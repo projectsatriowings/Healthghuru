@@ -6,12 +6,12 @@ import { SIX_TIPS } from "@/lib/constants";
 export default function SixTips() {
   return (
     <section className="section-padding bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <ScrollReveal variant="fadeIn">
           <SectionHeader title="Tips for Staying Healthy" />
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 xl:gap-10 2xl:gap-12 mt-12">
           {SIX_TIPS.map((tip, index) => (
             <ScrollReveal key={index} delay={index * 0.1}>
               <Card className="h-full p-8 flex flex-col items-start gap-4">

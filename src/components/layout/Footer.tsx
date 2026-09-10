@@ -15,8 +15,8 @@ export default function Footer() {
 
   return (
     <footer className="bg-dark text-white pt-16 pb-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+      <div className="site-container">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 xl:gap-16 2xl:gap-20 mb-12">
           {/* Column 1: Logo & Tagline */}
           <div className="flex flex-col items-start gap-4">
             <Link href="/" className="transition-transform hover:scale-105">

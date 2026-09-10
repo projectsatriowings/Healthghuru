@@ -24,7 +24,7 @@ export default async function VaultLayout({
         <div className="flex-1 ml-0 md:ml-[var(--sidebar-width,260px)] flex flex-col min-h-screen w-full min-w-0">
           <TopBar />
           <main className="flex-1 px-3 py-4 md:p-8 pb-[80px] md:pb-8 w-full min-w-0 overflow-x-hidden">
-            <div className="max-w-7xl mx-auto w-full">
+            <div className="site-container-fluid">
               {children}
             </div>
           </main>

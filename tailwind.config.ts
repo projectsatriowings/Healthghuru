@@ -76,6 +76,10 @@ const config: Config = {
         "card": "14px",
         "btn": "9999px",
       },
+      screens: {
+        "3xl": "1920px",
+        "4xl": "2560px",
+      },
     },
   },
   plugins: [],

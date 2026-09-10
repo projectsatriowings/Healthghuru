@@ -17,7 +17,7 @@ export default function AboutPage() {
     <>
       {/* Hero Banner */}
       <section className="bg-surface min-h-[50vh] flex items-center pt-24 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+        <div className="site-container">
           <ScrollReveal variant="fadeUp" className="text-center">
             <SectionHeader
               eyebrow="WHO WE ARE"
@@ -35,7 +35,7 @@ export default function AboutPage() {
 
       {/* Mission Section */}
       <section className="section-padding bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="site-container">
           <div className="flex flex-col lg:flex-row gap-16 items-center">
             <div className="w-full lg:w-1/2">
               <ScrollReveal variant="slideRight" className="relative w-full aspect-square md:aspect-[4/3] rounded-[24px] overflow-hidden shadow-2xl">
@@ -65,7 +65,7 @@ export default function AboutPage() {
 
       {/* Core Values */}
       <section className="section-padding bg-surface-alt">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="site-container">
           <ScrollReveal variant="fadeIn">
             <SectionHeader title="Our Core Values" />
           </ScrollReveal>
@@ -114,7 +114,7 @@ export default function AboutPage() {
 
       {/* Review Process */}
       <section className="section-padding bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="site-container-narrow text-center">
           <ScrollReveal variant="fadeUp">
             <SectionHeader title="Medical Expert Review Process" />
             <p className="text-text-secondary text-lg mb-12">
@@ -144,9 +144,9 @@ export default function AboutPage() {
 
       {/* Contact Section */}
       <section className="section-padding bg-surface-alt">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="site-container">
           <ScrollReveal variant="fadeIn">
-            <div className="bg-white rounded-[32px] p-8 md:p-16 shadow-xl border border-primary/10 max-w-5xl mx-auto">
+            <div className="bg-white rounded-[32px] p-8 md:p-16 shadow-xl border border-primary/10 max-w-5xl 2xl:max-w-6xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <div>
                   <h3 className="font-display text-3xl text-dark mb-6">Get in Touch</h3>

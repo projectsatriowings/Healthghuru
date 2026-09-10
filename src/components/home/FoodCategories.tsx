@@ -25,12 +25,12 @@ export default function FoodCategories() {
 
   return (
     <section className="section-padding bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <ScrollReveal variant="fadeIn">
           <SectionHeader title="For Well-Rounded Guidance for Your Health and Well-Being" />
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 xl:gap-8 2xl:gap-10 mt-12">
           {categories.map((category, index) => (
             <ScrollReveal key={category.name} delay={index * 0.1}>
               <div className="group relative w-full aspect-[4/5] rounded-[16px] overflow-hidden cursor-pointer shadow-md hover:shadow-xl transition-shadow duration-300">

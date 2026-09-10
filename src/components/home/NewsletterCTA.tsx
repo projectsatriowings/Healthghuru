@@ -11,19 +11,19 @@ export default function NewsletterCTA() {
       <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/3 w-96 h-96 bg-white opacity-5 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/3 w-96 h-96 bg-dark opacity-10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      <div className="site-container-narrow relative z-10 text-center">
         <ScrollReveal variant="fadeUp">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm text-white mb-6">
             <Mail size={32} />
           </div>
-          <h2 className="font-display text-4xl md:text-5xl text-white mb-6">
+          <h2 className="font-display text-4xl md:text-5xl 2xl:text-6xl text-white mb-6">
             Join 5,000+ Health Enthusiasts
           </h2>
-          <p className="text-white/90 text-lg md:text-xl font-body max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-white/90 text-lg md:text-xl 2xl:text-2xl font-body max-w-2xl 2xl:max-w-3xl mx-auto mb-10 leading-relaxed">
             Get personalized health content, expert tips, and exclusive resources delivered straight to your inbox every week.
           </p>
           
-          <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
+          <form className="flex flex-col sm:flex-row gap-4 max-w-lg 2xl:max-w-xl mx-auto" onSubmit={(e) => e.preventDefault()}>
             <input 
               type="email" 
               placeholder="Enter your email address" 

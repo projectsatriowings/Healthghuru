@@ -12,7 +12,7 @@ export default function FiveExercises() {
 
   return (
     <section className="section-padding bg-gradient-dark text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <ScrollReveal variant="fadeIn">
           <SectionHeader
             title="The Only 5 Exercises You'll Ever Need"
@@ -21,7 +21,7 @@ export default function FiveExercises() {
           />
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8 2xl:gap-10 mt-16">
           {exercises.map((exercise, index) => (
             <ScrollReveal key={exercise.name} delay={index * 0.1}>
               <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden group shadow-2xl">

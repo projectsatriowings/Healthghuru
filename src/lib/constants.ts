@@ -2,8 +2,11 @@ import { BlogPost, ExerciseData, SleepRisk } from "./types";
 
 export const NAV_LINKS = [
   { label: 'Home', href: '/' },
+  { label: 'News', href: '/news' },
+  { label: 'Articles', href: '/articles' },
+  { label: 'Videos', href: '/videos' },
+  { label: 'Magazines', href: '/magazines' },
   { label: 'Stay Healthy', href: '/stay-healthy' },
-  { label: 'About Us', href: '/about' },
   { label: 'Blog', href: '/blog' },
 ];
 

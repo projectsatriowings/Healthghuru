@@ -25,7 +25,7 @@ export default async function BlogPage() {
       <BlogHero />
       
       <section className="bg-surface py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="site-container">
           <div className="flex flex-col lg:flex-row gap-12">
             
             {/* Main Content Area */}

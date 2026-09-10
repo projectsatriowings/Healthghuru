@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function BlogHero() {
   return (
     <section className="bg-surface min-h-[50vh] flex items-center pt-24 pb-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="site-container">
         <ScrollReveal variant="fadeUp" className="text-center">
           <SectionHeader
             title="Wellness Knowledge Base"

@@ -31,7 +31,7 @@ export default function HealthierLivesAccordion() {
 
   return (
     <section className="section-padding bg-surface-alt">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container-narrow">
         <ScrollReveal variant="fadeIn">
           <SectionHeader title="Creating Healthier Lives" />
         </ScrollReveal>

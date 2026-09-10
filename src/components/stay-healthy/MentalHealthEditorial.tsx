@@ -24,12 +24,12 @@ export default function MentalHealthEditorial() {
 
   return (
     <section className="section-padding bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <ScrollReveal variant="fadeIn">
           <SectionHeader title="Mental Health is the Foundation of a Happy Life" />
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 xl:gap-10 2xl:gap-12 mt-12">
           {blocks.map((block, index) => (
             <ScrollReveal key={index} delay={index * 0.1}>
               <Card className="h-full p-8 border-t-4 border-t-primary rounded-t-sm rounded-b-card">

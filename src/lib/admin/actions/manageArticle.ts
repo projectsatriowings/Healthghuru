@@ -48,6 +48,33 @@ export async function manageArticle(input: z.infer<typeof articleSchema>) {
       )
     `;
 
+    // Dual-write into unified content_items platform
+    try {
+      await sql`
+        INSERT INTO content_items (
+          id, content_type, title, slug, excerpt, description, canonical_url,
+          image_url, author_name, published_at, source_id, status, language,
+          category, is_external, is_featured, is_trending, is_breaking, is_verified,
+          requires_review, quality_score, relevance_score, created_at, updated_at
+        ) VALUES (
+          ${newId}::uuid, 'article', ${validated.title}, ${validated.slug}, ${validated.excerpt}, ${validated.excerpt},
+          ${'/blog/' + validated.slug}, ${validated.heroImageUrl || null}, ${validated.authorName || 'HealthGhuru Editorial Team'},
+          CURRENT_TIMESTAMP, NULL, ${validated.status}, 'en',
+          ${validated.category}, FALSE, TRUE, FALSE, FALSE, TRUE,
+          FALSE, 95.0, 95.0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+        )
+        ON CONFLICT (slug) DO UPDATE SET
+          title = EXCLUDED.title,
+          excerpt = EXCLUDED.excerpt,
+          category = EXCLUDED.category,
+          image_url = EXCLUDED.image_url,
+          status = EXCLUDED.status,
+          updated_at = CURRENT_TIMESTAMP;
+      `;
+    } catch (syncErr) {
+      console.warn('Failed to sync article to content_items:', syncErr);
+    }
+
     await writeAuditLog({
       adminUserId: session.user.id,
       actionType: 'article_create',
@@ -82,6 +109,26 @@ export async function manageArticle(input: z.infer<typeof articleSchema>) {
       WHERE id = ${validated.id}::uuid
     `;
 
+    // Dual-update into unified content_items
+    try {
+      await sql`
+        UPDATE content_items
+        SET
+          title = ${validated.title},
+          slug = ${validated.slug},
+          category = ${validated.category},
+          excerpt = ${validated.excerpt},
+          description = ${validated.excerpt},
+          image_url = ${validated.heroImageUrl || null},
+          author_name = ${validated.authorName || null},
+          status = ${validated.status},
+          updated_at = CURRENT_TIMESTAMP
+        WHERE id = ${validated.id}::uuid;
+      `;
+    } catch (syncErr) {
+      console.warn('Failed to sync update to content_items:', syncErr);
+    }
+
     await writeAuditLog({
       adminUserId: session.user.id,
       actionType: 'article_update',
@@ -95,8 +142,13 @@ export async function manageArticle(input: z.infer<typeof articleSchema>) {
   }
 
   if (validated.action === 'delete' && validated.id) {
-    // Hard delete
-    await sql`DELETE FROM articles WHERE id = ${validated.id}::uuid`;
+    // Soft delete in articles and content_items
+    await sql`UPDATE articles SET deleted_at = CURRENT_TIMESTAMP WHERE id = ${validated.id}::uuid`;
+    try {
+      await sql`UPDATE content_items SET deleted_at = CURRENT_TIMESTAMP WHERE id = ${validated.id}::uuid`;
+    } catch (syncErr) {
+      console.warn('Failed to soft delete in content_items:', syncErr);
+    }
 
     await writeAuditLog({
       adminUserId: session.user.id,

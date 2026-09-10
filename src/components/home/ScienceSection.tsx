@@ -13,8 +13,8 @@ export default function ScienceSection() {
 
   return (
     <section className="section-padding bg-surface-alt overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row gap-16 items-center">
+      <div className="site-container">
+        <div className="flex flex-col lg:flex-row gap-16 xl:gap-20 2xl:gap-24 items-center">
           
           {/* Left: Image */}
           <div className="w-full lg:w-[45%] relative">

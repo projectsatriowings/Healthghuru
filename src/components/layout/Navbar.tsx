@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { NAV_LINKS } from "@/lib/constants";
@@ -41,7 +41,7 @@ export default function Navbar() {
           : "bg-transparent py-5"
       )}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 z-50 transition-transform hover:scale-105">
@@ -85,7 +85,17 @@ export default function Navbar() {
           </nav>
 
           {/* Desktop CTAs */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
+            <Link
+              href="/search"
+              aria-label="Search HealthGhuru"
+              className={cn(
+                "p-2.5 rounded-full transition-colors",
+                scrolled ? "hover:bg-surface text-dark" : "hover:bg-white/10 text-dark"
+              )}
+            >
+              <Search size={19} />
+            </Link>
             <Link href="/login">
               <Button variant="ghost" className={cn(
                 scrolled ? "border-primary text-primary" : "border-primary text-primary hover:bg-primary/10"
@@ -101,15 +111,21 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className={cn(
-              "md:hidden z-50 p-2 rounded-md transition-colors",
-              "text-text-primary"
-            )}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
+          <div className="md:hidden flex items-center gap-2">
+            <Link
+              href="/search"
+              aria-label="Search"
+              className="p-2 text-text-primary hover:text-primary transition-colors"
+            >
+              <Search size={22} />
+            </Link>
+            <button
+              className="z-50 p-2 rounded-md transition-colors text-text-primary"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
       </div>
 

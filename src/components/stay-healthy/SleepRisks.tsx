@@ -7,12 +7,12 @@ import * as Icons from "lucide-react";
 export default function SleepRisks() {
   return (
     <section className="section-padding bg-accent-light">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <ScrollReveal variant="fadeIn">
           <SectionHeader title="The Hidden Risks of Poor Sleep" />
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 xl:gap-8 mt-12">
           {SLEEP_RISKS.map((risk, index) => {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const IconComponent = (Icons as any)[risk.icon];

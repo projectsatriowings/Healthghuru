@@ -55,7 +55,7 @@ export function SectionHeader({
 
       {subtitle && (
         <p className={cn(
-          "font-body max-w-2xl text-sm md:text-lg leading-relaxed",
+          "font-body max-w-2xl xl:max-w-3xl 2xl:max-w-4xl text-sm md:text-lg 2xl:text-xl leading-relaxed",
           light ? "text-white/80" : "text-text-secondary"
         )}>
           {subtitle}

@@ -16,16 +16,16 @@ export default function HeroSection() {
       {/* Background SVG pattern */}
       <div className="absolute inset-y-0 left-0 w-1/2 opacity-[0.04] pointer-events-none z-0 bg-[url('/images/leaf-pattern.svg')] bg-repeat" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 items-center">
+      <div className="site-container relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 xl:gap-16 2xl:gap-24 items-center">
           
           {/* Left Content */}
-          <div className="flex flex-col items-start gap-6 max-w-2xl">
+          <div className="flex flex-col items-start gap-6 max-w-2xl xl:max-w-3xl 2xl:max-w-4xl">
             <ScrollReveal variant="slideLeft">
               <PillBadge active className="hero-eyebrow-pill mb-2 gap-2"><Sparkles size={16} /> Science-Backed Wellness</PillBadge>
             </ScrollReveal>
 
-            <h1 className="hero-headline font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-dark leading-tight">
+            <h1 className="hero-headline font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl text-dark leading-tight">
               {headline.map((line, index) => (
                 <motion.span
                   key={index}
@@ -41,7 +41,7 @@ export default function HeroSection() {
             </h1>
 
             <ScrollReveal delay={0.5}>
-              <p className="hero-subtext text-text-secondary text-lg max-w-lg">
+              <p className="hero-subtext text-text-secondary text-lg 2xl:text-xl max-w-lg xl:max-w-2xl">
                 Expert-reviewed articles on Nutrition, Sleep, Fitness and Mental Health — personalized for your journey.
               </p>
             </ScrollReveal>
@@ -70,7 +70,7 @@ export default function HeroSection() {
           </div>
 
           {/* Right Visual */}
-          <div className="relative w-full aspect-[4/5] lg:aspect-[3/4] max-w-lg mx-auto lg:ml-auto">
+          <div className="relative w-full aspect-[4/5] lg:aspect-[3/4] max-w-lg xl:max-w-xl 2xl:max-w-2xl mx-auto lg:ml-auto">
             <ScrollReveal delay={0.3} className="w-full h-full relative rounded-[24px] overflow-hidden shadow-2xl">
               <Image
                 src="/images/fitness_pillar.png"
@@ -88,7 +88,7 @@ export default function HeroSection() {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.8, type: "spring", stiffness: 100 }}
-              className="absolute -top-6 -right-6 lg:-right-12 bg-white rounded-2xl p-5 shadow-xl border border-primary/10 max-w-[180px]"
+              className="absolute -top-6 -right-6 lg:-right-10 xl:-right-12 bg-white rounded-2xl p-5 shadow-xl border border-primary/10 max-w-[180px] xl:max-w-[200px]"
             >
               <div className="text-3xl font-mono text-accent font-bold mb-1">20K+</div>
               <div className="text-sm font-heading text-text-primary leading-tight">Expert-reviewed Articles</div>
@@ -100,7 +100,7 @@ export default function HeroSection() {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.9, type: "spring", stiffness: 100 }}
-              className="absolute -bottom-8 -left-6 lg:-left-12 bg-white rounded-2xl p-5 shadow-xl border border-primary/10 max-w-[200px]"
+              className="absolute -bottom-8 -left-6 lg:-left-10 xl:-left-12 bg-white rounded-2xl p-5 shadow-xl border border-primary/10 max-w-[200px] xl:max-w-[220px]"
             >
               <div className="flex items-center gap-3 mb-2">
                 <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent">✓</div>

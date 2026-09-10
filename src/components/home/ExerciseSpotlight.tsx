@@ -9,18 +9,18 @@ import { EXERCISE_DATA } from "@/lib/constants";
 export default function ExerciseSpotlight() {
   return (
     <section className="section-padding bg-gradient-dark overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <ScrollReveal variant="fadeIn">
           <SectionHeader title="Explore the Best Exercises" light />
         </ScrollReveal>
 
         {/* Horizontal Scroll Row */}
         <div className="mt-12 -mx-4 px-4 sm:mx-0 sm:px-0">
-          <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 pb-8 pt-4">
+          <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 xl:gap-8 pb-8 pt-4">
             {EXERCISE_DATA.map((exercise, index) => (
               <motion.div
                 key={exercise.name}
-                className="snap-center shrink-0 w-[85vw] sm:w-[320px] relative rounded-2xl overflow-hidden shadow-2xl group cursor-pointer"
+                className="snap-center shrink-0 w-[85vw] sm:w-[320px] 2xl:w-[360px] relative rounded-2xl overflow-hidden shadow-2xl group cursor-pointer"
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}

@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 :root {
+  /* Design Tokens */
   /* Brand Greens */
   --color-primary:        #2E7D32;
   --color-primary-light:  #4CAF50;
@@ -88,6 +89,23 @@
   
   h3, h4 {
     @apply font-heading text-text-primary;
+  }
+}
+
+@layer components {
+  /* Master Responsive Site Container */
+  .site-container {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1600px] 3xl:max-w-[1760px];
+  }
+
+  /* Focused Narrow Container (for forms, single-column reading, newsletters) */
+  .site-container-narrow {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 max-w-4xl xl:max-w-5xl 2xl:max-w-6xl;
+  }
+
+  /* Wide Dashboard / Data Grid Container */
+  .site-container-fluid {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 max-w-[1760px];
   }
 }
 

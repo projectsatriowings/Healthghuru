@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function StayHeroSection() {
   return (
     <section className="bg-surface min-h-[60vh] flex items-center pt-24 pb-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <div className="site-container">
         <ScrollReveal variant="fadeUp" className="text-center">
           <SectionHeader
             eyebrow="YOUR WELLNESS JOURNEY"

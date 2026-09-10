@@ -1,18 +1,54 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { signIn } from '@/lib/auth/auth.config';
-import { AlertCircle, ArrowLeft, Shield } from 'lucide-react';
-import { redirect } from 'next/navigation';
+'use client';
+
+import { useState } from 'react';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { AlertCircle, ArrowLeft, Shield, Loader2, Eye, EyeOff } from 'lucide-react';
 import Image from "next/image";
 import Link from "next/link";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Button } from "@/components/ui/Button";
 
-export default function AdminLoginPage({
-  searchParams,
-}: {
-  searchParams: { error?: string };
-}) {
-  const errorMessage = searchParams.error ? 'Invalid credentials.' : '';
+export default function AdminLoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      const result = await signIn('credentials', {
+        email: email.trim(),
+        password: password,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setErrorMessage('Invalid admin email or password.');
+        setIsLoading(false);
+        return;
+      }
+
+      // Successful login
+      router.push('/admin');
+      router.refresh();
+    } catch {
+      setErrorMessage('An unexpected error occurred. Please try again.');
+      setIsLoading(false);
+    }
+  };
+
+  const handleDemoAdmin = () => {
+    setEmail('admin@healthghuru.com');
+    setPassword('admin123');
+    setErrorMessage('');
+  };
 
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center py-24 px-4 sm:px-6 lg:px-8 relative">
@@ -37,12 +73,13 @@ export default function AdminLoginPage({
                   alt="HealthGhuru Logo"
                   fill
                   className="object-contain"
+                  priority
                 />
               </div>
             </Link>
           </div>
 
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <div className="flex justify-center mb-3">
               <div className="bg-accent/10 p-3 rounded-full text-accent">
                 <Shield size={24} />
@@ -53,62 +90,51 @@ export default function AdminLoginPage({
           </div>
 
           {errorMessage && (
-            <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-lg flex items-center gap-2 text-sm border border-red-100">
+            <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-lg flex items-center gap-2 text-sm border border-red-100 animate-in fade-in">
               <AlertCircle size={16} className="shrink-0" />
-              {errorMessage}
+              <span>{errorMessage}</span>
             </div>
           )}
 
-          <form
-            action={async (formData) => {
-              'use server';
-              try {
-                const data = Object.fromEntries(formData);
-                await signIn('credentials', { ...data, redirectTo: '/admin' });
-              } catch (error: any) {
-                if (error.type === 'CredentialsSignin') {
-                  redirect('/admin/login?error=CredentialsSignin');
-                }
-                throw error;
-              }
-            }}
-            className="space-y-5"
-          >
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <div className="relative">
-                <input
-                  type="email"
-                  name="email"
-                  id="email"
-                  required
-                  placeholder=" "
-                  className="block w-full px-4 pt-6 pb-2 text-dark bg-surface-alt border border-transparent rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-accent peer"
-                />
-                <label
-                  htmlFor="email"
-                  className="absolute text-sm text-text-muted duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 font-medium"
-                >
-                  Admin Email
-                </label>
-              </div>
+              <label htmlFor="email" className="block text-xs font-semibold text-text-muted uppercase mb-1">
+                Admin Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="admin@healthghuru.com"
+                className="block w-full px-4 py-3 text-dark bg-surface-alt border border-border/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
+              />
             </div>
             
             <div>
+              <label htmlFor="password" className="block text-xs font-semibold text-text-muted uppercase mb-1">
+                Password
+              </label>
               <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   name="password"
                   id="password"
                   required
-                  placeholder=" "
-                  className="block w-full px-4 pt-6 pb-2 text-dark bg-surface-alt border border-transparent rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-accent peer"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="block w-full px-4 py-3 pr-11 text-dark bg-surface-alt border border-border/60 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
                 />
-                <label
-                  htmlFor="password"
-                  className="absolute text-sm text-text-muted duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] left-4 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-3 font-medium"
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-dark transition-colors p-1"
                 >
-                  Password
-                </label>
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
 
@@ -116,13 +142,31 @@ export default function AdminLoginPage({
               type="submit" 
               variant="primary"
               size="lg"
+              disabled={isLoading}
               className="w-full mt-2 relative"
             >
-              Access Dashboard
+              {isLoading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 size={18} className="animate-spin" /> Signing in...
+                </span>
+              ) : (
+                'Access Dashboard'
+              )}
             </Button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-border">
+          {/* Quick Demo Autofill */}
+          <div className="mt-4 pt-4 border-t border-border/50 text-center">
+            <button
+              type="button"
+              onClick={handleDemoAdmin}
+              className="text-xs text-accent hover:underline font-medium"
+            >
+              Fill Demo Admin Credentials
+            </button>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-border">
             <p className="text-center text-xs text-text-muted uppercase tracking-wider font-semibold">
               Restricted Area
             </p>

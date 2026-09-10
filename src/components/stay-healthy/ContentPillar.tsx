@@ -33,9 +33,9 @@ export default function ContentPillar({
 }: ContentPillarProps) {
   return (
     <section className={cn("section-padding overflow-hidden", className)}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <div className={cn(
-          "flex flex-col gap-12 lg:gap-16 items-center",
+          "flex flex-col gap-12 lg:gap-16 xl:gap-20 2xl:gap-24 items-center",
           // On desktop, row or row-reverse based on 'reversed'
           // On mobile, always column
           reversed ? "lg:flex-row-reverse" : "lg:flex-row"

@@ -28,12 +28,12 @@ export default function ThreePillars() {
 
   return (
     <section className="section-padding bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <ScrollReveal variant="fadeIn">
           <SectionHeader title="Your Health. Three Pillars." />
         </ScrollReveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 xl:gap-10 2xl:gap-12 mt-12">
           {pillars.map((pillar, index) => (
             <ScrollReveal key={pillar.title} delay={index * 0.1}>
               <Card className="h-full border-l-[4px] border-l-primary p-8 flex flex-col items-start group">

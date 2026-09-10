@@ -3,7 +3,7 @@ import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 export default function TrustBar() {
   return (
     <section className="bg-dark py-12 border-t border-b border-primary-dark">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
           
           <div className="flex flex-col items-center text-center px-6 border-white/20 md:border-r">

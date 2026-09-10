@@ -4,16 +4,8 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'healthghuru.com',
+        hostname: '**',
       },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-      }
     ],
     formats: ['image/avif', 'image/webp'],
   },
