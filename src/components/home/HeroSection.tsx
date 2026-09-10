@@ -12,20 +12,20 @@ export default function HeroSection() {
   const headline = "Live Better.\nFeel Stronger.\nEvery Day.".split("\n");
 
   return (
-    <section className="relative min-h-[100svh] flex items-center pt-24 pb-16 overflow-hidden">
+    <section className="relative flex items-center py-8 sm:py-14 lg:py-20 overflow-hidden">
       {/* Background SVG pattern */}
       <div className="absolute inset-y-0 left-0 w-1/2 opacity-[0.04] pointer-events-none z-0 bg-[url('/images/leaf-pattern.svg')] bg-repeat" />
 
       <div className="site-container relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 xl:gap-16 2xl:gap-24 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-8 xl:gap-16 2xl:gap-24 items-center">
           
           {/* Left Content */}
-          <div className="flex flex-col items-start gap-6 max-w-2xl xl:max-w-3xl 2xl:max-w-4xl">
+          <div className="flex flex-col items-start gap-5 sm:gap-6 max-w-2xl xl:max-w-3xl 2xl:max-w-4xl">
             <ScrollReveal variant="slideLeft">
-              <PillBadge active className="hero-eyebrow-pill mb-2 gap-2"><Sparkles size={16} /> Science-Backed Wellness</PillBadge>
+              <PillBadge active className="hero-eyebrow-pill mb-1 sm:mb-2 gap-2"><Sparkles size={16} /> Science-Backed Wellness</PillBadge>
             </ScrollReveal>
 
-            <h1 className="hero-headline font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl text-dark leading-tight">
+            <h1 className="hero-headline font-display text-3xl sm:text-5xl md:text-6xl lg:text-7xl 2xl:text-8xl text-dark leading-[1.15]">
               {headline.map((line, index) => (
                 <motion.span
                   key={index}
@@ -88,10 +88,10 @@ export default function HeroSection() {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.8, type: "spring", stiffness: 100 }}
-              className="absolute -top-6 -right-6 lg:-right-10 xl:-right-12 bg-white rounded-2xl p-5 shadow-xl border border-primary/10 max-w-[180px] xl:max-w-[200px]"
+              className="absolute top-2 right-2 sm:-top-6 sm:-right-6 lg:-right-10 xl:-right-12 bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 shadow-lg sm:shadow-xl border border-primary/10 max-w-[140px] sm:max-w-[180px] xl:max-w-[200px]"
             >
-              <div className="text-3xl font-mono text-accent font-bold mb-1">20K+</div>
-              <div className="text-sm font-heading text-text-primary leading-tight">Expert-reviewed Articles</div>
+              <div className="text-xl sm:text-3xl font-mono text-accent font-bold mb-0.5 sm:mb-1">20K+</div>
+              <div className="text-xs sm:text-sm font-heading text-text-primary leading-tight">Expert-reviewed Articles</div>
             </motion.div>
 
             {/* Floating Stat Card 2 */}
@@ -100,13 +100,13 @@ export default function HeroSection() {
               whileInView={{ opacity: 1, scale: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.9, type: "spring", stiffness: 100 }}
-              className="absolute -bottom-8 -left-6 lg:-left-10 xl:-left-12 bg-white rounded-2xl p-5 shadow-xl border border-primary/10 max-w-[200px] xl:max-w-[220px]"
+              className="absolute bottom-2 left-2 sm:-bottom-8 sm:-left-6 lg:-left-10 xl:-left-12 bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-5 shadow-lg sm:shadow-xl border border-primary/10 max-w-[150px] sm:max-w-[200px] xl:max-w-[220px]"
             >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent">✓</div>
-                <div className="text-2xl font-mono text-primary font-bold">100%</div>
+              <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+                <div className="w-7 h-7 sm:w-10 sm:h-10 rounded-full bg-accent/20 flex items-center justify-center text-accent text-xs sm:text-base">✓</div>
+                <div className="text-lg sm:text-2xl font-mono text-primary font-bold">100%</div>
               </div>
-              <div className="text-sm font-heading text-text-primary leading-tight">Science-Backed Content</div>
+              <div className="text-xs sm:text-sm font-heading text-text-primary leading-tight">Science-Backed Content</div>
             </motion.div>
           </div>
 

@@ -58,9 +58,12 @@ export default function CustomCursor() {
   const ringY = useSpring(mouseY, SPRING_CONFIG_SLOW);
 
   useEffect(() => {
-    const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
-    setIsTouch(!hasFinePointer);
-    if (!hasFinePointer) return;
+    const isMobileDevice =
+      window.innerWidth < 1024 ||
+      !window.matchMedia('(pointer: fine)').matches ||
+      window.matchMedia('(hover: none)').matches;
+    setIsTouch(isMobileDevice);
+    if (isMobileDevice) return;
 
     const handleMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
@@ -124,9 +127,9 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Global style: hide native cursor only once we know we're on a fine-pointer, non-reduced-motion device */}
+      {/* Global style: hide native cursor only once we know we're on a fine-pointer, desktop non-reduced-motion device */}
       <style jsx global>{`
-        @media (pointer: fine) {
+        @media (pointer: fine) and (min-width: 1024px) {
           body {
             cursor: none;
           }
