@@ -13,7 +13,8 @@ import { HealthDisclaimer } from "@/components/media/HealthDisclaimer";
 import Link from 'next/link';
 import { Sparkles, ArrowRight, Play, Flame, BookOpen } from 'lucide-react';
 
-export const revalidate = 60; // Revalidate homepage every minute
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function Home() {
   // 1. Breaking News
