@@ -16,7 +16,7 @@ export default function AboutPage() {
   return (
     <>
       {/* Hero Banner */}
-      <section className="bg-surface min-h-[50vh] flex items-center pt-24 pb-12">
+      <section className="bg-surface min-h-[40vh] flex items-center pt-8 sm:pt-12 pb-12">
         <div className="site-container">
           <ScrollReveal variant="fadeUp" className="text-center">
             <SectionHeader

@@ -56,10 +56,10 @@ export default async function NewsPage({
   `;
 
   return (
-    <div className="pt-24 pb-20 bg-surface/30 min-h-screen">
+    <div className="pb-20 bg-surface/30 min-h-screen">
       {breakingItems.length > 0 && <BreakingNewsTicker items={breakingItems} />}
 
-      <div className="site-container mt-8 space-y-8">
+      <div className={`site-container ${breakingItems.length > 0 ? 'mt-6 sm:mt-8' : 'pt-6 sm:pt-10'} space-y-8`}>
         <ScrollReveal>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
             <SectionHeader

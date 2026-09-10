@@ -325,3 +325,15 @@ html.lenis, html.lenis body {
   padding: 16px 24px;
   min-height: 56px;
 }
+
+/* CUSTOM CURSOR FINE POINTER HANDLING */
+@media (pointer: fine) {
+  html.custom-cursor-active,
+  html.custom-cursor-active body,
+  html.custom-cursor-active a,
+  html.custom-cursor-active button,
+  html.custom-cursor-active [data-cursor] {
+    cursor: none;
+  }
+}
+
