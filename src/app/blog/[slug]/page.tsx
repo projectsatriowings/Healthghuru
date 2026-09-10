@@ -35,7 +35,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const publishDate = formatDate(post.publish_date);
 
   return (
-    <article className="pt-32 pb-24 bg-white relative">
+    <article className="pt-8 sm:pt-12 pb-24 bg-white relative">
       <div className="max-w-[760px] mx-auto px-4 sm:px-6">
         
         {/* Breadcrumbs */}

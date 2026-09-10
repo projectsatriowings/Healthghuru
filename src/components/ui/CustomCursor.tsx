@@ -18,13 +18,6 @@ import { motion, useMotionValue, useSpring, AnimatePresence } from 'framer-motio
  *  - Hovering a tab/nav item: dot becomes a soft pill matching tab width (magnetic snap)
  *  - On click: ripple burst in primary green, dot scales down briefly (press feedback)
  *  - Hidden entirely on touch devices — never shows on mobile/tablet
- *
- * Usage: mount <CustomCursor /> once near the root of (vault) layout and the
- * public site root layout. Tag any interactive element with:
- *   data-cursor="button"   → ring state
- *   data-cursor="tab"      → magnetic pill state
- *   data-cursor="text"     → thin minimal state for plain text links
- *   data-cursor-text="Read more" → optional label inside the ring
  */
 
 type CursorVariant = 'default' | 'button' | 'tab' | 'text' | 'disabled';
@@ -119,6 +112,15 @@ export default function CustomCursor() {
     return () => mq.removeEventListener('change', listener);
   }, []);
 
+  useEffect(() => {
+    if (!isTouch && !reducedMotion) {
+      document.documentElement.classList.add('custom-cursor-active');
+      return () => {
+        document.documentElement.classList.remove('custom-cursor-active');
+      };
+    }
+  }, [isTouch, reducedMotion]);
+
   if (isTouch || reducedMotion) return null;
 
   const isTab = target.variant === 'tab' && target.rect;
@@ -127,20 +129,6 @@ export default function CustomCursor() {
 
   return (
     <>
-      {/* Global style: hide native cursor only once we know we're on a fine-pointer, desktop non-reduced-motion device */}
-      <style jsx global>{`
-        @media (pointer: fine) and (min-width: 1024px) {
-          body {
-            cursor: none;
-          }
-          a,
-          button,
-          [data-cursor] {
-            cursor: none;
-          }
-        }
-      `}</style>
-
       {/* RING / PILL — trailing, larger, adapts shape to target */}
       <motion.div
         aria-hidden
@@ -160,15 +148,15 @@ export default function CustomCursor() {
           height: isTab && target.rect ? target.rect.height + 10 : isButton ? 56 : 32,
           borderRadius: isTab ? 999 : isButton ? '50%' : '50%',
           backgroundColor: isTab
-            ? 'rgba(102,187,106,0.14)' /* var(--color-secondary) tint */
+            ? 'rgba(102,187,106,0.14)'
             : isButton
-            ? 'rgba(46,125,50,0.08)' /* var(--color-primary) tint */
+            ? 'rgba(46,125,50,0.08)'
             : 'rgba(46,125,50,0)',
           borderWidth: isTab || isButton ? 1.5 : 1,
           borderColor: isTab
-            ? '#66BB6A' /* var(--color-secondary) */
+            ? '#66BB6A'
             : isButton
-            ? '#2E7D32' /* var(--color-primary) */
+            ? '#2E7D32'
             : 'rgba(46,125,50,0.25)',
           scale: isPressed ? 0.88 : 1,
         }}
@@ -192,7 +180,7 @@ export default function CustomCursor() {
                 fontSize: '0.7rem',
                 fontWeight: 600,
                 letterSpacing: '0.02em',
-                color: '#1A2E1A' /* var(--color-text-primary) */,
+                color: '#1A2E1A',
                 whiteSpace: 'nowrap',
               }}
             >
@@ -219,14 +207,14 @@ export default function CustomCursor() {
         animate={{
           width: isText ? 4 : isPressed ? 6 : 8,
           height: isText ? 4 : isPressed ? 6 : 8,
-          opacity: target.label ? 0 : 1, // hide dot when a label is showing inside the ring
-          backgroundColor: '#2E7D32', // var(--color-primary)
+          opacity: target.label ? 0 : 1,
+          backgroundColor: '#2E7D32',
         }}
         transition={{ type: 'spring', damping: 30, stiffness: 400 }}
         className="rounded-full"
       />
 
-      {/* CLICK RIPPLES — short-lived burst in primary green on every click */}
+      {/* CLICK RIPPLES */}
       <AnimatePresence>
         {ripples.map((r) => (
           <motion.div
@@ -246,7 +234,7 @@ export default function CustomCursor() {
               marginLeft: -24,
               marginTop: -24,
               borderRadius: '50%',
-              border: '1.5px solid #4CAF50', // var(--color-primary-light)
+              border: '1.5px solid #4CAF50',
               pointerEvents: 'none',
             }}
           />

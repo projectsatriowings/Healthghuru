@@ -3,8 +3,11 @@ import { DM_Serif_Display, Plus_Jakarta_Sans, Inter, JetBrains_Mono } from "next
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
-
 import SmoothScroll from "@/components/layout/SmoothScroll";
+import ConditionalLayout from "@/components/layout/ConditionalLayout";
+import CustomCursor from "@/components/ui/CustomCursor";
+import { ToastProvider } from "@/components/providers/ToastProvider";
+import { DialogProvider } from "@/components/providers/DialogProvider";
 
 const dmSerif = DM_Serif_Display({
   weight: "400",
@@ -32,12 +35,15 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "HealthGhuru — Live Better. Feel Stronger.",
   description: "Science-backed wellness platform covering Nutrition, Sleep, Fitness and Mental Health. 20,000+ expert-reviewed articles.",
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png" },
+      { url: "/favicon.png", type: "image/png" }
+    ],
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
-
-import ConditionalLayout from "@/components/layout/ConditionalLayout";
-import CustomCursor from '@/components/ui/CustomCursor';
-import { ToastProvider } from "@/components/providers/ToastProvider";
-import { DialogProvider } from "@/components/providers/DialogProvider";
 
 export default function RootLayout({
   children,
