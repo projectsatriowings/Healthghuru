@@ -7,6 +7,8 @@ import { ContentCard } from '@/components/media/ContentCard';
 import { HealthDisclaimer } from '@/components/media/HealthDisclaimer';
 import Link from 'next/link';
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: 'Health Articles | HealthGhuru — Expert Insights & In-Depth Wellness Guides',
   description: 'Evidence-based articles on Nutrition, Fitness, Mental Health, Sleep, and Preventive Medicine by medical writers and reputable health institutions.',
@@ -17,61 +19,66 @@ export default async function ArticlesPage({
 }: {
   searchParams: { category?: string; filter?: string };
 }) {
-  const categoryFilter = searchParams.category;
-  const isOriginalOnly = searchParams.filter === 'original';
+  const categoryFilter = searchParams?.category;
+  const isOriginalOnly = searchParams?.filter === 'original';
 
-  let articles;
-  if (isOriginalOnly) {
-    articles = await sql`
-      SELECT i.*, s.name as source_name
-      FROM content_items i
-      LEFT JOIN content_sources s ON i.source_id = s.id
-      WHERE i.content_type = 'article' AND i.status = 'published' AND i.deleted_at IS NULL
-        AND i.is_external = FALSE
-      ORDER BY i.published_at DESC
-      LIMIT 24
-    `;
-  } else if (categoryFilter) {
-    articles = await sql`
-      SELECT i.*, s.name as source_name
-      FROM content_items i
-      LEFT JOIN content_sources s ON i.source_id = s.id
-      WHERE i.content_type = 'article' AND i.status = 'published' AND i.deleted_at IS NULL
-        AND LOWER(i.category) = LOWER(${categoryFilter})
-      ORDER BY i.published_at DESC
-      LIMIT 24
-    `;
-  } else {
-    articles = await sql`
-      SELECT i.*, s.name as source_name
-      FROM content_items i
-      LEFT JOIN content_sources s ON i.source_id = s.id
-      WHERE i.content_type = 'article' AND i.status = 'published' AND i.deleted_at IS NULL
-      ORDER BY i.published_at DESC
-      LIMIT 24
-    `;
-  }
-
-  const categories = await sql`
-    SELECT name, slug FROM content_categories ORDER BY display_order ASC, name ASC LIMIT 10
-  `;
+  // Execute database queries in parallel for instant response
+  const [categories, articles] = await Promise.all([
+    sql`
+      SELECT name, slug FROM content_categories WHERE is_enabled = TRUE ORDER BY display_order ASC, name ASC LIMIT 12
+    `,
+    isOriginalOnly
+      ? sql`
+          SELECT i.*, s.name as source_name
+          FROM content_items i
+          LEFT JOIN content_sources s ON i.source_id = s.id
+          WHERE i.content_type = 'article' AND i.status = 'published' AND i.deleted_at IS NULL
+            AND i.is_external = FALSE
+          ORDER BY i.published_at DESC
+          LIMIT 24
+        `
+      : categoryFilter
+      ? sql`
+          SELECT i.*, s.name as source_name
+          FROM content_items i
+          LEFT JOIN content_sources s ON i.source_id = s.id
+          WHERE i.content_type = 'article' AND i.status = 'published' AND i.deleted_at IS NULL
+            AND (
+              LOWER(i.category) = LOWER(${categoryFilter})
+              OR LOWER(COALESCE(i.subcategory, '')) = LOWER(${categoryFilter})
+            )
+          ORDER BY i.published_at DESC
+          LIMIT 24
+        `
+      : sql`
+          SELECT i.*, s.name as source_name
+          FROM content_items i
+          LEFT JOIN content_sources s ON i.source_id = s.id
+          WHERE i.content_type = 'article' AND i.status = 'published' AND i.deleted_at IS NULL
+          ORDER BY i.published_at DESC
+          LIMIT 24
+        `,
+  ]);
 
   return (
     <div className="pt-6 sm:pt-10 pb-20 bg-surface/30 min-h-screen">
       <div className="site-container space-y-8">
+        {/* Centered Section Header */}
         <ScrollReveal>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
+          <div className="w-full flex flex-col items-center justify-center text-center border-b border-border pb-6 space-y-5">
             <SectionHeader
               eyebrow="Editorial & Syndicated"
               title="Health & Wellness Articles"
               subtitle="Explore original guides by HealthGhuru alongside in-depth analyses from accredited medical publishers."
+              centered
             />
 
-            <div className="flex items-center gap-2 shrink-0">
+            {/* Centered Filter Tabs */}
+            <div className="flex items-center justify-center gap-2 pt-2">
               <Link
                 href="/articles"
                 className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                  !isOriginalOnly ? 'bg-primary text-white' : 'bg-white text-text-secondary border border-border'
+                  !isOriginalOnly ? 'bg-primary text-white shadow-sm' : 'bg-white text-text-secondary border border-border hover:bg-surface'
                 }`}
               >
                 All Articles
@@ -79,7 +86,7 @@ export default async function ArticlesPage({
               <Link
                 href="/articles?filter=original"
                 className={`px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
-                  isOriginalOnly ? 'bg-primary text-white' : 'bg-white text-text-secondary border border-border'
+                  isOriginalOnly ? 'bg-primary text-white shadow-sm' : 'bg-white text-text-secondary border border-border hover:bg-surface'
                 }`}
               >
                 ✦ HealthGhuru Originals
@@ -88,8 +95,8 @@ export default async function ArticlesPage({
           </div>
         </ScrollReveal>
 
-        {/* Categories Bar */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Centered Categories Bar */}
+        <div className="flex flex-wrap items-center justify-center gap-2">
           {categories.map((c: any) => {
             const active = categoryFilter?.toLowerCase() === c.name.toLowerCase();
             return (
@@ -110,11 +117,17 @@ export default async function ArticlesPage({
 
         {/* Articles Grid */}
         {articles.length === 0 ? (
-          <div className="bg-white rounded-2xl p-12 text-center border border-border shadow-sm">
+          <div className="bg-white rounded-2xl p-12 text-center border border-border shadow-sm max-w-xl mx-auto">
             <h3 className="font-display text-xl text-dark mb-1">No Articles Found</h3>
-            <p className="text-sm text-text-muted">
+            <p className="text-sm text-text-muted mb-4">
               There are currently no articles in this section. Explore our other health categories.
             </p>
+            <Link
+              href="/articles"
+              className="inline-block px-5 py-2.5 bg-primary text-white rounded-full text-xs font-semibold hover:bg-primary-dark transition-all shadow-sm"
+            >
+              View All Articles
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

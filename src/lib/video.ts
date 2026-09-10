@@ -1,11 +1,12 @@
 /**
- * Video helper utilities for extracting video identifiers, handling platforms,
- * and normalizing playback sources.
+ * Video helper utilities for extracting video identifiers, handling platforms
+ * (YouTube, Instagram Reels/Posts, Direct HTML5 video), and normalizing playback sources.
  */
 
 export interface ParsedVideoSource {
-  type: 'youtube' | 'direct' | 'unsupported' | 'empty';
+  type: 'youtube' | 'instagram' | 'direct' | 'unsupported' | 'empty';
   videoId?: string;
+  instagramCode?: string;
   directUrl?: string;
   embedUrl?: string;
 }
@@ -48,24 +49,42 @@ export function extractYouTubeId(input?: string | null): string | null {
 }
 
 /**
+ * Extracts Instagram Reel / Post code from URL.
+ */
+export function extractInstagramCode(input?: string | null): string | null {
+  if (!input) return null;
+  const match = input.match(/(?:instagram\.com|instagr\.am)\/(?:reel|reels|p|tv)\/([a-zA-Z0-9_-]+)/i);
+  return match ? match[1] : null;
+}
+
+/**
  * Parses any video source input (URL or ID) and determines its playback type.
  */
 export function parseVideoSource(urlOrId?: string | null, fallback?: string | null): ParsedVideoSource {
-  const primaryId = extractYouTubeId(urlOrId);
-  if (primaryId) {
+  const primaryYtId = extractYouTubeId(urlOrId);
+  if (primaryYtId) {
     return {
       type: 'youtube',
-      videoId: primaryId,
-      embedUrl: `https://www.youtube-nocookie.com/embed/${primaryId}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1&controls=1`,
+      videoId: primaryYtId,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${primaryYtId}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1&controls=1`,
     };
   }
 
-  const fallbackId = extractYouTubeId(fallback);
-  if (fallbackId) {
+  const fallbackYtId = extractYouTubeId(fallback);
+  if (fallbackYtId) {
     return {
       type: 'youtube',
-      videoId: fallbackId,
-      embedUrl: `https://www.youtube-nocookie.com/embed/${fallbackId}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1&controls=1`,
+      videoId: fallbackYtId,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${fallbackYtId}?enablejsapi=1&rel=0&modestbranding=1&playsinline=1&controls=1`,
+    };
+  }
+
+  const igCode = extractInstagramCode(urlOrId) || extractInstagramCode(fallback);
+  if (igCode) {
+    return {
+      type: 'instagram',
+      instagramCode: igCode,
+      embedUrl: `https://www.instagram.com/reel/${igCode}/embed`,
     };
   }
 

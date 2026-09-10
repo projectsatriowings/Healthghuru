@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "@studio-freight/lenis";
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const lenisRef = useRef<Lenis | null>(null);
+  const rafIdRef = useRef<number | null>(null);
 
   useEffect(() => {
     const dashboardRoutes = [
@@ -15,30 +17,60 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     
     // Disable smooth scroll on dashboard routes since they have their own inner scroll containers
     if (dashboardRoutes.some(route => pathname?.startsWith(route))) {
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+        lenisRef.current = null;
+      }
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
       return;
     }
 
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      gestureOrientation: "vertical",
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 2,
-    });
+    // Initialize Lenis once if not already initialized
+    if (!lenisRef.current) {
+      const lenis = new Lenis({
+        duration: 1.0,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        gestureOrientation: "vertical",
+        smoothWheel: true,
+        wheelMultiplier: 1,
+        touchMultiplier: 1.5,
+      });
 
-    function raf(time: number) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
+      lenisRef.current = lenis;
+
+      const raf = (time: number) => {
+        lenis.raf(time);
+        rafIdRef.current = requestAnimationFrame(raf);
+      };
+
+      rafIdRef.current = requestAnimationFrame(raf);
+    } else {
+      // On route change, reset scroll position smoothly
+      lenisRef.current.scrollTo(0, { immediate: true });
     }
 
-    requestAnimationFrame(raf);
-
     return () => {
-      lenis.destroy();
+      // Cleanup on unmount
     };
   }, [pathname]);
+
+  // Global unmount cleanup
+  useEffect(() => {
+    return () => {
+      if (lenisRef.current) {
+        lenisRef.current.destroy();
+        lenisRef.current = null;
+      }
+      if (rafIdRef.current) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
+    };
+  }, []);
 
   return <>{children}</>;
 }

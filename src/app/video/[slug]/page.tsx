@@ -34,12 +34,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
   }
 
   const video = items[0];
-  const isInstagram = video.canonical_url.includes('instagram.com');
-  const instagramMatch = video.canonical_url.match(/instagram\.com\/(?:reel|p)\/([a-zA-Z0-9_-]+)/);
-  const instagramCode = instagramMatch ? instagramMatch[1] : null;
-
-  const youtubeMatch = video.canonical_url.match(/(?:v=|\/embed\/|\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  const videoId = video.video_id || (youtubeMatch ? youtubeMatch[1] : null);
+  const isInstagram = Boolean(video.canonical_url?.includes('instagram.com'));
 
   // Related videos
   const relatedVideos = await sql`
@@ -63,91 +58,72 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
           <ArrowLeft size={14} /> Back to Video Library
         </Link>
 
-        {/* Video Player Container */}
-        <div className={`bg-black rounded-3xl overflow-hidden shadow-2xl relative border border-border flex items-center justify-center ${isInstagram ? 'max-w-md mx-auto aspect-[9/16] min-h-[580px]' : 'aspect-video'}`}>
-          {isInstagram && instagramCode ? (
-            <iframe
-              src={`https://www.instagram.com/reel/${instagramCode}/embed`}
-              title={video.title}
-              className="w-full h-full border-0"
-              allowFullScreen
-            />
-          ) : videoId ? (
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&rel=0`}
-              title={video.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full border-0"
-            />
-          ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center text-white text-sm p-6 text-center">
-              <p className="mb-3">Preview unavailable in embedded player.</p>
-              <a
-                href={video.canonical_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-4 py-2 rounded-full bg-primary text-white text-xs font-semibold inline-flex items-center gap-1.5 hover:bg-primary-dark transition-colors"
-              >
-                Watch Directly at Source <ExternalLink size={12} />
-              </a>
+        {/* Interactive Video Player (Supports YouTube, Instagram Reels, and Direct Video) */}
+        <YouTubePlayer
+          videoId={video.video_id}
+          videoUrl={video.canonical_url}
+          title={video.title}
+          thumbnailUrl={video.image_url}
+          canonicalUrl={video.canonical_url}
+          authorName={video.author_name || video.source_name}
+          durationSeconds={video.duration_seconds}
+        />
+
+        {/* Title, Attribution & Actions */}
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-border shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 pb-6 border-b border-border/50">
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <PillBadge active className="text-xs">{video.category || 'Wellness'}</PillBadge>
+                <span className="text-xs text-text-muted">·</span>
+                <span className="text-xs text-text-secondary flex items-center gap-1">
+                  <ShieldCheck size={12} className="text-primary" /> {isInstagram ? 'Verified Creator' : 'Verified Channel'}
+                </span>
+              </div>
+
+              <h1 className="font-display text-2xl sm:text-3xl text-dark leading-tight">
+                {video.title}
+              </h1>
+
+              <div className="flex items-center gap-2 text-sm text-text-secondary">
+                <User size={15} className="text-primary" />
+                <span className="font-medium text-dark">{video.author_name || video.source_name || 'Health Ghuru'}</span>
+              </div>
             </div>
-          )}
-        </div>
-
-        {/* Title & Channel Attribution */}
-        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-border shadow-sm space-y-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <PillBadge active className="text-xs">{video.category || 'Wellness'}</PillBadge>
-            <span className="text-xs text-text-muted">·</span>
-            <span className="text-xs text-text-secondary flex items-center gap-1">
-              <ShieldCheck size={12} className="text-primary" /> {isInstagram ? 'Verified Creator' : 'Verified Channel'}
-            </span>
-          </div>
-
-            <h1 className="font-display text-2xl sm:text-3xl text-dark leading-tight">
-              {video.title}
-            </h1>
-
-            <div className="flex items-center gap-2 text-sm text-text-secondary">
-              <User size={15} className="text-primary" />
-              <span className="font-medium text-dark">{video.author_name || video.source_name || 'Health Ghuru'}</span>
-            </div>
-          </div>
 
             <a
               href={video.canonical_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-primary hover:underline inline-flex items-center gap-1 text-xs"
+              className="px-6 py-3 bg-[#E50914] hover:bg-[#c40812] text-white rounded-full text-xs font-semibold shrink-0 shadow-sm transition-colors flex items-center gap-1.5 self-start sm:self-center"
             >
-              {isInstagram ? 'Watch on Instagram' : 'Watch on YouTube'} <ExternalLink size={12} />
+              {isInstagram ? 'Watch on Instagram' : 'Watch on YouTube'} <ExternalLink size={13} />
             </a>
           </div>
 
-          {/* Description */}
-          <div className="space-y-3 pt-2 text-sm text-text-secondary leading-relaxed whitespace-pre-line">
-            <h3 className="font-heading font-semibold text-dark text-base">Video Overview</h3>
-            <p>{video.description || video.excerpt || 'No description provided.'}</p>
-          </div>
+          {/* Description / Overview */}
+          {(video.description || video.excerpt) && (
+            <div className="space-y-2 text-sm text-text-secondary leading-relaxed whitespace-pre-line">
+              <h3 className="font-heading font-semibold text-dark text-base">Video Overview</h3>
+              <p>{video.description || video.excerpt}</p>
+            </div>
+          )}
         </div>
 
         <HealthDisclaimer />
 
-        {/* Related Content */ }
-  {
-    relatedVideos.length > 0 && (
-      <div className="space-y-4 pt-4">
-        <h3 className="font-heading font-semibold text-dark text-xl">Related Health Videos</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {relatedVideos.map((rel: any) => (
-            <ContentCard key={rel.id} item={rel} />
-          ))}
-        </div>
+        {/* Related Content */}
+        {relatedVideos.length > 0 && (
+          <div className="space-y-4 pt-4">
+            <h3 className="font-heading font-semibold text-dark text-xl">Related Health Videos</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {relatedVideos.map((rel: any) => (
+                <ContentCard key={rel.id} item={rel} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-    )
-  }
-      </div >
-    </div >
+    </div>
   );
 }
