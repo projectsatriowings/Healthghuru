@@ -22,29 +22,10 @@ export async function requireAdmin() {
   const user = users[0];
   
   if (!user || user.role !== 'admin') {
-    redirect('/vault');
+    redirect('/admin/login');
   }
   
   // Attach the freshest role to the session object
   session.user.role = user.role;
-  return session;
-}
-
-export async function requireAuth() {
-  const session = await getSession();
-  if (!session?.user) {
-    redirect('/login');
-  }
-
-  // Real DB check to ensure suspended users are immediately booted out
-  try {
-    const users = await sql`SELECT status FROM users WHERE id = ${session.user.id}::uuid`;
-    if (!users[0] || users[0].status === 'suspended') {
-      redirect('/login');
-    }
-  } catch {
-    // If status column doesn't exist yet, allow it
-  }
-
   return session;
 }

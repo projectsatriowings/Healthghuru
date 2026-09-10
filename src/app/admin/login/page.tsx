@@ -53,8 +53,8 @@ export default function AdminLoginPage() {
   return (
     <div className="min-h-screen bg-surface flex items-center justify-center py-24 px-4 sm:px-6 lg:px-8 relative">
       <div className="absolute top-6 left-6 md:top-10 md:left-10">
-        <Link href="/login" className="text-text-secondary hover:text-dark transition-colors flex items-center gap-2 font-medium text-sm">
-          <ArrowLeft size={16} /> Back to User Login
+        <Link href="/" className="text-text-secondary hover:text-dark transition-colors flex items-center gap-2 font-medium text-sm">
+          <ArrowLeft size={16} /> Back to Homepage
         </Link>
       </div>
       

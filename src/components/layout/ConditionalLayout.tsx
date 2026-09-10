@@ -13,28 +13,16 @@ export default function ConditionalLayout({
 }) {
   const pathname = usePathname();
   
-  const dashboardRoutes = [
-    '/vault',
-    '/dashboard',
-    '/records',
-    '/goals',
-    '/library',
-    '/profile',
-    '/admin'
-  ];
-
-  const isHidden = 
-    dashboardRoutes.some(route => pathname?.startsWith(route)) || 
-    pathname === '/login' || 
-    pathname === '/subscribe';
+  // Hide site navbar/footer only within the Admin console
+  const isAdmin = pathname?.startsWith('/admin');
 
   return (
     <>
-      {!isHidden && navbar}
+      {!isAdmin && navbar}
       <main className="flex-grow">
         {children}
       </main>
-      {!isHidden && footer}
+      {!isAdmin && footer}
     </>
   );
 }

@@ -36,13 +36,7 @@ HealthGhuru is an enterprise-grade digital health media, content aggregation, an
   - `/search`: Multi-faceted instant search across headlines, bodies, tags, and formats.
   - `/category/[slug]` & `/source/[slug]`: Dynamic topic pillar pages and publisher profiles.
 
-### 3. Personal Health Vault
-- **Encrypted Medical Records**: Secure storage of lab reports, prescriptions, clinical summaries, and doctor notes.
-- **Family Member Profiles**: Multi-profile management under a single account.
-- **Health Goals Tracker**: Metrics tracking (blood glucose, weight, blood pressure, etc.) with visual progress history.
-- **Wellness Logging**: Workouts, sleep cycles, dietary meals, and daily mental wellness journals.
-
-### 4. Admin Operations & Governance Console
+### 3. Editorial & Admin Operations Console
 - **Feed Sources Management** (`/admin/sources`): Create, toggle, configure cadence, and preview live feeds with the interactive drawer.
 - **Editorial Review Queue** (`/admin/review-queue`): Batch approve or reject content from sources flagged for human review.
 - **Ingestion Run Monitor** (`/admin/ingestion`): Real-time batch logs, execution durations, and per-item error isolation.
@@ -125,15 +119,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🔐 Default Access & Authentication
 
-### Admin Portal
+### Admin & Editorial Portal
 - **URL**: `/admin/login`
 - **Email**: `admin@healthghuru.com`
 - **Password**: `admin123`
-
-### Demo User (Health Vault)
-- **URL**: `/login`
-- **Email**: `user@example.com`
-- **Password**: `password123`
 
 ---
 

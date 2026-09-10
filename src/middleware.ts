@@ -9,12 +9,8 @@ export default auth((req: NextRequest & { auth: any }) => {
   const session = (req as any).auth;
 
   if (isAdminRoute) {
-    if (!session?.user) {
+    if (!session?.user || session.user.role !== 'admin') {
       return NextResponse.redirect(new URL('/admin/login', nextUrl));
-    }
-    if (session.user.role !== 'admin') {
-      // Not an admin — redirect to their normal Vault
-      return NextResponse.redirect(new URL('/vault', nextUrl));
     }
   }
   return NextResponse.next();

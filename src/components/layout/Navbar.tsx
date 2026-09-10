@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X, Search, Shield } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { NAV_LINKS } from "@/lib/constants";
@@ -27,10 +27,6 @@ export default function Navbar() {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [pathname]);
-
-  if (pathname === '/login' || pathname === '/subscribe') {
-    return null;
-  }
 
   return (
     <header
@@ -96,16 +92,16 @@ export default function Navbar() {
             >
               <Search size={19} />
             </Link>
-            <Link href="/login">
-              <Button variant="ghost" className={cn(
-                scrolled ? "border-primary text-primary" : "border-primary text-primary hover:bg-primary/10"
-              )}>
-                Login
-              </Button>
-            </Link>
-            <Link href="/subscribe">
-              <Button variant="primary">
-                Subscribe &rarr;
+            <Link href="/admin/login">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className={cn(
+                  "flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5",
+                  scrolled ? "border border-border hover:bg-surface text-dark" : "border border-dark/20 text-dark hover:bg-white/10"
+                )}
+              >
+                <Shield size={14} className="text-primary" /> Admin
               </Button>
             </Link>
           </div>
@@ -139,34 +135,26 @@ export default function Navbar() {
             transition={{ duration: 0.3, ease: "easeInOut" }}
             className="md:hidden overflow-hidden bg-white border-b border-primary/10 shadow-lg absolute top-full left-0 w-full"
           >
-            <div className="px-4 py-6 flex flex-col gap-6">
-              <nav className="flex flex-col gap-4">
-                {NAV_LINKS.map((link) => {
-                  const isActive = pathname === link.href;
-                  return (
-                    <Link
-                      key={link.href}
-                      href={link.href}
-                      className={cn(
-                        "mobile-nav-link border-b border-gray-100",
-                        isActive ? "text-primary" : "text-text-primary"
-                      )}
-                    >
-                      {link.label}
-                    </Link>
-                  );
-                })}
-              </nav>
-              
-              <div className="flex flex-col gap-3 pt-2 mt-auto">
-                <Link href="/login" className="w-full">
-                  <Button variant="secondary" className="w-full justify-center min-h-[52px] text-base">
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/subscribe" className="w-full">
-                  <Button variant="primary" className="w-full justify-center min-h-[52px] text-base">
-                    Subscribe &rarr;
+            <div className="site-container py-6 flex flex-col gap-4">
+              {NAV_LINKS.map((link) => {
+                const isActive = pathname === link.href;
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={cn(
+                      "font-heading font-medium text-lg py-2 border-b border-surface transition-colors",
+                      isActive ? "text-primary" : "text-text-primary"
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
+              <div className="pt-2 flex flex-col gap-3">
+                <Link href="/admin/login">
+                  <Button variant="ghost" size="lg" className="w-full flex items-center justify-center gap-2 border border-border">
+                    <Shield size={16} className="text-primary" /> Admin Portal
                   </Button>
                 </Link>
               </div>

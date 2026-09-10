@@ -2,17 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { MapPin, Phone, MessageCircle, Share2, Globe, Send } from "lucide-react";
+import { MapPin, Phone, MessageCircle, Share2, Globe, Send, Shield } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
 
 export default function Footer() {
-  const pathname = usePathname();
-
-  if (pathname === '/login' || pathname === '/subscribe') {
-    return null;
-  }
-
   return (
     <footer className="bg-dark text-white pt-16 pb-8">
       <div className="site-container">
@@ -33,7 +26,7 @@ export default function Footer() {
               Stay Fit. Stay Healthy.
             </p>
             <p className="text-white/70 text-sm max-w-sm mb-4">
-              Your science-backed wellness platform for a longer, healthier, and happier life.
+              Your centralized digital health media and medical news aggregation platform.
             </p>
             <div className="flex gap-4 text-white/60">
               <a href="#" className="hover:text-accent transition-colors"><Globe size={20} /></a>
@@ -45,7 +38,7 @@ export default function Footer() {
 
           {/* Column 2: Quick Links */}
           <div className="flex flex-col gap-4">
-            <h4 className="font-display text-xl text-white mb-2">Quick Links</h4>
+            <h4 className="font-display text-xl text-white mb-2">Sections & Media</h4>
             <nav className="flex flex-col gap-3">
               {NAV_LINKS.map((link) => (
                 <Link
@@ -58,11 +51,11 @@ export default function Footer() {
                 </Link>
               ))}
               <Link
-                href="/subscribe"
-                className="text-white/70 hover:text-white transition-colors flex items-center gap-2 group"
+                href="/admin/login"
+                className="text-white/50 hover:text-primary transition-colors flex items-center gap-2 group mt-2 pt-2 border-t border-white/10"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-primary/0 group-hover:bg-primary transition-colors" />
-                Subscribe
+                <Shield size={14} className="text-primary" />
+                Editorial Admin
               </Link>
             </nav>
           </div>
@@ -89,8 +82,9 @@ export default function Footer() {
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-white/50">
           <p>Copyright &copy; {new Date().getFullYear()} Healthghuru. All rights reserved.</p>
           <div className="flex gap-4 mt-4 md:mt-0">
-            <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
+            <Link href="/news" className="hover:text-white transition-colors">Health News</Link>
+            <Link href="/admin/login" className="hover:text-white transition-colors">Admin</Link>
           </div>
         </div>
       </div>
