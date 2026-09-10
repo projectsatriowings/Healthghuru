@@ -243,7 +243,7 @@ export function YouTubePlayer({
           showFeedback('play');
         }
       } catch {
-        // Fallback: If programmatic toggle fails, reload iframe with autoplay
+        // Fallback
         setIsPlaying((prev) => !prev);
       }
     } else {
@@ -301,7 +301,6 @@ export function YouTubePlayer({
   // Keyboard Shortcuts (Space to Play/Pause, M for Mute, F for Fullscreen)
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't intercept if typing in an input/textarea
       const target = e.target as HTMLElement;
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable) {
         return;
@@ -348,45 +347,17 @@ export function YouTubePlayer({
   const displayThumbnail =
     thumbnailUrl || (cleanVideoId ? `https://i.ytimg.com/vi/${cleanVideoId}/hqdefault.jpg` : '/images/exercise_plank.png');
 
-  // Case 1: Unsupported or missing video source
-  if (parsed.type === 'unsupported' || parsed.type === 'empty' || (!cleanVideoId && parsed.type !== 'direct')) {
+  // Case 1: Instagram Reel / Post Embed
+  if (parsed.type === 'instagram' && parsed.instagramCode) {
     return (
-      <div className="bg-gradient-to-br from-[#121820] to-[#0A0E13] rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-border flex flex-col items-center justify-center p-6 sm:p-10 text-center">
-        {displayThumbnail && (
-          <div className="absolute inset-0 opacity-20 filter blur-md">
-            <Image src={displayThumbnail} alt={title} fill className="object-cover" unoptimized />
-          </div>
-        )}
-        <div className="relative z-10 max-w-lg space-y-4">
-          <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto shadow-inner">
-            <AlertCircle size={26} />
-          </div>
-          <div className="space-y-1.5">
-            <h3 className="text-white font-heading font-semibold text-lg sm:text-xl line-clamp-1">{title}</h3>
-            <p className="text-text-muted text-xs sm:text-sm">
-              This video stream is available directly from the publisher channel.
-            </p>
-          </div>
-          {canonicalUrl ? (
-            <a
-              href={canonicalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#E50914] hover:bg-[#c40812] text-white text-xs font-semibold shadow-lg shadow-red-600/20 transition-all hover:scale-105"
-            >
-              Watch Video at Source <ExternalLink size={14} />
-            </a>
-          ) : (
-            <a
-              href={`https://www.youtube.com/results?search_query=${encodeURIComponent(title)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary hover:bg-primary-dark text-white text-xs font-semibold shadow-lg transition-all"
-            >
-              Search on YouTube <ExternalLink size={14} />
-            </a>
-          )}
-        </div>
+      <div className="bg-black rounded-3xl overflow-hidden shadow-2xl relative border border-border flex items-center justify-center max-w-md mx-auto aspect-[9/16] min-h-[560px] w-full">
+        <iframe
+          src={`https://www.instagram.com/reel/${parsed.instagramCode}/embed`}
+          title={title}
+          className="w-full h-full border-0"
+          allowFullScreen
+          loading="eager"
+        />
       </div>
     );
   }
@@ -464,7 +435,50 @@ export function YouTubePlayer({
     );
   }
 
-  // Case 3: Interactive YouTube Player (API + Custom Click-to-Play/Pause Controller)
+  // Case 3: Unsupported or missing video source
+  if (parsed.type === 'unsupported' || parsed.type === 'empty' || (!cleanVideoId && parsed.type !== 'direct')) {
+    return (
+      <div className="bg-gradient-to-br from-[#121820] to-[#0A0E13] rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-border flex flex-col items-center justify-center p-6 sm:p-10 text-center">
+        {displayThumbnail && (
+          <div className="absolute inset-0 opacity-20 filter blur-md">
+            <Image src={displayThumbnail} alt={title} fill className="object-cover" unoptimized />
+          </div>
+        )}
+        <div className="relative z-10 max-w-lg space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center mx-auto shadow-inner">
+            <AlertCircle size={26} />
+          </div>
+          <div className="space-y-1.5">
+            <h3 className="text-white font-heading font-semibold text-lg sm:text-xl line-clamp-1">{title}</h3>
+            <p className="text-text-muted text-xs sm:text-sm">
+              This video is available directly from the publisher source.
+            </p>
+          </div>
+          {canonicalUrl ? (
+            <a
+              href={canonicalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#E50914] hover:bg-[#c40812] text-white text-xs font-semibold shadow-lg shadow-red-600/20 transition-all hover:scale-105"
+            >
+              Watch Video at Source <ExternalLink size={14} />
+            </a>
+          ) : (
+            <a
+              href={`https://www.youtube.com/results?search_query=${encodeURIComponent(title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary hover:bg-primary-dark text-white text-xs font-semibold shadow-lg transition-all"
+            >
+              Search on YouTube <ExternalLink size={14} />
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Case 4: Interactive YouTube Player (API + Custom Click-to-Play/Pause Controller)
   return (
     <div
       ref={containerRef}

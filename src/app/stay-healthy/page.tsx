@@ -20,6 +20,8 @@ export const metadata: Metadata = {
   description: "Evidence-based tips, scientific guides, and practical strategies for Nutrition, Fitness, Mental Health, and Sleep.",
 };
 
+export const revalidate = 60;
+
 export default async function StayHealthyPage() {
   const pillarGuides = await sql`
     SELECT i.*, s.name as source_name

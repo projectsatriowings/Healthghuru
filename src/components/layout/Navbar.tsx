@@ -93,6 +93,7 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
+                    prefetch={true}
                     className={cn(
                       "font-heading font-semibold text-sm xl:text-[15px] tracking-wide transition-colors relative py-2 whitespace-nowrap",
                       isActive
@@ -185,6 +186,7 @@ export default function Navbar() {
                       <Link
                         key={link.href}
                         href={link.href}
+                        prefetch={true}
                         className={cn(
                           "flex items-center justify-between px-3.5 py-3 rounded-xl font-heading text-sm transition-all",
                           isActive

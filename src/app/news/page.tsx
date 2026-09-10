@@ -8,6 +8,8 @@ import { BreakingNewsTicker } from '@/components/media/BreakingNewsTicker';
 import { HealthDisclaimer } from '@/components/media/HealthDisclaimer';
 import Link from 'next/link';
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: 'Health News | HealthGhuru — Verified Global Health & Medical Headlines',
   description: 'Real-time health news, medical research updates, preventive care announcements, and evidence-based stories from verified medical sources.',
@@ -18,60 +20,63 @@ export default async function NewsPage({
 }: {
   searchParams: { category?: string };
 }) {
-  const categoryFilter = searchParams.category;
+  const categoryFilter = searchParams?.category;
 
-  const breakingItems = await sql`
-    SELECT id, title, slug, category, canonical_url, is_external,
-           (SELECT name FROM content_sources WHERE id = content_items.source_id) as source_name
-    FROM content_items
-    WHERE is_breaking = TRUE AND status = 'published' AND deleted_at IS NULL
-    ORDER BY published_at DESC
-    LIMIT 5
-  `;
-
-  let newsItems;
-  if (categoryFilter) {
-    newsItems = await sql`
-      SELECT i.*, s.name as source_name
-      FROM content_items i
-      LEFT JOIN content_sources s ON i.source_id = s.id
-      WHERE i.content_type = 'news' AND i.status = 'published' AND i.deleted_at IS NULL
-        AND LOWER(i.category) = LOWER(${categoryFilter})
-      ORDER BY i.published_at DESC
-      LIMIT 24
-    `;
-  } else {
-    newsItems = await sql`
-      SELECT i.*, s.name as source_name
-      FROM content_items i
-      LEFT JOIN content_sources s ON i.source_id = s.id
-      WHERE i.content_type = 'news' AND i.status = 'published' AND i.deleted_at IS NULL
-      ORDER BY i.published_at DESC
-      LIMIT 24
-    `;
-  }
-
-  const categories = await sql`
-    SELECT name, slug FROM content_categories ORDER BY display_order ASC, name ASC LIMIT 10
-  `;
+  // Execute database queries in parallel for instant sub-second rendering
+  const [breakingItems, categories, newsItems] = await Promise.all([
+    sql`
+      SELECT id, title, slug, category, canonical_url, is_external,
+             (SELECT name FROM content_sources WHERE id = content_items.source_id) as source_name
+      FROM content_items
+      WHERE is_breaking = TRUE AND status = 'published' AND deleted_at IS NULL
+      ORDER BY published_at DESC
+      LIMIT 5
+    `,
+    sql`
+      SELECT name, slug FROM content_categories WHERE is_enabled = TRUE ORDER BY display_order ASC, name ASC LIMIT 12
+    `,
+    categoryFilter
+      ? sql`
+          SELECT i.*, s.name as source_name
+          FROM content_items i
+          LEFT JOIN content_sources s ON i.source_id = s.id
+          WHERE i.content_type = 'news' AND i.status = 'published' AND i.deleted_at IS NULL
+            AND (
+              LOWER(i.category) = LOWER(${categoryFilter})
+              OR LOWER(COALESCE(i.subcategory, '')) = LOWER(${categoryFilter})
+            )
+          ORDER BY i.published_at DESC
+          LIMIT 24
+        `
+      : sql`
+          SELECT i.*, s.name as source_name
+          FROM content_items i
+          LEFT JOIN content_sources s ON i.source_id = s.id
+          WHERE i.content_type = 'news' AND i.status = 'published' AND i.deleted_at IS NULL
+          ORDER BY i.published_at DESC
+          LIMIT 24
+        `,
+  ]);
 
   return (
     <div className="pb-20 bg-surface/30 min-h-screen">
       {breakingItems.length > 0 && <BreakingNewsTicker items={breakingItems} />}
 
       <div className={`site-container ${breakingItems.length > 0 ? 'mt-6 sm:mt-8' : 'pt-6 sm:pt-10'} space-y-8`}>
+        {/* Centered Section Header */}
         <ScrollReveal>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
+          <div className="w-full flex flex-col items-center justify-center text-center border-b border-border pb-6">
             <SectionHeader
               eyebrow="Live Health News"
               title="Global Health & Medical Updates"
               subtitle="Curated from world health organizations, leading research institutes, and accredited publishers."
+              centered
             />
           </div>
         </ScrollReveal>
 
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Centered Category Pills */}
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Link
             href="/news"
             className={`px-4 py-1.5 rounded-full text-xs font-heading font-medium transition-all ${
@@ -102,11 +107,17 @@ export default async function NewsPage({
 
         {/* News Grid */}
         {newsItems.length === 0 ? (
-          <div className="bg-white rounded-2xl p-12 text-center border border-border shadow-sm">
+          <div className="bg-white rounded-2xl p-12 text-center border border-border shadow-sm max-w-xl mx-auto">
             <h3 className="font-display text-xl text-dark mb-1">No News Available</h3>
-            <p className="text-sm text-text-muted">
+            <p className="text-sm text-text-muted mb-4">
               There are currently no articles published in this category. Check back soon.
             </p>
+            <Link
+              href="/news"
+              className="inline-block px-5 py-2.5 bg-primary text-white rounded-full text-xs font-semibold hover:bg-primary-dark transition-all shadow-sm"
+            >
+              View All News
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

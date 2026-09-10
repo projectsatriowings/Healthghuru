@@ -7,8 +7,7 @@ import { ContentCard } from '@/components/media/ContentCard';
 import { HealthDisclaimer } from '@/components/media/HealthDisclaimer';
 import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Health Videos | HealthGhuru — Verified Medical & Wellness Video Guides',
@@ -20,80 +19,59 @@ export default async function VideosPage({
 }: {
   searchParams: { category?: string };
 }) {
-  const categoryFilter = searchParams.category;
+  const categoryFilter = searchParams?.category;
 
-  // Dynamically load active categories with published videos
-  const categories = await sql`
-    SELECT c.name, c.slug, c.display_order
-    FROM content_categories c
-    WHERE c.slug != 'wellness'
-      AND EXISTS (
-        SELECT 1 FROM content_items i
-        WHERE i.content_type = 'video' AND i.status = 'published' AND i.deleted_at IS NULL
-          AND (
-            LOWER(i.category) = LOWER(c.name)
-            OR LOWER(COALESCE(i.subcategory, '')) = LOWER(c.name)
-            OR COALESCE(i.raw_metadata->'matched_categories', '[]'::jsonb) @> jsonb_build_array(c.name)
-          )
-      )
-    ORDER BY c.display_order ASC;
-  `;
+  // Run queries in parallel for instant sub-second response
+  const [categories, allVideos] = await Promise.all([
+    sql`
+      SELECT c.name, c.slug, c.display_order
+      FROM content_categories c
+      WHERE c.is_enabled = TRUE
+      ORDER BY c.display_order ASC, c.name ASC
+      LIMIT 12;
+    `,
+    categoryFilter
+      ? sql`
+          SELECT i.*, s.name as source_name
+          FROM content_items i
+          LEFT JOIN content_sources s ON i.source_id = s.id
+          WHERE i.content_type = 'video' AND i.status = 'published' AND i.deleted_at IS NULL
+            AND (
+              LOWER(i.category) = LOWER(${categoryFilter})
+              OR LOWER(COALESCE(i.subcategory, '')) = LOWER(${categoryFilter})
+            )
+          ORDER BY i.published_at DESC
+          LIMIT 36;
+        `
+      : sql`
+          SELECT i.*, s.name as source_name
+          FROM content_items i
+          LEFT JOIN content_sources s ON i.source_id = s.id
+          WHERE i.content_type = 'video' AND i.status = 'published' AND i.deleted_at IS NULL
+          ORDER BY i.published_at DESC
+          LIMIT 36;
+        `,
+  ]);
 
-  let videos;
-  if (categoryFilter) {
-    const matchedCategory = categories.find(
-      (c: any) =>
-        c.name.toLowerCase() === categoryFilter.toLowerCase() ||
-        c.slug.toLowerCase() === categoryFilter.toLowerCase()
-    );
-    const filterName = matchedCategory ? matchedCategory.name : categoryFilter;
-    const filterJson = JSON.stringify([filterName]);
-
-    videos = await sql`
-      SELECT i.*, s.name as source_name
-      FROM content_items i
-      LEFT JOIN content_sources s ON i.source_id = s.id
-      WHERE i.content_type = 'video' AND i.status = 'published' AND i.deleted_at IS NULL
-        AND (
-          LOWER(i.category) = LOWER(${filterName})
-          OR LOWER(COALESCE(i.subcategory, '')) = LOWER(${filterName})
-          OR COALESCE(i.raw_metadata->'matched_categories', '[]'::jsonb) @> ${filterJson}::jsonb
-          OR EXISTS (
-            SELECT 1 FROM content_item_tags cit
-            JOIN content_tags ct ON cit.tag_id = ct.id
-            WHERE cit.content_item_id = i.id
-              AND (LOWER(ct.name) = LOWER(${filterName}) OR LOWER(ct.slug) = LOWER(${filterName}))
-          )
-        )
-      ORDER BY i.published_at DESC
-      LIMIT 36
-    `;
-  } else {
-    videos = await sql`
-      SELECT i.*, s.name as source_name
-      FROM content_items i
-      LEFT JOIN content_sources s ON i.source_id = s.id
-      WHERE i.content_type = 'video' AND i.status = 'published' AND i.deleted_at IS NULL
-      ORDER BY i.published_at DESC
-      LIMIT 36
-    `;
-  }
+  const videos = allVideos;
 
   return (
     <div className="pt-6 sm:pt-10 pb-20 bg-surface/30 min-h-screen">
       <div className="site-container space-y-8">
+        {/* Centered Section Header */}
         <ScrollReveal>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-border pb-6">
+          <div className="w-full flex flex-col items-center justify-center text-center border-b border-border pb-6">
             <SectionHeader
               eyebrow="Visual Wellness"
               title="Health & Medical Video Library"
               subtitle="Verified video content from accredited medical professionals, fitness instructors, and nutrition specialists."
+              centered
             />
           </div>
         </ScrollReveal>
 
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-2">
+        {/* Centered Category Pills */}
+        <div className="flex flex-wrap items-center justify-center gap-2">
           <Link
             href="/videos"
             className={`px-4 py-1.5 rounded-full text-xs font-heading font-medium transition-all ${
@@ -126,7 +104,7 @@ export default async function VideosPage({
 
         {/* Video Grid */}
         {videos.length === 0 ? (
-          <div className="bg-white rounded-2xl p-12 text-center border border-border shadow-sm">
+          <div className="bg-white rounded-2xl p-12 text-center border border-border shadow-sm max-w-xl mx-auto">
             <h3 className="font-display text-xl text-dark mb-1">
               No Videos Found {categoryFilter ? `in ${categoryFilter}` : ''}
             </h3>
@@ -135,7 +113,7 @@ export default async function VideosPage({
             </p>
             <Link
               href="/videos"
-              className="inline-block px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/90 transition-all"
+              className="inline-block px-5 py-2.5 bg-primary text-white rounded-full text-xs font-semibold hover:bg-primary-dark transition-all shadow-sm"
             >
               View All Videos
             </Link>
