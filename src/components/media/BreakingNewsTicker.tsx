@@ -34,17 +34,17 @@ export function BreakingNewsTicker({ items }: { items: (BreakingItem | any)[] })
   const targetHref = current.is_external ? current.canonical_url : `/blog/${current.slug}`;
 
   return (
-    <div className="bg-dark text-white border-b border-primary/20 py-2.5 px-4 z-40 relative">
-      <div className="site-container flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3 overflow-hidden flex-1">
+    <div className="bg-dark text-white border-b border-primary/20 py-2 px-3 sm:px-4 z-40 relative">
+      <div className="site-container flex items-center justify-between gap-2.5 sm:gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 overflow-hidden flex-1 min-w-0">
           {/* Breaking badge */}
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-rose-600 text-white font-heading font-bold text-xs shrink-0 uppercase tracking-wider animate-pulse">
-            <Zap size={12} className="fill-white" /> Breaking Health
+          <div className="flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full bg-rose-600 text-white font-heading font-bold text-[10px] sm:text-xs shrink-0 uppercase tracking-wider animate-pulse">
+            <Zap size={11} className="fill-white sm:w-3 sm:h-3" /> Breaking
           </div>
 
           {/* Headline link */}
-          <div className="truncate text-xs sm:text-sm font-medium">
-            <span className="text-secondary font-semibold mr-2">[{current.category}]</span>
+          <div className="truncate text-xs sm:text-sm font-medium min-w-0">
+            <span className="text-secondary font-semibold mr-1.5 hidden sm:inline">[{current.category}]</span>
             <a
               href={targetHref}
               target={current.is_external ? '_blank' : '_self'}

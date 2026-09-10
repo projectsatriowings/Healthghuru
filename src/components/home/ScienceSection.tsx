@@ -29,9 +29,9 @@ export default function ScienceSection() {
             </ScrollReveal>
 
             {/* Floating Badge */}
-            <ScrollReveal delay={0.4} variant="scaleUp" className="absolute -bottom-6 -right-6 lg:-right-12 z-10">
-              <div className="bg-primary text-white rounded-full px-6 py-3 font-heading font-semibold text-sm shadow-xl border-4 border-surface-alt flex items-center gap-2">
-                Medical Expert Verified <CheckCircle2 size={18} />
+            <ScrollReveal delay={0.4} variant="scaleUp" className="absolute bottom-3 right-3 sm:-bottom-6 sm:-right-6 lg:-right-12 z-10">
+              <div className="bg-primary text-white rounded-full px-4 py-2 sm:px-6 sm:py-3 font-heading font-semibold text-xs sm:text-sm shadow-xl border-2 sm:border-4 border-surface-alt flex items-center gap-1.5 sm:gap-2">
+                Medical Expert Verified <CheckCircle2 size={16} className="sm:w-[18px] sm:h-[18px]" />
               </div>
             </ScrollReveal>
           </div>
