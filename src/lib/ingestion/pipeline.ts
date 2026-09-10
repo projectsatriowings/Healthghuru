@@ -132,7 +132,11 @@ export async function runIngestionPipeline(
             ${item.durationSeconds || null}, ${item.videoId || null},
             ${dedupe.existingItemId ? dedupe.existingItemId : null}::uuid,
             ${dedupe.confidence},
-            ${JSON.stringify({ scoringReasons: scoring.reasons, sourceMetadata: item.sourceMetadata })}::jsonb,
+            ${JSON.stringify({ 
+              scoringReasons: scoring.reasons, 
+              sourceMetadata: item.sourceMetadata,
+              matched_categories: classification.matchedCategories 
+            })}::jsonb,
             CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
           )
           ON CONFLICT (slug) DO UPDATE SET
@@ -140,6 +144,9 @@ export async function runIngestionPipeline(
             excerpt = EXCLUDED.excerpt,
             description = EXCLUDED.description,
             image_url = EXCLUDED.image_url,
+            category = EXCLUDED.category,
+            subcategory = EXCLUDED.subcategory,
+            raw_metadata = EXCLUDED.raw_metadata,
             quality_score = EXCLUDED.quality_score,
             updated_at = CURRENT_TIMESTAMP;
         `;

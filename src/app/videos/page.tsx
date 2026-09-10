@@ -7,6 +7,9 @@ import { ContentCard } from '@/components/media/ContentCard';
 import { HealthDisclaimer } from '@/components/media/HealthDisclaimer';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const metadata: Metadata = {
   title: 'Health Videos | HealthGhuru — Verified Medical & Wellness Video Guides',
   description: 'Watch doctor-led wellness breakdowns, fitness routines, nutrition science explainers, and mental health practices from certified channels.',
@@ -19,16 +22,51 @@ export default async function VideosPage({
 }) {
   const categoryFilter = searchParams.category;
 
+  // Dynamically load active categories with published videos
+  const categories = await sql`
+    SELECT c.name, c.slug, c.display_order
+    FROM content_categories c
+    WHERE c.slug != 'wellness'
+      AND EXISTS (
+        SELECT 1 FROM content_items i
+        WHERE i.content_type = 'video' AND i.status = 'published' AND i.deleted_at IS NULL
+          AND (
+            LOWER(i.category) = LOWER(c.name)
+            OR LOWER(COALESCE(i.subcategory, '')) = LOWER(c.name)
+            OR COALESCE(i.raw_metadata->'matched_categories', '[]'::jsonb) @> jsonb_build_array(c.name)
+          )
+      )
+    ORDER BY c.display_order ASC;
+  `;
+
   let videos;
   if (categoryFilter) {
+    const matchedCategory = categories.find(
+      (c: any) =>
+        c.name.toLowerCase() === categoryFilter.toLowerCase() ||
+        c.slug.toLowerCase() === categoryFilter.toLowerCase()
+    );
+    const filterName = matchedCategory ? matchedCategory.name : categoryFilter;
+    const filterJson = JSON.stringify([filterName]);
+
     videos = await sql`
       SELECT i.*, s.name as source_name
       FROM content_items i
       LEFT JOIN content_sources s ON i.source_id = s.id
       WHERE i.content_type = 'video' AND i.status = 'published' AND i.deleted_at IS NULL
-        AND LOWER(i.category) = LOWER(${categoryFilter})
+        AND (
+          LOWER(i.category) = LOWER(${filterName})
+          OR LOWER(COALESCE(i.subcategory, '')) = LOWER(${filterName})
+          OR COALESCE(i.raw_metadata->'matched_categories', '[]'::jsonb) @> ${filterJson}::jsonb
+          OR EXISTS (
+            SELECT 1 FROM content_item_tags cit
+            JOIN content_tags ct ON cit.tag_id = ct.id
+            WHERE cit.content_item_id = i.id
+              AND (LOWER(ct.name) = LOWER(${filterName}) OR LOWER(ct.slug) = LOWER(${filterName}))
+          )
+        )
       ORDER BY i.published_at DESC
-      LIMIT 24
+      LIMIT 36
     `;
   } else {
     videos = await sql`
@@ -37,13 +75,9 @@ export default async function VideosPage({
       LEFT JOIN content_sources s ON i.source_id = s.id
       WHERE i.content_type = 'video' AND i.status = 'published' AND i.deleted_at IS NULL
       ORDER BY i.published_at DESC
-      LIMIT 24
+      LIMIT 36
     `;
   }
-
-  const categories = await sql`
-    SELECT name, slug FROM content_categories ORDER BY display_order ASC, name ASC LIMIT 10
-  `;
 
   return (
     <div className="pt-6 sm:pt-10 pb-20 bg-surface/30 min-h-screen">
@@ -71,7 +105,9 @@ export default async function VideosPage({
             All Videos
           </Link>
           {categories.map((c: any) => {
-            const active = categoryFilter?.toLowerCase() === c.name.toLowerCase();
+            const active =
+              categoryFilter?.toLowerCase() === c.name.toLowerCase() ||
+              categoryFilter?.toLowerCase() === c.slug.toLowerCase();
             return (
               <Link
                 key={c.slug}
@@ -91,10 +127,18 @@ export default async function VideosPage({
         {/* Video Grid */}
         {videos.length === 0 ? (
           <div className="bg-white rounded-2xl p-12 text-center border border-border shadow-sm">
-            <h3 className="font-display text-xl text-dark mb-1">No Videos Found</h3>
-            <p className="text-sm text-text-muted">
-              Configure or fetch YouTube channels in the admin dashboard to populate the video gallery.
+            <h3 className="font-display text-xl text-dark mb-1">
+              No Videos Found {categoryFilter ? `in ${categoryFilter}` : ''}
+            </h3>
+            <p className="text-sm text-text-muted mb-4">
+              We haven&apos;t indexed any videos under this topic yet. Check back soon or explore our full library.
             </p>
+            <Link
+              href="/videos"
+              className="inline-block px-4 py-2 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/90 transition-all"
+            >
+              View All Videos
+            </Link>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -164,6 +164,16 @@ export class RssSourceAdapter extends BaseSourceAdapter {
     // Slug
     const slug = generateSlug(title, externalId);
 
+    // Auto-detect Instagram Reels and video URLs
+    const isVideo = canonicalUrl.includes('instagram.com/reel') ||
+                    canonicalUrl.includes('instagram.com/p/') ||
+                    canonicalUrl.includes('youtube.com') ||
+                    canonicalUrl.includes('youtu.be') ||
+                    canonicalUrl.includes('vimeo.com') ||
+                    item.enclosure?.['@_type']?.startsWith('video/') ||
+                    source.name.toLowerCase().includes('reel') ||
+                    source.name.toLowerCase().includes('video');
+
     return {
       externalId,
       sourceId: source.id,
@@ -177,7 +187,7 @@ export class RssSourceAdapter extends BaseSourceAdapter {
       imageUrl,
       authorName,
       publishedAt,
-      contentType: 'news',
+      contentType: isVideo ? 'video' : 'news',
       category: source.defaultCategory || 'Wellness',
       tags,
       language: source.language || 'en',

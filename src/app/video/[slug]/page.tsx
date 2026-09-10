@@ -34,7 +34,12 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
   }
 
   const video = items[0];
-  const videoId = video.video_id || (video.canonical_url.match(/v=([a-zA-Z0-9_-]+)/) || [])[1];
+  const isInstagram = video.canonical_url.includes('instagram.com');
+  const instagramMatch = video.canonical_url.match(/instagram\.com\/(?:reel|p)\/([a-zA-Z0-9_-]+)/);
+  const instagramCode = instagramMatch ? instagramMatch[1] : null;
+
+  const youtubeMatch = video.canonical_url.match(/(?:v=|\/embed\/|\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  const videoId = video.video_id || (youtubeMatch ? youtubeMatch[1] : null);
 
   // Related videos
   const relatedVideos = await sql`
@@ -59,8 +64,15 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
         </Link>
 
         {/* Video Player Container */}
-        <div className="bg-black rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-border">
-          {videoId ? (
+        <div className={`bg-black rounded-3xl overflow-hidden shadow-2xl relative border border-border flex items-center justify-center ${isInstagram ? 'max-w-md mx-auto aspect-[9/16] min-h-[580px]' : 'aspect-video'}`}>
+          {isInstagram && instagramCode ? (
+            <iframe
+              src={`https://www.instagram.com/reel/${instagramCode}/embed`}
+              title={video.title}
+              className="w-full h-full border-0"
+              allowFullScreen
+            />
+          ) : videoId ? (
             <iframe
               src={`https://www.youtube-nocookie.com/embed/${videoId}?autoplay=0&rel=0`}
               title={video.title}
@@ -69,8 +81,16 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
               className="w-full h-full border-0"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-white text-sm">
-              Video player unavailable.
+            <div className="w-full h-full flex flex-col items-center justify-center text-white text-sm p-6 text-center">
+              <p className="mb-3">Preview unavailable in embedded player.</p>
+              <a
+                href={video.canonical_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 rounded-full bg-primary text-white text-xs font-semibold inline-flex items-center gap-1.5 hover:bg-primary-dark transition-colors"
+              >
+                Watch Directly at Source <ExternalLink size={12} />
+              </a>
             </div>
           )}
         </div>
@@ -81,7 +101,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
             <PillBadge active className="text-xs">{video.category || 'Wellness'}</PillBadge>
             <span className="text-xs text-text-muted">·</span>
             <span className="text-xs text-text-secondary flex items-center gap-1">
-              <ShieldCheck size={12} className="text-primary" /> Verified Channel
+              <ShieldCheck size={12} className="text-primary" /> {isInstagram ? 'Verified Creator' : 'Verified Channel'}
             </span>
           </div>
 
@@ -105,7 +125,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
               rel="noopener noreferrer"
               className="font-medium text-primary hover:underline inline-flex items-center gap-1 text-xs"
             >
-              Watch on YouTube <ExternalLink size={12} />
+              {isInstagram ? 'Watch on Instagram' : 'Watch on YouTube'} <ExternalLink size={12} />
             </a>
           </div>
 
