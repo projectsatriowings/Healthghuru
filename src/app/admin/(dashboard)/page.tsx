@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { requireAdmin } from '@/lib/auth/session';
 import { sql } from '@/lib/db';
 import { SectionHeader } from '@/components/ui/SectionHeader';
@@ -10,20 +11,26 @@ export const dynamic = 'force-dynamic';
 export default async function AdminDashboardPage() {
   await requireAdmin();
 
-  // Raw SQL queries to get live media platform KPI metrics
-  const totalContent = await sql`SELECT count(*) FROM content_items WHERE status = 'published' AND deleted_at IS NULL`;
-  const totalArticles = await sql`SELECT count(*) FROM articles WHERE status = 'published' AND deleted_at IS NULL`;
-  const activeSources = await sql`SELECT count(*) FROM content_sources WHERE enabled = TRUE`;
-  const totalUsers = await sql`SELECT count(*) FROM users`;
-
-  // Get data for the chart (Items published per day over last 30 days)
-  const chartDataRaw = await sql`
-    SELECT DATE(published_at) as date, COUNT(*) as count
-    FROM content_items
-    WHERE published_at >= CURRENT_DATE - INTERVAL '30 days' AND deleted_at IS NULL
-    GROUP BY DATE(published_at)
-    ORDER BY DATE(published_at) ASC
-  `;
+  // Run all independent analytics and chart queries in parallel
+  const [
+    totalContent,
+    totalArticles,
+    activeSources,
+    totalUsers,
+    chartDataRaw
+  ] = await Promise.all([
+    sql`SELECT count(*) FROM content_items WHERE status = 'published' AND deleted_at IS NULL`,
+    sql`SELECT count(*) FROM articles WHERE status = 'published' AND deleted_at IS NULL`,
+    sql`SELECT count(*) FROM content_sources WHERE enabled = TRUE`,
+    sql`SELECT count(*) FROM users`,
+    sql`
+      SELECT DATE(published_at) as date, COUNT(*) as count
+      FROM content_items
+      WHERE published_at >= CURRENT_DATE - INTERVAL '30 days' AND deleted_at IS NULL
+      GROUP BY DATE(published_at)
+      ORDER BY DATE(published_at) ASC
+    `
+  ]);
 
   // Generate the last 30 days to ensure continuity in the chart
   const chartData = [];
@@ -33,7 +40,7 @@ export default async function AdminDashboardPage() {
     const dateStr = d.toISOString().split('T')[0];
     
     // Find if we have data for this date
-    const found = chartDataRaw.find(row => {
+    const found = chartDataRaw.find((row: any) => {
       const rowDateStr = row.date instanceof Date ? row.date.toISOString().split('T')[0] : new Date(row.date).toISOString().split('T')[0];
       return rowDateStr === dateStr;
     });
@@ -45,10 +52,10 @@ export default async function AdminDashboardPage() {
   }
 
   const kpis = [
-    { label: 'Published Content', value: totalContent[0].count, icon: FileText, color: 'text-primary', bg: 'bg-primary/10' },
-    { label: 'Editorial Articles', value: totalArticles[0].count, icon: BookOpen, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: 'Active Ingestion Sources', value: activeSources[0].count, icon: Globe, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Registered Users', value: totalUsers[0].count, icon: Users, color: 'text-purple-600', bg: 'bg-purple-50' },
+    { label: 'Published Content', value: totalContent[0]?.count || 0, icon: FileText, color: 'text-primary', bg: 'bg-primary/10' },
+    { label: 'Editorial Articles', value: totalArticles[0]?.count || 0, icon: BookOpen, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Active Ingestion Sources', value: activeSources[0]?.count || 0, icon: Globe, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Registered Users', value: totalUsers[0]?.count || 0, icon: Users, color: 'text-purple-600', bg: 'bg-purple-50' },
   ];
 
   return (

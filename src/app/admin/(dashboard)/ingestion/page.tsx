@@ -10,7 +10,18 @@ export default async function AdminIngestionPage() {
   await requireAdmin();
 
   const runs = await sql`
-    SELECT r.*, s.type as source_type
+    SELECT 
+      r.id,
+      r.source_id,
+      r.source_name,
+      r.status,
+      r.started_at,
+      r.duration_ms,
+      r.items_found,
+      r.items_imported,
+      r.items_duplicated,
+      r.items_failed,
+      s.type as source_type
     FROM ingestion_runs r
     LEFT JOIN content_sources s ON r.source_id = s.id
     ORDER BY r.started_at DESC

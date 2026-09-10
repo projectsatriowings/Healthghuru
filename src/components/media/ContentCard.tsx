@@ -102,10 +102,14 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
               <span className="text-xs text-text-secondary font-medium">
                 {isOriginal ? 'HealthGhuru Original' : item.source_name || 'External'}
               </span>
-              <span className="text-xs text-text-muted">·</span>
-              <span suppressHydrationWarning className="text-xs text-text-muted">
-                {formatDate(item.published_at)}
-              </span>
+              {!isVideo && (
+                <>
+                  <span className="text-xs text-text-muted">·</span>
+                  <span suppressHydrationWarning className="text-xs text-text-muted">
+                    {formatDate(item.published_at)}
+                  </span>
+                </>
+              )}
             </div>
 
             <h3 className="font-heading font-semibold text-dark text-base sm:text-lg group-hover:text-primary transition-colors leading-snug line-clamp-2">
@@ -119,9 +123,11 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
               </a>
             </h3>
 
-            <p className="text-xs sm:text-sm text-text-secondary line-clamp-2 mt-1.5 leading-relaxed">
-              {item.excerpt || item.description || ''}
-            </p>
+            {!isVideo && (
+              <p className="text-xs sm:text-sm text-text-secondary line-clamp-2 mt-1.5 leading-relaxed">
+                {item.excerpt || item.description || ''}
+              </p>
+            )}
           </div>
 
           <div className="pt-2 flex items-center justify-between text-xs text-text-muted border-t border-border/40">
@@ -188,10 +194,12 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
       {/* Body */}
       <div className="p-5 flex-1 flex flex-col justify-between space-y-3">
         <div>
-          <div className="text-[11px] text-text-muted mb-1.5 flex items-center gap-1.5">
-            <Clock size={11} />
-            <span suppressHydrationWarning>{formatDate(item.published_at)}</span>
-          </div>
+          {!isVideo && (
+            <div className="text-[11px] text-text-muted mb-1.5 flex items-center gap-1.5">
+              <Clock size={11} />
+              <span suppressHydrationWarning>{formatDate(item.published_at)}</span>
+            </div>
+          )}
 
           <h3 className="font-heading font-semibold text-dark text-base group-hover:text-primary transition-colors leading-snug line-clamp-2">
             <a
@@ -204,9 +212,11 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
             </a>
           </h3>
 
-          <p className="text-xs text-text-secondary line-clamp-2 mt-2 leading-relaxed">
-            {item.excerpt || item.description || ''}
-          </p>
+          {!isVideo && (
+            <p className="text-xs text-text-secondary line-clamp-2 mt-2 leading-relaxed">
+              {item.excerpt || item.description || ''}
+            </p>
+          )}
         </div>
 
         {/* Card Footer */}

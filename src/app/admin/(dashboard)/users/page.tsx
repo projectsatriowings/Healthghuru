@@ -21,6 +21,7 @@ export default async function AdminUsersPage() {
     FROM users u
     LEFT JOIN user_plans p ON p.user_id = u.id
     ORDER BY u.name ASC
+    LIMIT 100
   ` as unknown as UserRow[];
 
   return (

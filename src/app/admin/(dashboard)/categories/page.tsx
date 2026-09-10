@@ -8,10 +8,24 @@ export default async function AdminCategoriesPage() {
   await requireAdmin();
 
   const categories = await sql`
-    SELECT c.*, COUNT(i.id)::int as item_count
+    WITH counts AS (
+      SELECT LOWER(category) as cat, COUNT(*)::int as count
+      FROM content_items
+      WHERE deleted_at IS NULL
+      GROUP BY LOWER(category)
+    )
+    SELECT 
+      c.id,
+      c.name,
+      c.slug,
+      c.description,
+      c.icon_name,
+      c.display_order,
+      c.is_enabled,
+      c.created_at,
+      COALESCE(counts.count, 0) as item_count
     FROM content_categories c
-    LEFT JOIN content_items i ON LOWER(c.name) = LOWER(i.category) AND i.deleted_at IS NULL
-    GROUP BY c.id
+    LEFT JOIN counts ON LOWER(c.name) = counts.cat
     ORDER BY c.display_order ASC, c.name ASC
   `;
 

@@ -3,9 +3,9 @@ import { Metadata } from 'next';
 import { sql } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ExternalLink, Calendar, User, ShieldCheck } from 'lucide-react';
+import { ArrowLeft, ExternalLink, User, ShieldCheck } from 'lucide-react';
+import { YouTubePlayer } from '@/components/media/YouTubePlayer';
 import { PillBadge } from '@/components/ui/PillBadge';
-import { formatDate } from '@/lib/utils';
 import { ContentCard } from '@/components/media/ContentCard';
 import { HealthDisclaimer } from '@/components/media/HealthDisclaimer';
 
@@ -105,19 +105,15 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
             </span>
           </div>
 
-          <h1 className="font-display text-2xl sm:text-3xl lg:text-4xl text-dark leading-tight">
-            {video.title}
-          </h1>
+            <h1 className="font-display text-2xl sm:text-3xl text-dark leading-tight">
+              {video.title}
+            </h1>
 
-          <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-t border-b border-border/40 text-xs text-text-muted">
-            <div className="flex items-center gap-4">
-              <span className="font-semibold text-dark flex items-center gap-1.5 text-sm">
-                <User size={15} className="text-primary" /> {video.author_name || video.source_name}
-              </span>
-              <span suppressHydrationWarning className="flex items-center gap-1">
-                <Calendar size={13} /> {formatDate(video.published_at)}
-              </span>
+            <div className="flex items-center gap-2 text-sm text-text-secondary">
+              <User size={15} className="text-primary" />
+              <span className="font-medium text-dark">{video.author_name || video.source_name || 'Health Ghuru'}</span>
             </div>
+          </div>
 
             <a
               href={video.canonical_url}
@@ -138,18 +134,20 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
 
         <HealthDisclaimer />
 
-        {/* Related Content */}
-        {relatedVideos.length > 0 && (
-          <div className="space-y-4 pt-4">
-            <h3 className="font-heading font-semibold text-dark text-xl">Related Health Videos</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedVideos.map((rel: any) => (
-                <ContentCard key={rel.id} item={rel} />
-              ))}
-            </div>
-          </div>
-        )}
+        {/* Related Content */ }
+  {
+    relatedVideos.length > 0 && (
+      <div className="space-y-4 pt-4">
+        <h3 className="font-heading font-semibold text-dark text-xl">Related Health Videos</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {relatedVideos.map((rel: any) => (
+            <ContentCard key={rel.id} item={rel} />
+          ))}
+        </div>
       </div>
-    </div>
+    )
+  }
+      </div >
+    </div >
   );
 }
