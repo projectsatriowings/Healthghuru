@@ -39,13 +39,21 @@ export default function Navbar() {
       <div className="site-container">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex-shrink-0 z-50 transition-transform hover:scale-105">
-            <div className="relative w-40 h-14 sm:h-16 -ml-2 md:ml-0">
+          <Link
+            href="/"
+            className="flex-shrink-0 z-50 transition-transform hover:scale-105 outline-none focus:outline-none focus:ring-0 focus-visible:outline-none active:outline-none border-0 select-none"
+            style={{ outline: 'none', border: 'none', boxShadow: 'none' }}
+          >
+            <div
+              className="relative w-40 h-14 sm:h-16 -ml-2 md:ml-0 outline-none border-0"
+              style={{ outline: 'none', border: 'none', boxShadow: 'none' }}
+            >
               <Image
                 src="/images/logo_transparent.png"
                 alt="HealthGhuru Logo"
                 fill
-                className="object-contain object-left"
+                className="object-contain object-left outline-none border-0"
+                style={{ outline: 'none', border: 'none' }}
                 priority
               />
             </div>

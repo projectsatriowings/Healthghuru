@@ -4,13 +4,12 @@ import Link from "next/link";
 import { Card } from "@/components/ui/Card";
 import { PillBadge } from "@/components/ui/PillBadge";
 import { Button } from "@/components/ui/Button";
+import { formatDate } from "@/lib/utils";
 
 export default function FeaturedArticle({ post }: { post?: any }) {
   if (!post) return null;
   
-  const publishDate = new Date(post.publish_date).toLocaleDateString('en-US', {
-    month: 'short', day: 'numeric', year: 'numeric'
-  });
+  const publishDate = formatDate(post.publish_date);
 
   return (
     <div className="py-8">
@@ -58,7 +57,7 @@ export default function FeaturedArticle({ post }: { post?: any }) {
             </div>
             <div className="flex flex-col">
               <span className="font-heading font-semibold text-sm text-dark">{post.author_name || "Dr. Sarah Jenkins"}</span>
-              <span className="text-text-muted text-xs">{publishDate} · {post.read_time} min read</span>
+              <span suppressHydrationWarning className="text-text-muted text-xs">{publishDate} · {post.read_time} min read</span>
             </div>
           </div>
         </div>

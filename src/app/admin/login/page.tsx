@@ -66,13 +66,21 @@ export default function AdminLoginPage() {
 
           {/* Logo */}
           <div className="flex justify-center mb-6">
-            <Link href="/" className="transition-transform hover:scale-105">
-              <div className="relative w-48 h-20">
+            <Link
+              href="/"
+              className="transition-transform hover:scale-105 outline-none focus:outline-none focus:ring-0 border-0"
+              style={{ outline: 'none', border: 'none', boxShadow: 'none' }}
+            >
+              <div
+                className="relative w-48 h-20 outline-none border-0"
+                style={{ outline: 'none', border: 'none', boxShadow: 'none' }}
+              >
                 <Image
                   src="/images/logo_transparent.png"
                   alt="HealthGhuru Logo"
                   fill
-                  className="object-contain"
+                  className="object-contain outline-none border-0"
+                  style={{ outline: 'none', border: 'none' }}
                   priority
                 />
               </div>

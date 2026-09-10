@@ -6,6 +6,7 @@ import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { HealthDisclaimer } from '@/components/media/HealthDisclaimer';
 import Image from 'next/image';
 import { BookOpen, ExternalLink, Calendar } from 'lucide-react';
+import { formatMonthYear } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Health Magazines & Periodicals | HealthGhuru — Medical Digests & Publications',
@@ -105,7 +106,7 @@ export default async function MagazinesPage() {
                 <div>
                   <div className="flex items-center gap-1.5 text-xs text-text-muted mb-2">
                     <Calendar size={12} />
-                    <span>{new Date(mag.published_at).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</span>
+                    <span suppressHydrationWarning>{formatMonthYear(mag.published_at)}</span>
                     <span>·</span>
                     <span className="text-dark font-medium">{mag.source_name}</span>
                   </div>
