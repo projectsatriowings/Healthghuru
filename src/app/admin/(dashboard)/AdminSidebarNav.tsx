@@ -8,7 +8,6 @@ import {
   FileText,
   Settings,
   CreditCard,
-  ShieldAlert,
   Rss,
   Activity,
   CheckSquare,
@@ -28,7 +27,6 @@ export function AdminSidebarNav() {
     { href: '/admin/categories', label: 'Taxonomy', icon: Layers },
     { href: '/admin/users', label: 'Users', icon: Users },
     { href: '/admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
-    { href: '/admin/audit-log', label: 'Audit Log', icon: ShieldAlert },
   ];
 
   return (
