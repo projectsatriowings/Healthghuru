@@ -2,7 +2,7 @@ import { requireAdmin } from '@/lib/auth/session';
 import { sql } from '@/lib/db';
 import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
-import { Users, FileText, Target, ShieldCheck } from 'lucide-react';
+import { Users, FileText, Globe, BookOpen } from 'lucide-react';
 import { DashboardChartClient } from './DashboardChartClient';
 
 export const dynamic = 'force-dynamic';
@@ -10,19 +10,19 @@ export const dynamic = 'force-dynamic';
 export default async function AdminDashboardPage() {
   await requireAdmin();
 
-  // Raw SQL queries to get KPI metrics
+  // Raw SQL queries to get live media platform KPI metrics
+  const totalContent = await sql`SELECT count(*) FROM content_items WHERE status = 'published' AND deleted_at IS NULL`;
+  const totalArticles = await sql`SELECT count(*) FROM articles WHERE status = 'published' AND deleted_at IS NULL`;
+  const activeSources = await sql`SELECT count(*) FROM content_sources WHERE enabled = TRUE`;
   const totalUsers = await sql`SELECT count(*) FROM users`;
-  const proUsers = await sql`SELECT count(*) FROM user_plans WHERE tier = 'pro'`;
-  const activeGoals = await sql`SELECT count(*) FROM app_vault_goals WHERE status = 'active'`;
-  const vaultRecords = await sql`SELECT count(*) FROM app_vault_records WHERE DATE(created_at) = CURRENT_DATE`;
 
-  // Get data for the chart (Records uploaded per day over last 30 days)
+  // Get data for the chart (Items published per day over last 30 days)
   const chartDataRaw = await sql`
-    SELECT DATE(created_at) as date, COUNT(*) as count
-    FROM app_vault_records
-    WHERE created_at >= CURRENT_DATE - INTERVAL '30 days'
-    GROUP BY DATE(created_at)
-    ORDER BY DATE(created_at) ASC
+    SELECT DATE(published_at) as date, COUNT(*) as count
+    FROM content_items
+    WHERE published_at >= CURRENT_DATE - INTERVAL '30 days' AND deleted_at IS NULL
+    GROUP BY DATE(published_at)
+    ORDER BY DATE(published_at) ASC
   `;
 
   // Generate the last 30 days to ensure continuity in the chart
@@ -34,7 +34,6 @@ export default async function AdminDashboardPage() {
     
     // Find if we have data for this date
     const found = chartDataRaw.find(row => {
-      // row.date might be a Date object or string depending on postgres driver
       const rowDateStr = row.date instanceof Date ? row.date.toISOString().split('T')[0] : new Date(row.date).toISOString().split('T')[0];
       return rowDateStr === dateStr;
     });
@@ -46,10 +45,10 @@ export default async function AdminDashboardPage() {
   }
 
   const kpis = [
-    { label: 'Total Users', value: totalUsers[0].count, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Pro Subscribers', value: proUsers[0].count, icon: ShieldCheck, color: 'text-primary', bg: 'bg-primary/10' },
-    { label: 'Records Today', value: vaultRecords[0].count, icon: FileText, color: 'text-purple-600', bg: 'bg-purple-50' },
-    { label: 'Active Goals', value: activeGoals[0].count, icon: Target, color: 'text-accent', bg: 'bg-accent/10' },
+    { label: 'Published Content', value: totalContent[0].count, icon: FileText, color: 'text-primary', bg: 'bg-primary/10' },
+    { label: 'Editorial Articles', value: totalArticles[0].count, icon: BookOpen, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Active Ingestion Sources', value: activeSources[0].count, icon: Globe, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Registered Users', value: totalUsers[0].count, icon: Users, color: 'text-purple-600', bg: 'bg-purple-50' },
   ];
 
   return (
