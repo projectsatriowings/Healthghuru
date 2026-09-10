@@ -27,7 +27,7 @@ export default async function MagazinesPage() {
   const displayMagazines = magazines;
 
   return (
-    <div className="pt-28 pb-20 bg-surface/30 min-h-screen">
+    <div className="pt-6 sm:pt-10 pb-20 bg-surface/30 min-h-screen">
       <div className="site-container space-y-8">
         <ScrollReveal>
           <div className="border-b border-border pb-6">
