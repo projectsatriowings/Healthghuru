@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Metadata } from "next";
 import StayHeroSection from "@/components/stay-healthy/StayHeroSection";
 import SixTips from "@/components/stay-healthy/SixTips";
@@ -6,13 +7,30 @@ import FiveExercises from "@/components/stay-healthy/FiveExercises";
 import SleepRisks from "@/components/stay-healthy/SleepRisks";
 import HealthierLivesAccordion from "@/components/stay-healthy/HealthierLivesAccordion";
 import MentalHealthEditorial from "@/components/stay-healthy/MentalHealthEditorial";
+import { sql } from "@/lib/db";
+import { ContentCard } from "@/components/media/ContentCard";
+import { SectionHeader } from "@/components/ui/SectionHeader";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { HealthDisclaimer } from "@/components/media/HealthDisclaimer";
+import Link from "next/link";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Stay Healthy | HealthGhuru",
-  description: "Evidence-based tips and strategies for Nutrition, Fitness, Mental Health, and Sleep.",
+  title: "Stay Healthy | HealthGhuru — Evidence-Based Wellness Pillars",
+  description: "Evidence-based tips, scientific guides, and practical strategies for Nutrition, Fitness, Mental Health, and Sleep.",
 };
 
-export default function StayHealthyPage() {
+export default async function StayHealthyPage() {
+  const pillarGuides = await sql`
+    SELECT i.*, s.name as source_name
+    FROM content_items i
+    LEFT JOIN content_sources s ON i.source_id = s.id
+    WHERE i.category IN ('Nutrition', 'Fitness', 'Mental Health', 'Sleep')
+      AND i.status = 'published' AND i.deleted_at IS NULL
+    ORDER BY i.published_at DESC
+    LIMIT 4
+  `;
+
   return (
     <>
       <StayHeroSection />
@@ -33,7 +51,7 @@ export default function StayHealthyPage() {
         imageUrl="/images/nutrition_pillar.png"
         imageAlt="Healthy Food"
         ctaText="Read Nutrition Articles →"
-        ctaHref="/blog?category=Nutrition"
+        ctaHref="/category/nutrition"
       />
 
       <ContentPillar
@@ -51,7 +69,7 @@ export default function StayHealthyPage() {
         imageAlt="Fitness Workout"
         reversed
         ctaText="Explore Workouts →"
-        ctaHref="/blog?category=Fitness"
+        ctaHref="/category/fitness"
         className="bg-surface-alt"
       />
 
@@ -70,7 +88,7 @@ export default function StayHealthyPage() {
         imageUrl="/images/mental_health_pillar.png"
         imageAlt="Mental Wellbeing"
         ctaText="Mental Health Guide →"
-        ctaHref="/blog?category=Mental+Health"
+        ctaHref="/category/mental-health"
       />
 
       <ContentPillar
@@ -87,14 +105,51 @@ export default function StayHealthyPage() {
         imageAlt="Good Sleep"
         reversed
         ctaText="Improve Your Sleep →"
-        ctaHref="/blog?category=Sleep"
+        ctaHref="/category/sleep"
         className="bg-surface-alt"
       />
+
+      {/* Database-Driven Recent Pillar Guides */}
+      {pillarGuides.length > 0 && (
+        <section className="py-16 bg-white border-t border-b border-border/50">
+          <div className="site-container">
+            <ScrollReveal>
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+                <div>
+                  <span className="text-xs font-semibold uppercase tracking-wider text-primary font-heading flex items-center gap-1.5 mb-1">
+                    <Sparkles size={14} /> Live Research & Guides
+                  </span>
+                  <SectionHeader
+                    title="Featured Pillar Guides"
+                    subtitle="Latest clinical advice and evidence-based articles fetched directly from medical authorities."
+                  />
+                </div>
+                <Link
+                  href="/latest"
+                  className="text-xs font-semibold text-primary hover:text-primary-dark inline-flex items-center gap-1 shrink-0"
+                >
+                  View All Feeds <ArrowRight size={14} />
+                </Link>
+              </div>
+            </ScrollReveal>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {pillarGuides.map((item: any) => (
+                <ContentCard key={item.id} item={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <HealthierLivesAccordion />
       <FiveExercises />
       <MentalHealthEditorial />
       <SleepRisks />
+
+      <div className="site-container pb-16">
+        <HealthDisclaimer />
+      </div>
     </>
   );
 }

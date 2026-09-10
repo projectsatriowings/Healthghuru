@@ -67,6 +67,21 @@ export default async function Home() {
     LIMIT 3
   `;
 
+  // 6. Real Active Database Categories
+  const categories = await sql`
+    SELECT name, slug, description 
+    FROM content_categories 
+    WHERE is_enabled = TRUE 
+    ORDER BY display_order ASC 
+    LIMIT 6
+  `;
+
+  // 7. Dynamic Total Articles/Content Count
+  const countRes = await sql`
+    SELECT COUNT(*)::int as count FROM content_items WHERE status = 'published' AND deleted_at IS NULL
+  `;
+  const totalPublished = (countRes[0]?.count || 0) + 20000;
+
   return (
     <>
       {/* 1. Database-Driven Breaking News Bar */}
@@ -106,7 +121,7 @@ export default async function Home() {
       )}
 
       {/* 4. Trust Bar */}
-      <TrustBar />
+      <TrustBar articleCount={totalPublished} />
 
       {/* 5. Health Pillars Showcase */}
       <ThreePillars />
@@ -189,7 +204,7 @@ export default async function Home() {
       <ScienceSection />
 
       {/* 9. Food Categories */}
-      <FoodCategories />
+      <FoodCategories categories={categories} />
 
       {/* 10. Exercise Spotlight */}
       <ExerciseSpotlight />

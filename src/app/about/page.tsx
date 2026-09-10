@@ -1,18 +1,27 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle2, Shield, Heart, MapPin, Phone, Mail } from "lucide-react";
+import { CheckCircle2, Shield, Heart, MapPin, Phone, Mail, Globe, ArrowRight, ShieldCheck } from "lucide-react";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Card } from "@/components/ui/Card";
 import TrustBar from "@/components/home/TrustBar";
+import { sql } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "About Us | HealthGhuru",
-  description: "Learn more about our mission to provide science-backed wellness advice.",
+  title: "About Us | HealthGhuru — Evidence-Based Health Intelligence",
+  description: "Learn more about our mission, medical review standards, and accredited syndication sources.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const sources = await sql`
+    SELECT name, type, website_url, trust_score, item_count,
+           LOWER(REPLACE(name, ' ', '-')) as slug
+    FROM content_sources 
+    WHERE enabled = TRUE 
+    ORDER BY priority ASC, name ASC
+  `;
   return (
     <>
       {/* Hero Banner */}
@@ -139,6 +148,60 @@ export default function AboutPage() {
               ))}
             </div>
           </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Database-Driven Accredited Sources Section */}
+      <section className="section-padding bg-surface/50 border-t border-b border-border">
+        <div className="site-container">
+          <ScrollReveal variant="fadeUp" className="text-center mb-12">
+            <SectionHeader
+              eyebrow="Accredited Syndication Partners"
+              title="Verified Medical Sources & Journals"
+              subtitle="We curate and syndicate directly from world-renowned healthcare systems, research agencies, and peer-reviewed digests."
+            />
+          </ScrollReveal>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {sources.map((source: any, i: number) => (
+              <ScrollReveal key={source.name} delay={i * 0.05}>
+                <div className="bg-white rounded-2xl p-6 border border-border shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between h-full">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[10px] font-mono uppercase px-2.5 py-0.5 rounded-full bg-surface text-text-muted border border-border">
+                        {source.type.toUpperCase()}
+                      </span>
+                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                        <ShieldCheck size={11} /> {source.trust_score || 'High'} Trust
+                      </span>
+                    </div>
+                    <h4 className="font-heading font-bold text-dark text-lg mb-2">
+                      {source.name}
+                    </h4>
+                  </div>
+
+                  <div className="pt-4 border-t border-border/40 mt-4 flex items-center justify-between">
+                    <Link
+                      href={`/source/${source.slug}`}
+                      className="text-xs font-semibold text-primary hover:text-primary-dark inline-flex items-center gap-1"
+                    >
+                      View Publications <ArrowRight size={12} />
+                    </Link>
+                    {source.website_url && (
+                      <a
+                        href={source.website_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-text-muted hover:text-dark inline-flex items-center gap-1"
+                      >
+                        <Globe size={13} />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
         </div>
       </section>
 

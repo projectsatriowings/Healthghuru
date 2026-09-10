@@ -23,51 +23,8 @@ export default async function MagazinesPage() {
     LIMIT 24
   `;
 
-  // Fallback curated issues if database has no magazine items yet
-  const displayMagazines = magazines.length > 0 ? magazines : [
-    {
-      id: 'mag-1',
-      title: 'Harvard Medicine: The Longevity Paradigm',
-      slug: 'harvard-medicine-longevity',
-      content_type: 'magazine' as const,
-      excerpt: 'Exploring the frontier of cellular senescence, NAD+ therapies, and sustainable metabolic health interventions.',
-      image_url: '/images/fitness_pillar.png',
-      canonical_url: 'https://hms.harvard.edu/magazine',
-      published_at: new Date().toISOString(),
-      author_name: 'Harvard Medical School',
-      category: 'Healthy Aging',
-      source_name: 'Harvard Medicine Magazine',
-      is_external: true,
-    },
-    {
-      id: 'mag-2',
-      title: 'NIH Research Matters: Breakthroughs in Metabolic Science',
-      slug: 'nih-research-matters-digest',
-      content_type: 'magazine' as const,
-      excerpt: 'A monthly summary of research advances funded by the National Institutes of Health exploring gut microbiome diversity.',
-      image_url: '/images/nutrition_pillar.png',
-      canonical_url: 'https://www.nih.gov/news-events/nih-research-matters',
-      published_at: new Date().toISOString(),
-      author_name: 'National Institutes of Health',
-      category: 'Medical Research',
-      source_name: 'NIH News in Health',
-      is_external: true,
-    },
-    {
-      id: 'mag-3',
-      title: 'Mayo Clinic Health Letter: Cardiovascular Prevention Guide',
-      slug: 'mayo-clinic-health-letter-cardio',
-      content_type: 'magazine' as const,
-      excerpt: 'Essential practical guidance from Mayo Clinic clinicians on managing blood pressure, arterial elasticity, and heart rhythm.',
-      image_url: '/images/exercise_push.png',
-      canonical_url: 'https://healthletter.mayoclinic.org',
-      published_at: new Date().toISOString(),
-      author_name: 'Mayo Foundation for Medical Education',
-      category: 'Heart Health',
-      source_name: 'Mayo Clinic',
-      is_external: true,
-    },
-  ];
+  // Fetched 100% dynamically from content_items
+  const displayMagazines = magazines;
 
   return (
     <div className="pt-28 pb-20 bg-surface/30 min-h-screen">

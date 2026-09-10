@@ -1,13 +1,19 @@
 import { AnimatedCounter } from "@/components/ui/AnimatedCounter";
 
-export default function TrustBar() {
+interface TrustBarProps {
+  articleCount?: number;
+}
+
+export default function TrustBar({ articleCount = 20000 }: TrustBarProps) {
+  const displayCount = Math.max(articleCount, 20000);
+
   return (
     <section className="bg-dark py-12 border-t border-b border-primary-dark">
       <div className="site-container">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
           
           <div className="flex flex-col items-center text-center px-6 border-white/20 md:border-r">
-            <AnimatedCounter value={20000} suffix="+" className="trust-bar-number font-mono text-4xl lg:text-5xl text-accent mb-2 font-bold" />
+            <AnimatedCounter value={displayCount} suffix="+" className="trust-bar-number font-mono text-4xl lg:text-5xl text-accent mb-2 font-bold" />
             <span className="trust-bar-label font-heading text-white uppercase tracking-widest">Expert Articles</span>
           </div>
 
