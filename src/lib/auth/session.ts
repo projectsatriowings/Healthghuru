@@ -1,17 +1,19 @@
 import 'server-only';
+import { cache } from 'react';
 import { auth } from './auth.config';
 import { redirect } from 'next/navigation';
 import { sql } from '@/lib/db';
 
-export async function getSession() {
+export const getSession = cache(async () => {
   return await auth();
-}
+});
 
 /**
- * The actual security boundary. Call this at the top of every admin
- * Server Component, Server Action, and Route Handler.
+ * The actual security boundary. Memoized via React cache() so multiple
+ * calls within the same request (e.g., layout + page) only execute the
+ * database verification query ONCE.
  */
-export async function requireAdmin() {
+export const requireAdmin = cache(async () => {
   const session = await getSession();
   if (!session?.user) {
     redirect('/admin/login');
@@ -28,4 +30,4 @@ export async function requireAdmin() {
   // Attach the freshest role to the session object
   session.user.role = user.role;
   return session;
-}
+});

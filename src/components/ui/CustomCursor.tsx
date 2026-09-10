@@ -85,13 +85,19 @@ export default function CustomCursor() {
     };
 
     const handleUp = () => setIsPressed(false);
-    const handleLeaveWindow = () => setTarget({ variant: 'default', rect: null, label: null });
+    const handleLeaveWindow = () => {
+      mouseX.set(-100);
+      mouseY.set(-100);
+      setTarget({ variant: 'default', rect: null, label: null });
+    };
+    const handleBlur = handleLeaveWindow;
 
     window.addEventListener('mousemove', handleMove);
     window.addEventListener('mouseover', handleOver);
     window.addEventListener('mousedown', handleDown);
     window.addEventListener('mouseup', handleUp);
     window.addEventListener('mouseleave', handleLeaveWindow);
+    window.addEventListener('blur', handleBlur);
 
     return () => {
       window.removeEventListener('mousemove', handleMove);
@@ -99,6 +105,7 @@ export default function CustomCursor() {
       window.removeEventListener('mousedown', handleDown);
       window.removeEventListener('mouseup', handleUp);
       window.removeEventListener('mouseleave', handleLeaveWindow);
+      window.removeEventListener('blur', handleBlur);
     };
   }, [mouseX, mouseY]);
 
@@ -111,15 +118,6 @@ export default function CustomCursor() {
     mq.addEventListener('change', listener);
     return () => mq.removeEventListener('change', listener);
   }, []);
-
-  useEffect(() => {
-    if (!isTouch && !reducedMotion) {
-      document.documentElement.classList.add('custom-cursor-active');
-      return () => {
-        document.documentElement.classList.remove('custom-cursor-active');
-      };
-    }
-  }, [isTouch, reducedMotion]);
 
   if (isTouch || reducedMotion) return null;
 

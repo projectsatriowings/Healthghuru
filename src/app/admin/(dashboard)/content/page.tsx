@@ -5,31 +5,42 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { UnifiedContentClient } from './UnifiedContentClient';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AdminContentPage() {
   await requireAdmin();
 
-  const items = await sql`
-    SELECT 
-      i.*,
-      s.name as source_name,
-      s.type as source_type
-    FROM content_items i
-    LEFT JOIN content_sources s ON i.source_id = s.id
-    WHERE i.deleted_at IS NULL
-    ORDER BY i.published_at DESC
-    LIMIT 200
-  `;
-
-  const categories = await sql`
-    SELECT id, name FROM content_categories ORDER BY display_order ASC, name ASC
-  `;
-
-  const sources = await sql`
-    SELECT id, name FROM content_sources ORDER BY name ASC
-  `;
+  // Run lightweight projected queries in parallel (avoid fetching huge full bodies / embeddings)
+  const [items, categories, sources] = await Promise.all([
+    sql`
+      SELECT 
+        i.id,
+        i.title,
+        i.slug,
+        i.content_type,
+        i.category,
+        i.status,
+        i.is_breaking,
+        i.is_featured,
+        i.is_trending,
+        i.is_external,
+        i.canonical_url,
+        i.published_at,
+        i.author_name,
+        s.name as source_name,
+        s.type as source_type
+      FROM content_items i
+      LEFT JOIN content_sources s ON i.source_id = s.id
+      WHERE i.deleted_at IS NULL
+      ORDER BY i.published_at DESC
+      LIMIT 100
+    `,
+    sql`SELECT id, name FROM content_categories ORDER BY display_order ASC, name ASC`,
+    sql`SELECT id, name FROM content_sources ORDER BY name ASC`
+  ]);
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-300">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
         <ScrollReveal>
           <SectionHeader 
@@ -57,7 +68,7 @@ export default async function AdminContentPage() {
         </ScrollReveal>
       </div>
 
-      <ScrollReveal delay={0.2} className="bg-white rounded-2xl shadow-card border border-border overflow-hidden p-4">
+      <ScrollReveal delay={0.15} className="bg-white rounded-2xl shadow-card border border-border overflow-hidden p-4">
         <UnifiedContentClient initialItems={items} categories={categories} sources={sources} />
       </ScrollReveal>
     </div>

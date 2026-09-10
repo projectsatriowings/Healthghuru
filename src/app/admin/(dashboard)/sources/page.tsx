@@ -9,21 +9,22 @@ import { SourcesClient } from './SourcesClient';
 export default async function AdminSourcesPage() {
   await requireAdmin();
 
-  const sources = await sql`
-    SELECT s.*, c.name as category_name
-    FROM content_sources s
-    LEFT JOIN content_categories c ON s.category_id = c.id
-    ORDER BY s.priority ASC, s.name ASC
-  `;
+  const [sources, categories] = await Promise.all([
+    sql`
+      SELECT s.*, c.name as category_name
+      FROM content_sources s
+      LEFT JOIN content_categories c ON s.category_id = c.id
+      ORDER BY s.priority ASC, s.name ASC
+    `,
+    sql`
+      SELECT id, name, slug FROM content_categories ORDER BY display_order ASC, name ASC
+    `
+  ]);
 
   const enrichedSources = sources.map((s: any) => ({
     ...s,
     healthStatus: evaluateSourceHealth(s),
   }));
-
-  const categories = await sql`
-    SELECT id, name, slug FROM content_categories ORDER BY display_order ASC, name ASC
-  `;
 
   return (
     <div className="max-w-7xl mx-auto space-y-8 animate-in fade-in duration-500">

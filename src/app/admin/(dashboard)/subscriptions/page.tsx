@@ -11,14 +11,15 @@ export default async function AdminSubscriptionsPage() {
     SELECT 
       u.id, 
       u.name, 
-      u.email,
-      p.tier,
-      p.records_limit,
-      p.active_goals_limit,
+      u.email, 
+      p.tier, 
+      p.records_limit, 
+      p.active_goals_limit, 
       p.family_members_limit
     FROM users u
     LEFT JOIN user_plans p ON p.user_id = u.id
     ORDER BY u.name ASC
+    LIMIT 100
   `;
 
   return (

@@ -38,9 +38,10 @@ export function AdminSidebarNav() {
           return (
             <Link 
               key={link.href} 
-              href={link.href} 
+              href={link.href}
+              prefetch={true}
               data-cursor="tab"
-              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-heading font-medium text-sm transition-all duration-200 border-l-4 ${
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-heading font-medium text-sm transition-all duration-150 border-l-4 ${
                 isActive 
                   ? "bg-primary/10 text-primary border-primary font-semibold" 
                   : "text-text-secondary hover:text-dark hover:bg-surface border-transparent"
@@ -57,8 +58,9 @@ export function AdminSidebarNav() {
       <div className="mt-auto pt-4 border-t border-border">
         <Link 
           href="/admin/settings" 
+          prefetch={true}
           data-cursor="tab"
-          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-heading font-medium text-sm transition-all duration-200 border-l-4 ${
+          className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-heading font-medium text-sm transition-all duration-150 border-l-4 ${
             pathname.startsWith('/admin/settings')
               ? "bg-primary/10 text-primary border-primary font-semibold"
               : "text-text-secondary hover:text-dark hover:bg-surface border-transparent"
