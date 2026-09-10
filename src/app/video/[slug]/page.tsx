@@ -84,70 +84,45 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
                 {video.title}
               </h1>
 
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <User size={15} className="text-primary" />
-                <span className="font-medium text-dark">{video.author_name || video.source_name || 'Health Ghuru'}</span>
+              <div className="flex items-center justify-between flex-wrap gap-4 border-b border-border/50 pb-4">
+                <div className="flex items-center gap-2 text-sm text-text-secondary">
+                  <User size={15} className="text-primary" />
+                  <span className="font-medium text-dark">{video.author_name || video.source_name || 'Health Ghuru'}</span>
+                </div>
+
+                <a
+                  href={video.canonical_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-[#E50914] hover:bg-[#c40812] text-white rounded-full text-xs font-semibold shrink-0 shadow-sm transition-colors flex items-center gap-1.5 self-start sm:self-center"
+                >
+                  {isInstagram ? 'Watch on Instagram' : 'Watch on YouTube'} <ExternalLink size={13} />
+                </a>
               </div>
+
+              {/* Description / Overview */}
+              {(video.description || video.excerpt) && (
+                <div className="space-y-2 text-sm text-text-secondary leading-relaxed whitespace-pre-line">
+                  <h3 className="font-heading font-semibold text-dark text-base">Video Overview</h3>
+                  <p>{video.description || video.excerpt}</p>
+                </div>
+              )}
             </div>
-<<<<<<< Updated upstream
-=======
-          )}
+
+            <HealthDisclaimer />
+
+            {/* Related Content */}
+            {relatedVideos.length > 0 && (
+              <div className="space-y-4 pt-4">
+                <h3 className="font-heading font-semibold text-dark text-xl">Related Health Videos</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {relatedVideos.map((rel: any) => (
+                    <ContentCard key={rel.id} item={rel} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* Title & Channel Attribution */}
-        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-border shadow-sm space-y-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <PillBadge active className="text-xs">{video.category || 'Wellness'}</PillBadge>
-            <span className="text-xs text-text-muted">·</span>
-            <span className="text-xs text-text-secondary flex items-center gap-1">
-              <ShieldCheck size={12} className="text-primary" /> {isInstagram ? 'Verified Creator' : 'Verified Channel'}
-            </span>
-          </div>
-
-          <h1 className="font-display text-2xl sm:text-3xl text-dark leading-tight">
-            {video.title}
-          </h1>
-
-          <div className="flex items-center justify-between flex-wrap gap-4 border-b border-border/50 pb-4">
-            <div className="flex items-center gap-2 text-sm text-text-secondary">
-              <User size={15} className="text-primary" />
-              <span className="font-medium text-dark">{video.author_name || video.source_name || 'Health Ghuru'}</span>
-            </div>
->>>>>>> Stashed changes
-
-            <a
-              href={video.canonical_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-3 bg-[#E50914] hover:bg-[#c40812] text-white rounded-full text-xs font-semibold shrink-0 shadow-sm transition-colors flex items-center gap-1.5 self-start sm:self-center"
-            >
-              {isInstagram ? 'Watch on Instagram' : 'Watch on YouTube'} <ExternalLink size={13} />
-            </a>
-          </div>
-
-          {/* Description / Overview */}
-          {(video.description || video.excerpt) && (
-            <div className="space-y-2 text-sm text-text-secondary leading-relaxed whitespace-pre-line">
-              <h3 className="font-heading font-semibold text-dark text-base">Video Overview</h3>
-              <p>{video.description || video.excerpt}</p>
-            </div>
-          )}
-        </div>
-
-        <HealthDisclaimer />
-
-        {/* Related Content */}
-        {relatedVideos.length > 0 && (
-          <div className="space-y-4 pt-4">
-            <h3 className="font-heading font-semibold text-dark text-xl">Related Health Videos</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedVideos.map((rel: any) => (
-                <ContentCard key={rel.id} item={rel} />
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+        );
 }
