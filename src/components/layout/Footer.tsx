@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Phone, MessageCircle, Share2, Globe, Send, Shield } from "lucide-react";
+import { MapPin, Phone, MessageCircle, Share2, Globe, Send } from "lucide-react";
 import { NAV_LINKS } from "@/lib/constants";
 
 export default function Footer() {
@@ -50,13 +50,6 @@ export default function Footer() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/admin/login"
-                className="text-white/50 hover:text-primary transition-colors flex items-center gap-2 group mt-2 pt-2 border-t border-white/10"
-              >
-                <Shield size={14} className="text-primary" />
-                Editorial Admin
-              </Link>
             </nav>
           </div>
 
@@ -84,7 +77,7 @@ export default function Footer() {
           <div className="flex gap-4 mt-4 md:mt-0">
             <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
             <Link href="/news" className="hover:text-white transition-colors">Health News</Link>
-            <Link href="/admin/login" className="hover:text-white transition-colors">Admin</Link>
+            <Link href="/articles" className="hover:text-white transition-colors">Articles</Link>
           </div>
         </div>
       </div>

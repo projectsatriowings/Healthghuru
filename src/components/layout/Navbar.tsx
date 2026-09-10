@@ -4,9 +4,8 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Search, Shield } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/Button";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 
@@ -80,29 +79,17 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Desktop CTAs */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* Desktop Right CTA: Search Only */}
+          <div className="hidden md:flex items-center">
             <Link
               href="/search"
               aria-label="Search HealthGhuru"
               className={cn(
-                "p-2.5 rounded-full transition-colors",
+                "p-2.5 rounded-full transition-colors flex items-center gap-2 text-sm font-medium",
                 scrolled ? "hover:bg-surface text-dark" : "hover:bg-white/10 text-dark"
               )}
             >
               <Search size={19} />
-            </Link>
-            <Link href="/admin/login">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className={cn(
-                  "flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5",
-                  scrolled ? "border border-border hover:bg-surface text-dark" : "border border-dark/20 text-dark hover:bg-white/10"
-                )}
-              >
-                <Shield size={14} className="text-primary" /> Admin
-              </Button>
             </Link>
           </div>
 
@@ -151,13 +138,6 @@ export default function Navbar() {
                   </Link>
                 );
               })}
-              <div className="pt-2 flex flex-col gap-3">
-                <Link href="/admin/login">
-                  <Button variant="ghost" size="lg" className="w-full flex items-center justify-center gap-2 border border-border">
-                    <Shield size={16} className="text-primary" /> Admin Portal
-                  </Button>
-                </Link>
-              </div>
             </div>
           </motion.div>
         )}
