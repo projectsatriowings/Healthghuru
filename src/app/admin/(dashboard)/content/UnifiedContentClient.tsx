@@ -13,6 +13,7 @@ import {
   Search,
 } from 'lucide-react';
 import { PillBadge } from '@/components/ui/PillBadge';
+import { formatDate } from '@/lib/utils';
 
 interface UnifiedContentClientProps {
   initialItems: any[];
@@ -163,7 +164,7 @@ export function UnifiedContentClient({ initialItems, categories }: UnifiedConten
                           {isOriginal ? '✦ HealthGhuru Original' : item.source_name || 'External Source'}
                         </span>
                         <span>·</span>
-                        <span>{new Date(item.published_at).toLocaleDateString()}</span>
+                        <span suppressHydrationWarning>{formatDate(item.published_at)}</span>
                         {item.canonical_url && (
                           <>
                             <span>·</span>

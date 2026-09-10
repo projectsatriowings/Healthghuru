@@ -12,6 +12,7 @@ import {
   CheckCheck,
   Trash2,
 } from 'lucide-react';
+import { formatDate } from '@/lib/utils';
 
 interface ReviewQueueClientProps {
   initialItems: any[];
@@ -210,8 +211,8 @@ export function ReviewQueueClient({ initialItems, categories }: ReviewQueueClien
                       <span className="text-text-muted">·</span>
                       <span className="font-medium text-dark">{item.source_name || 'External'}</span>
                       <span className="text-text-muted">·</span>
-                      <span className="text-text-muted">
-                        {new Date(item.published_at).toLocaleDateString()}
+                      <span suppressHydrationWarning className="text-text-muted">
+                        {formatDate(item.published_at)}
                       </span>
 
                       {/* Quality Score */}

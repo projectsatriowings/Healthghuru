@@ -8,6 +8,7 @@ import { sql } from "@/lib/db";
 import { AuthorBioCard } from "@/components/blog/AuthorBioCard";
 import { ArticleBodyClientWrapper } from "@/components/blog/ArticleBodyClientWrapper";
 import { Metadata } from "next";
+import { formatDate } from "@/lib/utils";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const posts = await sql`SELECT title, excerpt FROM articles WHERE slug = ${params.slug} AND status = 'published'`;
@@ -31,9 +32,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   }
 
   const post = posts[0];
-  const publishDate = new Date(post.publish_date).toLocaleDateString('en-US', {
-    month: 'long', day: 'numeric', year: 'numeric'
-  });
+  const publishDate = formatDate(post.publish_date);
 
   return (
     <article className="pt-32 pb-24 bg-white relative">
@@ -70,7 +69,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             </div>
             <div className="flex flex-col">
               <span className="article-byline-name font-heading font-semibold text-text-primary">{post.author_name}</span>
-              <span className="article-byline-meta text-text-muted text-sm">
+              <span suppressHydrationWarning className="article-byline-meta text-text-muted text-sm">
                 {post.author_credential && <span className="text-primary mr-2 font-medium">{post.author_credential}</span>}
                 {publishDate} · {post.read_time} min read
               </span>

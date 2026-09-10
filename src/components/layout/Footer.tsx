@@ -12,13 +12,21 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 xl:gap-16 2xl:gap-20 mb-12">
           {/* Column 1: Logo & Tagline */}
           <div className="flex flex-col items-start gap-4">
-            <Link href="/" className="transition-transform hover:scale-105">
-              <div className="relative w-48 h-20 -ml-2 md:ml-0">
+            <Link
+              href="/"
+              className="transition-transform hover:scale-105 outline-none focus:outline-none focus:ring-0 border-0"
+              style={{ outline: 'none', border: 'none', boxShadow: 'none' }}
+            >
+              <div
+                className="relative w-48 h-20 -ml-2 md:ml-0 outline-none border-0"
+                style={{ outline: 'none', border: 'none', boxShadow: 'none' }}
+              >
                 <Image
                   src="/images/logo_transparent.png"
                   alt="HealthGhuru Logo"
                   fill
-                  className="object-contain object-left"
+                  className="object-contain object-left outline-none border-0"
+                  style={{ outline: 'none', border: 'none' }}
                 />
               </div>
             </Link>
@@ -73,7 +81,7 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-white/50">
-          <p>Copyright &copy; {new Date().getFullYear()} Healthghuru. All rights reserved.</p>
+          <p suppressHydrationWarning>Copyright &copy; {new Date().getFullYear()} Healthghuru. All rights reserved.</p>
           <div className="flex gap-4 mt-4 md:mt-0">
             <Link href="/about" className="hover:text-white transition-colors">About Us</Link>
             <Link href="/news" className="hover:text-white transition-colors">Health News</Link>

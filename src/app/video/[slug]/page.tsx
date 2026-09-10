@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, Calendar, User, ShieldCheck } from 'lucide-react';
 import { PillBadge } from '@/components/ui/PillBadge';
+import { formatDate } from '@/lib/utils';
 import { ContentCard } from '@/components/media/ContentCard';
 import { HealthDisclaimer } from '@/components/media/HealthDisclaimer';
 
@@ -93,8 +94,8 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
               <span className="font-semibold text-dark flex items-center gap-1.5 text-sm">
                 <User size={15} className="text-primary" /> {video.author_name || video.source_name}
               </span>
-              <span className="flex items-center gap-1">
-                <Calendar size={13} /> {new Date(video.published_at).toLocaleDateString()}
+              <span suppressHydrationWarning className="flex items-center gap-1">
+                <Calendar size={13} /> {formatDate(video.published_at)}
               </span>
             </div>
 

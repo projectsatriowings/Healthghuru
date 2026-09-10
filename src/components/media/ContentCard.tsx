@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { ExternalLink, Play, Clock, BookOpen } from 'lucide-react';
 import { PillBadge } from '@/components/ui/PillBadge';
+import { formatDate } from '@/lib/utils';
 
 export interface ContentCardProps {
   item: {
@@ -102,8 +103,8 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
                 {isOriginal ? 'HealthGhuru Original' : item.source_name || 'External'}
               </span>
               <span className="text-xs text-text-muted">·</span>
-              <span className="text-xs text-text-muted">
-                {new Date(item.published_at).toLocaleDateString()}
+              <span suppressHydrationWarning className="text-xs text-text-muted">
+                {formatDate(item.published_at)}
               </span>
             </div>
 
@@ -189,7 +190,7 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
         <div>
           <div className="text-[11px] text-text-muted mb-1.5 flex items-center gap-1.5">
             <Clock size={11} />
-            <span>{new Date(item.published_at).toLocaleDateString()}</span>
+            <span suppressHydrationWarning>{formatDate(item.published_at)}</span>
           </div>
 
           <h3 className="font-heading font-semibold text-dark text-base group-hover:text-primary transition-colors leading-snug line-clamp-2">

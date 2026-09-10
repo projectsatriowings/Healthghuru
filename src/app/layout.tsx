@@ -45,8 +45,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${dmSerif.variable} ${plusJakarta.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
-      <body className="antialiased min-h-screen flex flex-col font-body">
+    <html lang="en" suppressHydrationWarning className={`${dmSerif.variable} ${plusJakarta.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+      <body suppressHydrationWarning className="antialiased min-h-screen flex flex-col font-body">
         <ToastProvider>
           <DialogProvider>
             <CustomCursor />

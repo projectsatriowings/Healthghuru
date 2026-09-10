@@ -33,5 +33,5 @@ export function AnimatedCounter({ value, suffix = "", className }: AnimatedCount
     });
   }, [springValue, suffix]);
 
-  return <span ref={ref} className={className}>0{suffix}</span>;
+  return <span ref={ref} suppressHydrationWarning className={className}>0{suffix}</span>;
 }

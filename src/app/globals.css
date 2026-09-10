@@ -78,6 +78,10 @@
 }
 
 @layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
     @apply font-body text-text-primary bg-surface;
     background-color: var(--color-surface);
@@ -89,6 +93,15 @@
   
   h3, h4 {
     @apply font-heading text-text-primary;
+  }
+
+  a, button, [role="button"] {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  a:focus, a:focus-visible,
+  button:focus, button:focus-visible {
+    outline: none;
   }
 }
 
