@@ -4,7 +4,6 @@ import { sql } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, ExternalLink, User, ShieldCheck } from 'lucide-react';
-import { YouTubePlayer } from '@/components/media/YouTubePlayer';
 import { PillBadge } from '@/components/ui/PillBadge';
 import { ContentCard } from '@/components/media/ContentCard';
 import { HealthDisclaimer } from '@/components/media/HealthDisclaimer';
@@ -90,6 +89,31 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
                 <span className="font-medium text-dark">{video.author_name || video.source_name || 'Health Ghuru'}</span>
               </div>
             </div>
+<<<<<<< Updated upstream
+=======
+          )}
+        </div>
+
+        {/* Title & Channel Attribution */}
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-border shadow-sm space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <PillBadge active className="text-xs">{video.category || 'Wellness'}</PillBadge>
+            <span className="text-xs text-text-muted">·</span>
+            <span className="text-xs text-text-secondary flex items-center gap-1">
+              <ShieldCheck size={12} className="text-primary" /> {isInstagram ? 'Verified Creator' : 'Verified Channel'}
+            </span>
+          </div>
+
+          <h1 className="font-display text-2xl sm:text-3xl text-dark leading-tight">
+            {video.title}
+          </h1>
+
+          <div className="flex items-center justify-between flex-wrap gap-4 border-b border-border/50 pb-4">
+            <div className="flex items-center gap-2 text-sm text-text-secondary">
+              <User size={15} className="text-primary" />
+              <span className="font-medium text-dark">{video.author_name || video.source_name || 'Health Ghuru'}</span>
+            </div>
+>>>>>>> Stashed changes
 
             <a
               href={video.canonical_url}

@@ -94,6 +94,7 @@ export function YouTubePlayer({
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isBuffering, setIsBuffering] = useState(false);
   const [isEnded, setIsEnded] = useState(false);
   const [showControls, setShowControls] = useState(true);
