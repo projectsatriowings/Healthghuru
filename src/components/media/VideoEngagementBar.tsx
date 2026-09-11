@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Share2, Bookmark, Check, Copy } from 'lucide-react';
+import { Share2, Bookmark, Check } from 'lucide-react';
 
 interface VideoEngagementBarProps {
   contentId: string;
@@ -95,39 +95,39 @@ export function VideoEngagementBar({
 
   return (
     <div className="flex items-center gap-2 pt-1">
-      {/* Share Button */}
+      {/* Share Button with Hover & Moving Effects */}
       <button
         onClick={handleShare}
         type="button"
         aria-label="Share this video"
-        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-text-secondary bg-surface hover:bg-surface-alt border border-border/80 hover:text-dark transition-all active:scale-95"
+        className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold text-text-secondary bg-surface hover:bg-surface-alt border border-border/80 hover:text-dark transition-all duration-200 hover:scale-105 hover:-translate-y-0.5 hover:shadow-sm active:scale-95"
       >
         {copied ? (
           <>
-            <Check size={14} className="text-primary" />
+            <Check size={14} className="text-primary animate-bounce" />
             <span className="text-primary">Link Copied!</span>
           </>
         ) : (
           <>
-            <Share2 size={14} />
+            <Share2 size={14} className="transition-transform duration-200 hover:rotate-12" />
             <span>Share</span>
           </>
         )}
       </button>
 
-      {/* Bookmark Button */}
+      {/* Bookmark Button with Hover & Moving Effects */}
       <button
         onClick={handleToggleBookmark}
         type="button"
         disabled={saving}
         aria-label={saved ? 'Remove from saved' : 'Save to bookmarks'}
-        className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all active:scale-95 border ${
+        className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 hover:scale-105 hover:-translate-y-0.5 hover:shadow-sm active:scale-95 border ${
           saved
             ? 'bg-primary/10 text-primary border-primary/30 shadow-sm'
             : 'bg-surface hover:bg-surface-alt text-text-secondary hover:text-dark border-border/80'
         }`}
       >
-        <Bookmark size={14} className={saved ? 'fill-primary text-primary' : ''} />
+        <Bookmark size={14} className={`transition-transform duration-200 hover:scale-110 ${saved ? 'fill-primary text-primary' : ''}`} />
         <span>{saved ? 'Saved' : 'Bookmark'}</span>
       </button>
     </div>

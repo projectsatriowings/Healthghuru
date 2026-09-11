@@ -100,15 +100,15 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
           <div className="flex items-center justify-between gap-4 pb-2 border-b border-border/40">
             <Link
               href={isShort ? '/videos?format=short' : '/videos'}
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-text-secondary hover:text-primary transition-colors py-1"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-text-secondary hover:text-primary transition-all duration-200 py-1 hover:-translate-x-1"
             >
-              <ArrowLeft size={16} /> Back to {isShort ? 'Shorts & Reels' : 'Video Library'}
+              <ArrowLeft size={16} className="transition-transform duration-200 group-hover:-translate-x-1" /> Back to {isShort ? 'Shorts & Reels' : 'Video Library'}
             </Link>
 
             <div className="hidden sm:flex items-center gap-2 text-xs text-text-muted">
               <span>Video Library</span>
               <span>/</span>
-              <span className="text-primary font-medium">{video.category || 'Wellness'}</span>
+              <span className="text-primary font-medium hover:underline">{video.category || 'Wellness'}</span>
               <span>/</span>
               <span className="truncate max-w-[300px]">{video.title}</span>
             </div>
@@ -120,7 +120,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
         {/* ========================================================================= */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 xl:gap-8 items-start">
           {/* ===================================================== */}
-          {/* LEFT COLUMN: VIDEO PLAYER ONLY (WITH ENTRANCE ANIMATION) */}
+          {/* LEFT COLUMN: VIDEO PLAYER ONLY (WITH MOVING EFFECTS)  */}
           {/* ===================================================== */}
           <div
             className={`w-full ${
@@ -144,7 +144,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
           </div>
 
           {/* ===================================================== */}
-          {/* RIGHT COLUMN: ALL CONTENT, METADATA & ACTIONS (ANIMATED) */}
+          {/* RIGHT COLUMN: CONTENT, METADATA & ACTIONS (HOVER RX)  */}
           {/* ===================================================== */}
           <div
             className={`space-y-4 w-full ${
@@ -153,17 +153,19 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
                 : 'lg:col-span-4 xl:col-span-4 2xl:col-span-4'
             }`}
           >
-            {/* Main Content Card with Smooth Fade-Up Animation */}
+            {/* Main Content Card with Hover Lift & Glow Effect */}
             <ScrollReveal variant="fadeUp" delay={0.12}>
-              <div className="bg-white rounded-3xl p-6 sm:p-7 border border-border shadow-sm space-y-5 transition-shadow duration-300 hover:shadow-card">
+              <div className="bg-white rounded-3xl p-6 sm:p-7 border border-border shadow-sm space-y-5 transition-all duration-300 hover:shadow-xl hover:border-primary/30 hover:-translate-y-1">
                 {/* 1. Category, Badges & Verification Row */}
                 <div className="flex flex-wrap items-center justify-between gap-2.5">
                   <div className="flex flex-wrap items-center gap-2">
-                    <PillBadge active className="text-xs px-3 py-1">
-                      {video.category || 'Wellness'}
-                    </PillBadge>
+                    <div className="transition-transform duration-200 hover:scale-105">
+                      <PillBadge active className="text-xs px-3 py-1">
+                        {video.category || 'Wellness'}
+                      </PillBadge>
+                    </div>
                     <span className="text-xs text-text-muted">·</span>
-                    <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 transition-all duration-200 hover:scale-105 hover:bg-primary/15">
                       <ShieldCheck size={13} className="text-primary" />
                       {isInstagram
                         ? 'Verified Reel'
@@ -172,7 +174,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
                         : 'Verified Channel'}
                     </span>
                     <span className="text-xs text-text-muted">·</span>
-                    <span className="text-xs text-text-muted flex items-center gap-1">
+                    <span className="text-xs text-text-muted flex items-center gap-1 transition-colors hover:text-dark">
                       <Clock size={12} /> {isShort ? '9:16 Reel' : 'HD Video'}
                     </span>
                   </div>
@@ -185,14 +187,14 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
                 </div>
 
                 {/* 2. Main Title */}
-                <h1 className="font-display text-xl sm:text-2xl lg:text-2xl xl:text-3xl text-dark leading-snug font-bold">
+                <h1 className="font-display text-xl sm:text-2xl lg:text-2xl xl:text-3xl text-dark leading-snug font-bold transition-colors duration-200 hover:text-primary">
                   {video.title}
                 </h1>
 
                 {/* 3. Author / Source & Primary Action Button Row */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-surface border border-border/60">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 p-3.5 sm:p-4 rounded-2xl bg-surface border border-border/60 transition-all duration-300 hover:bg-surface-alt hover:border-primary/30 hover:shadow-sm">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0 border border-primary/20">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0 border border-primary/20 transition-transform duration-300 hover:scale-110 hover:bg-primary hover:text-white">
                       <User size={18} />
                     </div>
                     <div>
@@ -214,15 +216,15 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
                       href={video.canonical_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`px-4 py-2 rounded-full text-xs font-semibold shrink-0 shadow-md transition-all flex items-center justify-center gap-1.5 self-start sm:self-center hover:scale-105 active:scale-95 ${
+                      className={`px-4 py-2 rounded-full text-xs font-semibold shrink-0 shadow-md transition-all duration-300 flex items-center justify-center gap-1.5 self-start sm:self-center hover:scale-105 active:scale-95 ${
                         isInstagram
-                          ? 'bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] text-white shadow-rose-500/25'
-                          : 'bg-[#E50914] hover:bg-[#c40812] text-white shadow-red-600/25'
+                          ? 'bg-gradient-to-r from-[#f09433] via-[#dc2743] to-[#bc1888] text-white shadow-rose-500/25 hover:shadow-rose-500/40 hover:brightness-110'
+                          : 'bg-[#E50914] hover:bg-[#c40812] text-white shadow-red-600/25 hover:shadow-red-600/40'
                       }`}
                     >
                       {isInstagram ? <InstagramIcon size={13} /> : <YoutubeIcon size={13} />}
                       {isInstagram ? 'Watch on Instagram' : 'Watch on YouTube'}
-                      <ExternalLink size={11} />
+                      <ExternalLink size={11} className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                     </a>
                   )}
                 </div>
@@ -242,9 +244,9 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
               </div>
             </ScrollReveal>
 
-            {/* Medical Information Disclaimer with Smooth Fade-Up Animation */}
+            {/* Medical Information Disclaimer */}
             <ScrollReveal variant="fadeUp" delay={0.2}>
-              <div className="!my-0">
+              <div className="!my-0 transition-all duration-300 hover:shadow-md hover:border-primary/30 rounded-2xl">
                 <HealthDisclaimer />
               </div>
             </ScrollReveal>
@@ -274,7 +276,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
 
                 <Link
                   href={isShort ? '/videos?format=short' : '/videos'}
-                  className="text-xs sm:text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1"
+                  className="text-xs sm:text-sm font-semibold text-primary hover:underline inline-flex items-center gap-1 transition-all hover:translate-x-1"
                 >
                   View All <ExternalLink size={12} />
                 </Link>
