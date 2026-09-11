@@ -10,19 +10,19 @@ export default function ThreePillars() {
       title: "Nutrition",
       icon: <Apple size={32} className="text-primary mb-4" />,
       description: "We provide nutrition strategies and ideas to help you achieve your objectives, whether you're trying to maintain, lose, or gain weight.",
-      link: "/stay-healthy",
+      link: "/category/nutrition",
     },
     {
       title: "Sleep",
       icon: <Moon size={32} className="text-primary mb-4" />,
       description: "Good sleep is a topic that is often neglected, but it is a very important aspect of our everyday life affecting quality of life in countless ways.",
-      link: "/stay-healthy",
+      link: "/category/sleep",
     },
     {
       title: "Fitness",
       icon: <Dumbbell size={32} className="text-primary mb-4" />,
       description: "Regular physical activity provides immediate and long-term health benefits and enhances overall quality of life regardless of age, sex, or physical ability.",
-      link: "/stay-healthy",
+      link: "/category/fitness",
     },
   ];
 

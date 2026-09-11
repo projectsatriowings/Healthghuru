@@ -126,7 +126,7 @@ export async function runIngestionPipeline(
             ${item.excerpt || null}, ${item.description || null}, ${item.canonicalUrl},
             ${item.imageUrl || null}, ${item.authorName || source.name}, ${item.publishedAt.toISOString()}::timestamptz,
             ${source.id}::uuid, ${contentStatus}, ${item.language || 'en'},
-            ${item.country || null}, ${classification.primaryCategory}, ${classification.subcategory || null},
+            ${item.country || null}, ${classification.primaryCategory}, ${item.subcategory || classification.subcategory || (item.contentType === 'video' ? 'video' : null)},
             ${item.isExternal}, FALSE, FALSE, FALSE, ${source.trustScore === 'High'},
             ${requiresReview}, ${scoring.qualityScore}, ${scoring.relevanceScore},
             ${item.durationSeconds || null}, ${item.videoId || null},

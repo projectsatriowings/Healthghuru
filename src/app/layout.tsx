@@ -8,6 +8,7 @@ import ConditionalLayout from "@/components/layout/ConditionalLayout";
 import CustomCursor from "@/components/ui/CustomCursor";
 import { ToastProvider } from "@/components/providers/ToastProvider";
 import { DialogProvider } from "@/components/providers/DialogProvider";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 
 const dmSerif = DM_Serif_Display({
   weight: "400",
@@ -53,16 +54,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${dmSerif.variable} ${plusJakarta.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <body suppressHydrationWarning className="antialiased min-h-screen flex flex-col font-body">
-        <ToastProvider>
-          <DialogProvider>
-            <CustomCursor />
-            <SmoothScroll>
-              <ConditionalLayout navbar={<Navbar />} footer={<Footer />}>
-                {children}
-              </ConditionalLayout>
-            </SmoothScroll>
-          </DialogProvider>
-        </ToastProvider>
+        <AuthProvider>
+          <ToastProvider>
+            <DialogProvider>
+              <CustomCursor />
+              <SmoothScroll>
+                <ConditionalLayout navbar={<Navbar />} footer={<Footer />}>
+                  {children}
+                </ConditionalLayout>
+              </SmoothScroll>
+            </DialogProvider>
+          </ToastProvider>
+        </AuthProvider>
       </body>
     </html>
   );

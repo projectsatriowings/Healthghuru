@@ -48,15 +48,27 @@ export default function HeroSection() {
 
             <ScrollReveal delay={0.6}>
               <div className="flex flex-wrap gap-3 py-2">
-                <motion.div whileHover={{ scale: 1.05 }} className="hero-floating-badges bg-white rounded-full font-heading shadow-sm text-primary flex items-center gap-2"><Apple size={16} /> Nutrition</motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} className="hero-floating-badges bg-white rounded-full font-heading shadow-sm text-primary flex items-center gap-2"><Moon size={16} /> Sleep</motion.div>
-                <motion.div whileHover={{ scale: 1.05 }} className="hero-floating-badges bg-white rounded-full font-heading shadow-sm text-primary flex items-center gap-2"><Dumbbell size={16} /> Fitness</motion.div>
+                <Link href="/category/nutrition">
+                  <motion.div whileHover={{ scale: 1.05 }} className="hero-floating-badges bg-white rounded-full font-heading shadow-sm text-primary flex items-center gap-2 cursor-pointer hover:shadow-md transition-shadow">
+                    <Apple size={16} /> Nutrition
+                  </motion.div>
+                </Link>
+                <Link href="/category/sleep">
+                  <motion.div whileHover={{ scale: 1.05 }} className="hero-floating-badges bg-white rounded-full font-heading shadow-sm text-primary flex items-center gap-2 cursor-pointer hover:shadow-md transition-shadow">
+                    <Moon size={16} /> Sleep
+                  </motion.div>
+                </Link>
+                <Link href="/category/fitness">
+                  <motion.div whileHover={{ scale: 1.05 }} className="hero-floating-badges bg-white rounded-full font-heading shadow-sm text-primary flex items-center gap-2 cursor-pointer hover:shadow-md transition-shadow">
+                    <Dumbbell size={16} /> Fitness
+                  </motion.div>
+                </Link>
               </div>
             </ScrollReveal>
 
             <ScrollReveal delay={0.7} className="mt-4">
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/about" className="w-full sm:w-auto">
+                <Link href="/latest" className="w-full sm:w-auto">
                   <Button variant="primary" size="lg" className="hero-cta-primary w-full sm:w-auto">Explore Wellness &rarr;</Button>
                 </Link>
                 <Link href="/blog" className="w-full sm:w-auto">

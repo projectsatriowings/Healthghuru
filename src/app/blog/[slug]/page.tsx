@@ -7,6 +7,7 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { sql } from "@/lib/db";
 import { AuthorBioCard } from "@/components/blog/AuthorBioCard";
 import { ArticleBodyClientWrapper } from "@/components/blog/ArticleBodyClientWrapper";
+import { SidebarAd } from "@/components/ads/SidebarAd";
 import { Metadata } from "next";
 import { formatDate } from "@/lib/utils";
 
@@ -123,6 +124,9 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           credential={post.author_credential}
           bio="Specializing in holistic health and preventative care, dedicated to helping people live their healthiest lives through evidence-based lifestyle changes."
         />
+
+        {/* In-Article Sponsor Ad */}
+        <SidebarAd category={post.category} className="my-10" />
 
         {/* Footer actions */}
         <div className="mt-10 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-6">
