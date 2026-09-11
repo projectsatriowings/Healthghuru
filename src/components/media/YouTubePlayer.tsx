@@ -24,6 +24,7 @@ export interface YouTubePlayerProps {
   canonicalUrl?: string | null;
   authorName?: string | null;
   durationSeconds?: number | null;
+  isShort?: boolean;
 }
 
 function InstagramIcon({ size = 14, className = '' }: { size?: number; className?: string }) {
@@ -46,6 +47,14 @@ function InstagramIcon({ size = 14, className = '' }: { size?: number; className
   );
 }
 
+function YouTubeShortsIcon({ size = 14, className = '' }: { size?: number; className?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M17.77 10.32l-1.2-.5L18 9.06a3.74 3.74 0 0 0-3.5-5.36 3.7 3.7 0 0 0-2.4 1.1L5.8 9.56a3.75 3.75 0 0 0 2.2 6.74l1.2.5-1.43.76a3.75 3.75 0 0 0 3.5 5.38 3.7 3.7 0 0 0 2.4-1.1l6.3-4.76a3.75 3.75 0 0 0-2.2-6.76zM10 14.65v-5.3l4.5 2.65-4.5 2.65z" />
+    </svg>
+  );
+}
+
 export function YouTubePlayer({
   videoId: rawVideoId,
   videoUrl,
@@ -54,6 +63,7 @@ export function YouTubePlayer({
   canonicalUrl,
   authorName,
   durationSeconds,
+  isShort = false,
 }: YouTubePlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -70,6 +80,8 @@ export function YouTubePlayer({
   const [feedbackIcon, setFeedbackIcon] = useState<'play' | 'pause' | null>(null);
   const [iframeKey, setIframeKey] = useState(0);
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const isVertical = isShort || parsed.type === 'instagram';
 
   // Dynamically load Instagram embed script for interactive embeds
   useEffect(() => {
@@ -266,16 +278,16 @@ export function YouTubePlayer({
     const embedUrl = `https://www.instagram.com/reel/${parsed.instagramCode}/embed/`;
 
     return (
-      <div className="w-full flex flex-col items-center justify-center my-2 space-y-4">
-        {/* Smartphone Frame Container */}
-        <div className="w-full max-w-[460px] bg-slate-950 rounded-[32px] sm:rounded-[38px] p-2 sm:p-3 border-4 border-slate-800 shadow-2xl shadow-black/60 relative overflow-hidden flex flex-col items-center">
+      <div className="w-full flex justify-center lg:justify-start">
+        {/* Smartphone Frame Container (Enlarged for Immersive Viewing) */}
+        <div className="w-full max-w-[460px] sm:max-w-[480px] xl:max-w-[500px] bg-slate-950 rounded-[38px] sm:rounded-[44px] p-2.5 sm:p-3.5 border-[4px] border-slate-800 shadow-2xl shadow-slate-950/70 relative overflow-hidden flex flex-col items-center">
           {/* Top Status Header */}
           <div className="w-full flex items-center justify-between px-3 py-2 text-white/90 border-b border-white/10 mb-2">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#f09433] via-[#dc2743] to-[#bc1888] flex items-center justify-center text-white shadow-sm">
                 <InstagramIcon size={13} />
               </div>
-              <span className="text-xs font-semibold tracking-tight text-white">
+              <span className="text-xs font-semibold tracking-tight text-white truncate max-w-[160px] sm:max-w-[200px]">
                 {authorName || 'HealthGhuru Reels'}
               </span>
             </div>
@@ -283,7 +295,7 @@ export function YouTubePlayer({
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIframeKey(k => k + 1)}
-                className="text-[11px] text-white/70 hover:text-white inline-flex items-center gap-1 transition-colors"
+                className="text-[11px] text-white/70 hover:text-white inline-flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded"
                 title="Reload Player"
               >
                 <RotateCcw size={11} /> Reload
@@ -300,13 +312,13 @@ export function YouTubePlayer({
           </div>
 
           {/* Interactive Player Screen */}
-          <div className="w-full aspect-[9/16] min-h-[540px] sm:min-h-[600px] bg-black rounded-[22px] overflow-hidden relative shadow-inner">
+          <div className="w-full aspect-[9/16] min-h-[600px] sm:min-h-[660px] xl:min-h-[720px] max-h-[820px] bg-black rounded-[26px] overflow-hidden relative shadow-inner">
             <iframe
               key={iframeKey}
               ref={iframeRef}
               src={embedUrl}
               title={title}
-              className="w-full h-full border-0 rounded-[22px]"
+              className="w-full h-full border-0 rounded-[26px]"
               allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen"
               allowFullScreen
               loading="eager"
@@ -314,7 +326,7 @@ export function YouTubePlayer({
           </div>
 
           {/* Bottom Interactive Guidance Bar */}
-          <div className="w-full px-3 py-2 flex items-center justify-between text-[11px] text-slate-400 mt-1">
+          <div className="w-full px-3 py-2.5 flex items-center justify-between text-[11px] text-slate-400 mt-1">
             <span className="flex items-center gap-1">
               💡 Tap play icon inside to start video & audio
             </span>
@@ -322,9 +334,9 @@ export function YouTubePlayer({
               href={igUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-rose-400 hover:underline font-medium"
+              className="text-rose-400 hover:underline font-medium inline-flex items-center gap-0.5"
             >
-              Open Post &rarr;
+              Open Post <ExternalLink size={10} />
             </a>
           </div>
         </div>
@@ -333,14 +345,145 @@ export function YouTubePlayer({
   }
 
   // ==========================================
-  // CASE 2: DIRECT HTML5 VIDEO FILE (.mp4, etc.)
+  // CASE 2: YOUTUBE SHORTS (VERTICAL 9:16 PHONE FRAME)
+  // ==========================================
+  if (parsed.type === 'youtube' && isVertical && cleanVideoId) {
+    const ytUrl = canonicalUrl || `https://www.youtube.com/shorts/${cleanVideoId}`;
+
+    return (
+      <div className="w-full flex justify-center lg:justify-start">
+        {/* Smartphone Frame Container */}
+        <div className="w-full max-w-[460px] sm:max-w-[480px] xl:max-w-[500px] bg-slate-950 rounded-[38px] sm:rounded-[44px] p-2.5 sm:p-3.5 border-[4px] border-slate-800 shadow-2xl shadow-slate-950/70 relative overflow-hidden flex flex-col items-center">
+          {/* Top Status Header */}
+          <div className="w-full flex items-center justify-between px-3 py-2 text-white/90 border-b border-white/10 mb-2">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-red-600 flex items-center justify-center text-white shadow-sm">
+                <YouTubeShortsIcon size={12} />
+              </div>
+              <span className="text-xs font-semibold tracking-tight text-white truncate max-w-[160px] sm:max-w-[200px]">
+                {authorName || 'HealthGhuru Shorts'}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setIframeKey(k => k + 1)}
+                className="text-[11px] text-white/70 hover:text-white inline-flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded"
+                title="Reload Player"
+              >
+                <RotateCcw size={11} /> Reload
+              </button>
+              <a
+                href={ytUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[11px] font-semibold text-red-400 hover:text-red-300 inline-flex items-center gap-1 bg-white/10 hover:bg-white/20 px-2.5 py-1 rounded-full transition-colors"
+              >
+                YouTube <ExternalLink size={10} />
+              </a>
+            </div>
+          </div>
+
+          {/* Interactive Player Screen */}
+          <div className="w-full aspect-[9/16] min-h-[600px] sm:min-h-[660px] xl:min-h-[720px] max-h-[820px] bg-black rounded-[26px] overflow-hidden relative shadow-inner">
+            {hasStarted ? (
+              <iframe
+                key={iframeKey}
+                ref={iframeRef}
+                src={`https://www.youtube-nocookie.com/embed/${cleanVideoId}?autoplay=1&enablejsapi=1&rel=0&modestbranding=1&playsinline=1`}
+                title={title}
+                className="w-full h-full border-0 rounded-[26px]"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen"
+                allowFullScreen
+                loading="eager"
+              />
+            ) : (
+              <div
+                onClick={togglePlayPause}
+                className="w-full h-full bg-cover bg-center cursor-pointer relative flex flex-col justify-between p-6 transition-all duration-300 hover:brightness-105"
+                style={{ backgroundImage: `url(${displayThumbnail})` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/60 rounded-[26px]" />
+                
+                <div className="relative z-10 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-red-600/90 backdrop-blur-md text-white text-xs font-semibold">
+                    <YouTubeShortsIcon size={12} /> Short
+                  </span>
+                  {durationSeconds ? (
+                    <span className="px-2.5 py-0.5 rounded bg-black/70 text-white font-mono text-xs">
+                      {formatDuration(durationSeconds)}
+                    </span>
+                  ) : null}
+                </div>
+
+                <div className="relative z-10 flex flex-col items-center justify-center gap-3 my-auto">
+                  <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-red-600 hover:bg-red-700 text-white flex items-center justify-center shadow-2xl shadow-red-600/50 transform hover:scale-110 active:scale-95 transition-all duration-300 ring-4 ring-white/30">
+                    <Play size={36} className="fill-white ml-1.5" />
+                  </div>
+                  <span className="text-white text-xs sm:text-sm font-medium tracking-wide drop-shadow-md bg-black/60 backdrop-blur-sm px-4 py-1 rounded-full">
+                    Tap to play Short
+                  </span>
+                </div>
+
+                <div className="relative z-10 text-center text-white/80 text-xs truncate">
+                  {title}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Bottom Guidance Bar */}
+          <div className="w-full px-3 py-2.5 flex items-center justify-between text-[11px] text-slate-400 mt-1">
+            <span className="flex items-center gap-1">
+              💡 Press Space or click to play
+            </span>
+            <a
+              href={ytUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-red-400 hover:underline font-medium inline-flex items-center gap-0.5"
+            >
+              Open on YouTube <ExternalLink size={10} />
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================
+  // CASE 3: DIRECT HTML5 VIDEO FILE (.mp4, etc.)
   // ==========================================
   if (parsed.type === 'direct' && parsed.directUrl) {
+    if (isVertical) {
+      return (
+        <div className="w-full flex justify-center lg:justify-start">
+          <div className="w-full max-w-[460px] sm:max-w-[480px] xl:max-w-[500px] bg-slate-950 rounded-[38px] sm:rounded-[44px] p-2.5 sm:p-3.5 border-[4px] border-slate-800 shadow-2xl shadow-slate-950/70 relative overflow-hidden flex flex-col items-center">
+            <div className="w-full aspect-[9/16] min-h-[600px] sm:min-h-[660px] xl:min-h-[720px] max-h-[820px] bg-black rounded-[26px] overflow-hidden relative shadow-inner">
+              <video
+                ref={directVideoRef}
+                src={parsed.directUrl}
+                poster={displayThumbnail}
+                playsInline
+                onClick={togglePlayPauseDirect}
+                onPlay={() => {
+                  setIsPlaying(true);
+                  setHasStarted(true);
+                }}
+                onPause={() => setIsPlaying(false)}
+                className="w-full h-full object-cover cursor-pointer rounded-[26px]"
+              />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div
         ref={containerRef}
         onMouseMove={handleMouseMove}
-        className="group bg-black rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-border select-none"
+        className="group bg-black rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-border select-none w-full"
       >
         <video
           ref={directVideoRef}
@@ -402,11 +545,11 @@ export function YouTubePlayer({
   }
 
   // ==========================================
-  // CASE 3: UNSUPPORTED / MISSING VIDEO SOURCE
+  // CASE 4: UNSUPPORTED / MISSING VIDEO SOURCE
   // ==========================================
   if (parsed.type === 'unsupported' || parsed.type === 'empty' || (!cleanVideoId && parsed.type !== 'direct')) {
     return (
-      <div className="bg-gradient-to-br from-[#121820] to-[#0A0E13] rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-border flex flex-col items-center justify-center p-6 sm:p-10 text-center">
+      <div className="w-full bg-gradient-to-br from-[#121820] to-[#0A0E13] rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-border flex flex-col items-center justify-center p-6 sm:p-10 text-center">
         {displayThumbnail && (
           <div className="absolute inset-0 opacity-20 filter blur-md">
             <Image src={displayThumbnail} alt={title} fill className="object-cover" unoptimized />
@@ -447,13 +590,13 @@ export function YouTubePlayer({
   }
 
   // ==========================================
-  // CASE 4: YOUTUBE VIDEO PLAYER
+  // CASE 5: STANDARD 16:9 YOUTUBE VIDEO PLAYER
   // ==========================================
   return (
     <div
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="group bg-black rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-border select-none"
+      className="group bg-black rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-border select-none w-full"
     >
       {/* 1. Active YouTube Embed when started */}
       {hasStarted ? (
@@ -523,7 +666,7 @@ export function YouTubePlayer({
         /* 2. Hero Cover Poster with Responsive Play Trigger */
         <div
           onClick={togglePlayPause}
-          className="absolute inset-0 bg-cover bg-center cursor-pointer z-10 flex flex-col justify-between p-6 transition-all duration-300 hover:brightness-105"
+          className="absolute inset-0 bg-cover bg-center cursor-pointer z-10 flex flex-col justify-between p-6 sm:p-8 transition-all duration-300 hover:brightness-105"
           style={{ backgroundImage: `url(${displayThumbnail})` }}
         >
           {/* Gradient Tint */}
@@ -531,18 +674,18 @@ export function YouTubePlayer({
 
           {/* Top Info Bar */}
           <div className="relative z-10 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-dark/70 backdrop-blur-md text-white text-xs font-medium border border-white/10">
-              <Sparkles size={12} className="text-primary" /> Health & Wellness Video
+            <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-dark/70 backdrop-blur-md text-white text-xs font-medium border border-white/10">
+              <Sparkles size={13} className="text-primary" /> Health & Wellness Video
             </span>
             {durationSeconds ? (
-              <span className="px-2.5 py-1 rounded-md bg-black/80 backdrop-blur-md text-white font-mono text-xs">
+              <span className="px-3 py-1 rounded-md bg-black/80 backdrop-blur-md text-white font-mono text-xs">
                 {formatDuration(durationSeconds)}
               </span>
             ) : null}
           </div>
 
           {/* Center Play Button with Glow */}
-          <div className="relative z-10 flex flex-col items-center justify-center gap-3">
+          <div className="relative z-10 flex flex-col items-center justify-center gap-3.5 my-auto">
             <button
               type="button"
               aria-label="Play video"
@@ -550,19 +693,19 @@ export function YouTubePlayer({
                 e.stopPropagation();
                 togglePlayPause();
               }}
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-primary hover:bg-primary-dark text-white flex items-center justify-center shadow-2xl shadow-primary/40 transform group-hover:scale-110 active:scale-95 transition-all duration-300"
+              className="w-22 h-22 sm:w-26 sm:h-26 rounded-full bg-primary hover:bg-primary-dark text-white flex items-center justify-center shadow-2xl shadow-primary/50 transform group-hover:scale-110 active:scale-95 transition-all duration-300 ring-4 ring-white/30"
             >
-              <Play size={36} className="fill-white ml-1.5 sm:ml-2" />
+              <Play size={40} className="fill-white ml-2" />
             </button>
-            <span className="text-white text-xs sm:text-sm font-medium tracking-wide drop-shadow-md bg-black/50 backdrop-blur-sm px-4 py-1 rounded-full">
+            <span className="text-white text-xs sm:text-sm font-medium tracking-wide drop-shadow-md bg-black/60 backdrop-blur-sm px-4 py-1.5 rounded-full">
               Click anywhere to play
             </span>
           </div>
 
           {/* Bottom Attribution */}
-          <div className="relative z-10 flex items-center justify-between text-white/90 text-xs">
+          <div className="relative z-10 flex items-center justify-between text-white/90 text-xs sm:text-sm">
             <span className="font-heading font-medium truncate max-w-[80%]">{authorName || 'HealthGhuru Verified'}</span>
-            <span className="text-[11px] text-white/70">Press Space to Play</span>
+            <span className="text-xs text-white/70">Press Space to Play</span>
           </div>
         </div>
       )}

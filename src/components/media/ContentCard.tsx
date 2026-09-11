@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { ExternalLink, Play, Clock, BookOpen, Zap } from 'lucide-react';
+import { ExternalLink, Play, Clock, BookOpen } from 'lucide-react';
 import { PillBadge } from '@/components/ui/PillBadge';
 import { formatDate } from '@/lib/utils';
 
@@ -117,15 +117,15 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
   // 1. Horizontal List Layout (Used in Trending / Research sidebars)
   if (layout === 'horizontal') {
     return (
-      <div className="group bg-white rounded-2xl border border-border p-3.5 sm:p-4 shadow-sm hover:shadow-card transition-all duration-300 flex flex-col sm:flex-row gap-4 items-start">
-        {/* Clickable Thumbnail */}
-        <Link
-          href={targetHref}
-          target={isExternalLink ? '_blank' : '_self'}
-          rel={isExternalLink ? 'noopener noreferrer' : undefined}
-          onClick={recordClick}
-          className="w-full sm:w-48 aspect-[16/10] relative rounded-xl overflow-hidden bg-surface shrink-0 border border-border/40 block cursor-pointer"
-        >
+      <Link
+        href={targetHref}
+        target={isExternalLink ? '_blank' : '_self'}
+        rel={isExternalLink ? 'noopener noreferrer' : undefined}
+        onClick={recordClick}
+        className="group bg-white rounded-2xl border border-border p-3.5 sm:p-4 shadow-sm hover:shadow-card transition-all duration-300 flex flex-col sm:flex-row gap-4 items-start block cursor-pointer text-inherit no-underline"
+      >
+        {/* Thumbnail */}
+        <div className="w-full sm:w-48 aspect-[16/10] relative rounded-xl overflow-hidden bg-surface shrink-0 border border-border/40 block">
           <Image
             src={displayImage}
             alt={item.title}
@@ -146,10 +146,10 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
               {formatDuration(item.duration_seconds)}
             </span>
           ) : null}
-        </Link>
+        </div>
 
         {/* Info */}
-        <div className="flex-1 flex flex-col justify-between h-full space-y-1.5">
+        <div className="flex-1 flex flex-col justify-between h-full space-y-1.5 w-full">
           <div>
             <div className="flex items-center gap-1.5 mb-1 flex-wrap">
               <PillBadge active className="text-[10px] py-0.5 px-2">
@@ -170,14 +170,7 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
             </div>
 
             <h3 className="font-heading font-semibold text-dark text-sm sm:text-base group-hover:text-primary transition-colors leading-snug line-clamp-2">
-              <Link
-                href={targetHref}
-                target={isExternalLink ? '_blank' : '_self'}
-                rel={isExternalLink ? 'noopener noreferrer' : undefined}
-                onClick={recordClick}
-              >
-                {item.title}
-              </Link>
+              {item.title}
             </h3>
 
             {!isVideo && (
@@ -189,32 +182,26 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
 
           <div className="pt-1.5 flex items-center justify-between text-[11px] text-text-muted border-t border-border/40">
             <span>By {item.author_name || item.source_name || 'HealthGhuru'}</span>
-            <Link
-              href={targetHref}
-              target={isExternalLink ? '_blank' : '_self'}
-              rel={isExternalLink ? 'noopener noreferrer' : undefined}
-              onClick={recordClick}
-              className="font-medium text-primary hover:text-primary-dark inline-flex items-center gap-1"
-            >
+            <span className="font-medium text-primary group-hover:text-primary-dark inline-flex items-center gap-1">
               {isExternalLink ? 'Read' : isVideo ? 'Watch' : 'Read'}
               {isExternalLink ? <ExternalLink size={11} /> : <BookOpen size={11} />}
-            </Link>
+            </span>
           </div>
         </div>
-      </div>
+      </Link>
     );
   }
 
   // 2. YouTube Shorts Card Format (Vertical Thumbnail + Title below card)
   if (isShort && layout !== 'compact') {
     return (
-      <div className="group flex flex-col w-full select-none">
+      <Link
+        href={targetHref}
+        onClick={recordClick}
+        className="group flex flex-col w-full select-none cursor-pointer block text-inherit no-underline"
+      >
         {/* Vertical Thumbnail Container (9:16 aspect ratio, clean rounded corners) */}
-        <Link
-          href={targetHref}
-          onClick={recordClick}
-          className="w-full aspect-[9/16] relative rounded-2xl overflow-hidden bg-slate-900 border border-border/60 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300 block cursor-pointer"
-        >
+        <div className="w-full aspect-[9/16] relative rounded-2xl overflow-hidden bg-slate-900 border border-border/60 shadow-sm group-hover:shadow-lg group-hover:-translate-y-1 transition-all duration-300 block">
           <Image
             src={displayImage}
             alt={item.title}
@@ -245,35 +232,34 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
               <Play size={20} className="fill-white ml-0.5" />
             </div>
           </div>
-        </Link>
+        </div>
 
-        {/* Title and Metadata below the Thumbnail (Official YouTube Shorts Format) */}
+        {/* Title and Metadata below the Thumbnail */}
         <div className="mt-2.5 space-y-1">
           <h4 className="font-heading font-semibold text-dark text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-            <Link href={targetHref} onClick={recordClick}>
-              {item.title}
-            </Link>
+            {item.title}
           </h4>
 
           <p className="text-xs text-text-muted flex items-center gap-1.5 truncate">
             <span>{item.author_name || item.source_name || 'HealthGhuru'}</span>
           </p>
         </div>
-      </div>
+      </Link>
     );
   }
 
   // 3. Standard Card (16:10 for Full Length Videos and Articles)
+  // ENTIRE CARD IS FULLY CLICKABLE: Clicking ANYWHERE on the card opens the video!
   return (
-    <div className="group bg-white rounded-xl border border-border shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden">
+    <Link
+      href={targetHref}
+      target={isExternalLink ? '_blank' : '_self'}
+      rel={isExternalLink ? 'noopener noreferrer' : undefined}
+      onClick={recordClick}
+      className="group bg-white rounded-xl border border-border shadow-sm hover:shadow-card hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden cursor-pointer block text-inherit no-underline select-none"
+    >
       {/* Clickable Thumbnail & Play Button */}
-      <Link
-        href={targetHref}
-        target={isExternalLink ? '_blank' : '_self'}
-        rel={isExternalLink ? 'noopener noreferrer' : undefined}
-        onClick={recordClick}
-        className="w-full aspect-[16/10] relative overflow-hidden bg-surface block cursor-pointer"
-      >
+      <div className="w-full aspect-[16/10] relative overflow-hidden bg-surface block">
         <Image
           src={displayImage}
           alt={item.title}
@@ -310,7 +296,7 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
         <div className="absolute bottom-2 left-2 bg-dark/80 text-white/90 text-[9px] font-medium px-1.5 py-0.5 rounded backdrop-blur-sm">
           {isOriginal ? '✦ Original' : item.source_name || 'External'}
         </div>
-      </Link>
+      </div>
 
       {/* Body */}
       <div className="p-4 flex-1 flex flex-col justify-between space-y-2">
@@ -323,14 +309,7 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
           )}
 
           <h3 className="font-heading font-semibold text-dark text-sm sm:text-base group-hover:text-primary transition-colors leading-snug line-clamp-2">
-            <Link
-              href={targetHref}
-              target={isExternalLink ? '_blank' : '_self'}
-              rel={isExternalLink ? 'noopener noreferrer' : undefined}
-              onClick={recordClick}
-            >
-              {item.title}
-            </Link>
+            {item.title}
           </h3>
 
           {!isVideo && (
@@ -345,18 +324,12 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
           <span className="truncate max-w-[120px] font-medium text-dark">
             {item.author_name || item.source_name || 'HealthGhuru'}
           </span>
-          <Link
-            href={targetHref}
-            target={isExternalLink ? '_blank' : '_self'}
-            rel={isExternalLink ? 'noopener noreferrer' : undefined}
-            onClick={recordClick}
-            className="text-primary hover:underline inline-flex items-center gap-1 font-semibold"
-          >
+          <span className="text-primary group-hover:text-primary-dark inline-flex items-center gap-1 font-semibold">
             {isExternalLink ? 'Source' : isVideo ? 'Watch' : 'Read'}
             {isExternalLink ? <ExternalLink size={10} /> : <BookOpen size={10} />}
-          </Link>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
