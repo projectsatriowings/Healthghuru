@@ -87,6 +87,12 @@ export class YouTubeSourceAdapter extends BaseSourceAdapter {
       const publishedAt = parsePublicationDate(snippet.publishedAt);
       const slug = generateSlug(title, videoId);
 
+      const durationSecs = durationMap[videoId] || 0;
+      const isShort = (durationSecs > 0 && durationSecs <= 60) ||
+                      title.toLowerCase().includes('#shorts') ||
+                      title.toLowerCase().includes('#short') ||
+                      description.toLowerCase().includes('#shorts');
+
       return {
         externalId: videoId,
         sourceId: source.id,
@@ -102,9 +108,10 @@ export class YouTubeSourceAdapter extends BaseSourceAdapter {
         publishedAt,
         contentType: 'video' as const,
         category: source.defaultCategory || 'Wellness',
+        subcategory: isShort ? 'short' : 'video',
         language: source.language || 'en',
         country: source.country,
-        durationSeconds: durationMap[videoId] || 0,
+        durationSeconds: durationSecs,
         videoId,
         isExternal: true,
         rawPayload: { videoId, channelId },
@@ -146,6 +153,10 @@ export class YouTubeSourceAdapter extends BaseSourceAdapter {
       const authorName = entry.author?.name || source.name;
       const slug = generateSlug(title, videoId);
 
+      const isShort = title.toLowerCase().includes('#shorts') ||
+                      title.toLowerCase().includes('#short') ||
+                      description.toLowerCase().includes('#shorts');
+
       return {
         externalId: videoId,
         sourceId: source.id,
@@ -161,6 +172,7 @@ export class YouTubeSourceAdapter extends BaseSourceAdapter {
         publishedAt,
         contentType: 'video' as const,
         category: source.defaultCategory || 'Wellness',
+        subcategory: isShort ? 'short' : 'video',
         language: source.language || 'en',
         country: source.country,
         videoId,

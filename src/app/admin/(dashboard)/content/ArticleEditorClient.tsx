@@ -25,6 +25,10 @@ export function ArticleEditorClient({ initialArticle }: { initialArticle?: any }
     authorAvatar: initialArticle?.author_avatar || '/images/exercise_plank.png',
     heroImageUrl: initialArticle?.hero_image_url || '',
     heroImageAlt: initialArticle?.hero_image_alt || '',
+    isFeatured: initialArticle?.is_featured ?? true,
+    isTrending: initialArticle?.is_trending ?? false,
+    qualityScore: initialArticle?.quality_score ?? 95,
+    tagsInput: initialArticle?.tags ? initialArticle.tags.join(', ') : '',
   });
   
   const [blocks, setBlocks] = useState<ArticleBlock[]>(
@@ -67,12 +71,23 @@ export function ArticleEditorClient({ initialArticle }: { initialArticle?: any }
     e.preventDefault();
     setIsSubmitting(true);
     try {
+      const parsedTags = formData.tagsInput
+        ? formData.tagsInput
+            .split(',')
+            .map((t: string) => t.trim())
+            .filter(Boolean)
+        : [];
+
       await manageArticle({
         action: initialArticle ? 'update' : 'create',
         id: initialArticle?.id,
         ...formData,
+        isFeatured: Boolean(formData.isFeatured),
+        isTrending: Boolean(formData.isTrending),
+        qualityScore: Number(formData.qualityScore),
+        tags: parsedTags,
         readTime: Number(formData.readTime),
-        blocks: blocks
+        blocks: blocks,
       } as any);
       router.push('/admin/content');
       router.refresh();
@@ -129,6 +144,10 @@ export function ArticleEditorClient({ initialArticle }: { initialArticle?: any }
               <option value="Fitness">Fitness ▾</option>
               <option value="Sleep">Sleep ▾</option>
               <option value="Mental Health">Mental Health ▾</option>
+              <option value="Gut Health">Gut Health ▾</option>
+              <option value="Heart Health">Heart Health ▾</option>
+              <option value="Healthy Aging">Healthy Aging ▾</option>
+              <option value="Immunity">Immunity ▾</option>
             </select>
           </div>
 
@@ -209,6 +228,67 @@ export function ArticleEditorClient({ initialArticle }: { initialArticle?: any }
               className="w-full px-4 py-2 border border-gray-300 rounded-lg resize-none text-sm"
               placeholder="A brief summary of the article..."
             ></textarea>
+          </div>
+        </div>
+
+        {/* Recommendation Engine Signals & Tags */}
+        <div className="p-4 bg-[#F5FAF5] rounded-xl border border-[rgba(46,125,50,0.2)] space-y-4">
+          <h4 className="font-heading font-semibold text-sm text-primary flex items-center gap-2">
+            <span>✦ Personalization & Recommendation Engine Signals</span>
+          </h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-center">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="isFeaturedToggle"
+                checked={formData.isFeatured}
+                onChange={e => setFormData({ ...formData, isFeatured: e.target.checked })}
+                className="w-4 h-4 rounded text-primary focus:ring-primary/40"
+              />
+              <label htmlFor="isFeaturedToggle" className="text-xs font-semibold text-dark cursor-pointer">
+                Curated Pick (is_featured +1.5x)
+              </label>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id="isTrendingToggle"
+                checked={formData.isTrending}
+                onChange={e => setFormData({ ...formData, isTrending: e.target.checked })}
+                className="w-4 h-4 rounded text-primary focus:ring-primary/40"
+              />
+              <label htmlFor="isTrendingToggle" className="text-xs font-semibold text-dark cursor-pointer">
+                Trending Surge (is_trending +1.0x)
+              </label>
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-xs font-semibold text-dark">
+                Quality Score (1–100): {formData.qualityScore}
+              </label>
+              <input
+                type="range"
+                min="50"
+                max="100"
+                value={formData.qualityScore}
+                onChange={e => setFormData({ ...formData, qualityScore: parseInt(e.target.value) || 90 })}
+                className="w-full accent-primary"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="block text-xs font-semibold text-dark">
+                Taxonomy Tags (comma-separated)
+              </label>
+              <input
+                type="text"
+                value={formData.tagsInput}
+                onChange={e => setFormData({ ...formData, tagsInput: e.target.value })}
+                placeholder="e.g. nutrition, longevity, diet"
+                className="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-xs"
+              />
+            </div>
           </div>
         </div>
 

@@ -21,6 +21,10 @@ const articleSchema = z.object({
   authorName: z.string().optional(),
   authorAvatar: z.string().optional(),
   authorCredential: z.string().optional(),
+  isFeatured: z.boolean().optional(),
+  isTrending: z.boolean().optional(),
+  qualityScore: z.number().optional(),
+  tags: z.array(z.string()).optional(),
   blocks: z.any().optional(),
   action: z.enum(['create', 'update', 'delete']),
 });
@@ -48,7 +52,7 @@ export async function manageArticle(input: z.infer<typeof articleSchema>) {
       )
     `;
 
-    // Dual-write into unified content_items platform
+    // Dual-write into unified content_items platform with recommendation signals
     try {
       await sql`
         INSERT INTO content_items (
@@ -60,8 +64,8 @@ export async function manageArticle(input: z.infer<typeof articleSchema>) {
           ${newId}::uuid, 'article', ${validated.title}, ${validated.slug}, ${validated.excerpt}, ${validated.excerpt},
           ${'/blog/' + validated.slug}, ${validated.heroImageUrl || null}, ${validated.authorName || 'HealthGhuru Editorial Team'},
           CURRENT_TIMESTAMP, NULL, ${validated.status}, 'en',
-          ${validated.category}, FALSE, TRUE, FALSE, FALSE, TRUE,
-          FALSE, 95.0, 95.0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+          ${validated.category}, FALSE, ${validated.isFeatured ?? true}, ${validated.isTrending ?? false}, FALSE, TRUE,
+          FALSE, ${validated.qualityScore ?? 95.0}, 95.0, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
         )
         ON CONFLICT (slug) DO UPDATE SET
           title = EXCLUDED.title,
@@ -69,8 +73,31 @@ export async function manageArticle(input: z.infer<typeof articleSchema>) {
           category = EXCLUDED.category,
           image_url = EXCLUDED.image_url,
           status = EXCLUDED.status,
+          is_featured = EXCLUDED.is_featured,
+          is_trending = EXCLUDED.is_trending,
+          quality_score = EXCLUDED.quality_score,
           updated_at = CURRENT_TIMESTAMP;
       `;
+
+      // Sync tags if provided
+      if (validated.tags && validated.tags.length > 0) {
+        for (const tagName of validated.tags) {
+          if (!tagName.trim()) continue;
+          const tagRes = await sql`
+            INSERT INTO content_tags (name, slug)
+            VALUES (${tagName.trim()}, ${tagName.toLowerCase().replace(/[^a-z0-9]+/g, '-')})
+            ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name
+            RETURNING id
+          `;
+          if (tagRes.length > 0) {
+            await sql`
+              INSERT INTO content_item_tags (content_item_id, tag_id)
+              VALUES (${newId}::uuid, ${tagRes[0].id}::uuid)
+              ON CONFLICT (content_item_id, tag_id) DO NOTHING
+            `;
+          }
+        }
+      }
     } catch (syncErr) {
       console.warn('Failed to sync article to content_items:', syncErr);
     }
@@ -122,9 +149,32 @@ export async function manageArticle(input: z.infer<typeof articleSchema>) {
           image_url = ${validated.heroImageUrl || null},
           author_name = ${validated.authorName || null},
           status = ${validated.status},
+          ${validated.isFeatured !== undefined ? sql`is_featured = ${validated.isFeatured},` : sql``}
+          ${validated.isTrending !== undefined ? sql`is_trending = ${validated.isTrending},` : sql``}
+          ${validated.qualityScore !== undefined ? sql`quality_score = ${validated.qualityScore},` : sql``}
           updated_at = CURRENT_TIMESTAMP
         WHERE id = ${validated.id}::uuid;
       `;
+
+      // Sync tags if provided
+      if (validated.tags && validated.tags.length > 0) {
+        for (const tagName of validated.tags) {
+          if (!tagName.trim()) continue;
+          const tagRes = await sql`
+            INSERT INTO content_tags (name, slug)
+            VALUES (${tagName.trim()}, ${tagName.toLowerCase().replace(/[^a-z0-9]+/g, '-')})
+            ON CONFLICT (slug) DO UPDATE SET name = EXCLUDED.name
+            RETURNING id
+          `;
+          if (tagRes.length > 0) {
+            await sql`
+              INSERT INTO content_item_tags (content_item_id, tag_id)
+              VALUES (${validated.id}::uuid, ${tagRes[0].id}::uuid)
+              ON CONFLICT (content_item_id, tag_id) DO NOTHING
+            `;
+          }
+        }
+      }
     } catch (syncErr) {
       console.warn('Failed to sync update to content_items:', syncErr);
     }
