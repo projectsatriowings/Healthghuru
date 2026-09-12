@@ -1,10 +1,33 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Menu, X, Search, ChevronRight, Home, Newspaper, FileText, Video, BookOpen, HeartPulse, PenTool, Sparkles, ShieldCheck } from "lucide-react";
+import { useSession, signOut } from "next-auth/react";
+import {
+  Menu,
+  X,
+  Search,
+  ChevronRight,
+  ChevronDown,
+  Home,
+  Newspaper,
+  FileText,
+  Video,
+  BookOpen,
+  HeartPulse,
+  PenTool,
+  Sparkles,
+  ShieldCheck,
+  User,
+  LogOut,
+  Bookmark,
+  Compass,
+  Settings,
+  LayoutDashboard,
+  Activity,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NAV_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
@@ -17,12 +40,16 @@ const NAV_ICONS: Record<string, React.ReactNode> = {
   "/magazines": <BookOpen size={18} />,
   "/stay-healthy": <HeartPulse size={18} />,
   "/blog": <PenTool size={18} />,
+  "/tools": <Activity size={18} />,
 };
 
 export default function Navbar() {
+  const { data: session, status } = useSession();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const pathname = usePathname();
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,26 +59,48 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu on route change
+  // Close menus on route change
   useEffect(() => {
     setMobileMenuOpen(false);
+    setUserDropdownOpen(false);
   }, [pathname]);
+
+  // Close user dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Prevent background scroll when mobile menu is open
   useEffect(() => {
     if (mobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [mobileMenuOpen]);
 
-  if (pathname === '/login' || pathname === '/subscribe') {
+  if (pathname === "/login" || pathname === "/subscribe") {
     return null;
   }
+
+  const user = session?.user;
+  const userInitials = user?.name
+    ? user.name
+        .split(" ")
+        .map((n) => n[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
+    : "HG";
 
   return (
     <>
@@ -66,7 +115,6 @@ export default function Navbar() {
       >
         <div className="site-container">
           <div className="flex items-center justify-between gap-3 sm:gap-6">
-            
             {/* Logo */}
             <Link
               href="/"
@@ -95,13 +143,14 @@ export default function Navbar() {
                     href={link.href}
                     prefetch={true}
                     className={cn(
-                      "font-heading font-semibold text-sm xl:text-[15px] tracking-wide transition-colors relative py-2 whitespace-nowrap",
-                      isActive
-                        ? "text-primary font-bold"
-                        : "text-text-primary hover:text-primary"
+                      "flex items-center gap-1.5 font-heading font-semibold text-sm xl:text-[15px] tracking-wide transition-colors relative py-2 whitespace-nowrap",
+                      isActive ? "text-primary font-bold" : "text-text-primary hover:text-primary"
                     )}
                   >
                     {link.label}
+                    {link.href === '/tools' && (
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-white bg-gradient-to-r from-accent to-[#ff8a57] px-1.5 py-0.5 rounded shadow-sm relative -top-1.5 -ml-0.5">Pro</span>
+                    )}
                     {/* Active / Hover underline indicator */}
                     <span
                       className={cn(
@@ -125,19 +174,133 @@ export default function Navbar() {
                 <Search size={20} />
               </Link>
 
-              {/* Login Button (desktop / tablet) */}
-              <Link href="/login" className="hidden sm:inline-block">
-                <span className="inline-flex items-center justify-center px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-heading font-semibold text-primary border border-primary/30 rounded-full hover:bg-primary/5 hover:border-primary/50 active:scale-95 transition-all">
-                  Login
-                </span>
-              </Link>
+              {/* Logged In User State / Dropdown */}
+              {status === "authenticated" && user ? (
+                <div className="relative hidden sm:block" ref={userMenuRef}>
+                  <button
+                    type="button"
+                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                    className="flex items-center gap-2.5 p-1.5 pl-2.5 pr-3 rounded-full border border-primary/20 bg-surface hover:border-primary/40 transition-all text-left group"
+                    aria-expanded={userDropdownOpen}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-heading font-bold text-xs shadow-2xs">
+                      {userInitials}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-heading font-bold text-xs text-dark max-w-[100px] truncate">
+                        {user.name?.split(" ")[0] || "Account"}
+                      </span>
+                      <span className="text-[10px] text-text-muted capitalize leading-none">
+                        {user.role === "admin" ? "Admin" : "Member"}
+                      </span>
+                    </div>
+                    <ChevronDown
+                      size={14}
+                      className={cn(
+                        "text-text-muted transition-transform duration-200 ml-0.5",
+                        userDropdownOpen && "rotate-180 text-primary"
+                      )}
+                    />
+                  </button>
 
-              {/* Subscribe Button (desktop / tablet) */}
-              <Link href="/subscribe" className="hidden sm:inline-block">
-                <span className="inline-flex items-center justify-center gap-1.5 px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-heading font-semibold text-white bg-gradient-to-r from-accent to-[#ff8a57] rounded-full shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
-                  Subscribe &rarr;
-                </span>
-              </Link>
+                  {/* Dropdown Menu */}
+                  <AnimatePresence>
+                    {userDropdownOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 top-full mt-2 w-64 bg-white rounded-2xl shadow-xl border border-primary/15 p-2 z-50"
+                      >
+                        {/* User Header */}
+                        <div className="p-3 bg-surface rounded-xl mb-1.5 border border-primary/10">
+                          <p className="font-heading font-bold text-sm text-dark truncate">
+                            {user.name || "HealthGuru Member"}
+                          </p>
+                          <p className="text-xs text-text-muted truncate mt-0.5">{user.email}</p>
+                          <div className="mt-2 flex items-center gap-1.5">
+                            <span className="text-[10px] font-heading font-semibold uppercase px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+                              {user.role === "admin" ? "Administrator" : "Active Member"}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Personalized Feed & Hub Link */}
+                        <Link
+                          href="/dashboard"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-heading font-semibold text-text-primary hover:bg-primary/5 hover:text-primary transition-colors"
+                        >
+                          <Sparkles size={15} className="text-primary" />
+                          <span>Personalized Hub</span>
+                        </Link>
+
+                        {/* Account & Profile Link */}
+                        <Link
+                          href="/account"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-heading font-semibold text-text-primary hover:bg-primary/5 hover:text-primary transition-colors"
+                        >
+                          <User size={15} className="text-primary" />
+                          <span>My Account & Profile</span>
+                        </Link>
+
+                        {/* Saved Content Link */}
+                        <Link
+                          href="/account?tab=saved"
+                          onClick={() => setUserDropdownOpen(false)}
+                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-heading font-semibold text-text-primary hover:bg-primary/5 hover:text-primary transition-colors"
+                        >
+                          <Bookmark size={15} className="text-primary" />
+                          <span>Saved Content</span>
+                        </Link>
+
+                        {/* Admin Link (if admin) */}
+                        {user.role === "admin" && (
+                          <Link
+                            href="/admin"
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-heading font-semibold text-text-primary hover:bg-primary/5 hover:text-primary transition-colors"
+                          >
+                            <LayoutDashboard size={15} className="text-primary" />
+                            <span>Admin Dashboard</span>
+                          </Link>
+                        )}
+
+                        {/* Sign Out */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            signOut({ callbackUrl: "/" });
+                          }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-heading font-semibold text-red-600 hover:bg-red-50 transition-colors mt-1 border-t border-border/60"
+                        >
+                          <LogOut size={15} />
+                          <span>Sign Out</span>
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              ) : (
+                <>
+                  {/* Login Button (desktop / tablet) */}
+                  <Link href="/login" className="hidden sm:inline-block">
+                    <span className="inline-flex items-center justify-center px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-heading font-semibold text-primary border border-primary/30 rounded-full hover:bg-primary/5 hover:border-primary/50 active:scale-95 transition-all">
+                      Login
+                    </span>
+                  </Link>
+
+                  {/* Subscribe Button (desktop / tablet) */}
+                  <Link href="/subscribe" className="hidden sm:inline-block">
+                    <span className="inline-flex items-center justify-center gap-1.5 px-5 sm:px-6 py-2 sm:py-2.5 text-xs sm:text-sm font-heading font-semibold text-white bg-gradient-to-r from-accent to-[#ff8a57] rounded-full shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all">
+                      Subscribe &rarr;
+                    </span>
+                  </Link>
+                </>
+              )}
 
               {/* Mobile / Tablet Menu Toggle Button */}
               <button
@@ -178,6 +341,47 @@ export default function Navbar() {
                   </span>
                 </Link>
 
+                {/* Mobile Logged In User Card */}
+                {status === "authenticated" && user && (
+                  <div className="p-3.5 rounded-2xl bg-surface border border-primary/15 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-heading font-bold text-sm">
+                          {userInitials}
+                        </div>
+                        <div>
+                          <p className="font-heading font-bold text-sm text-dark">{user.name}</p>
+                          <p className="text-[11px] text-text-muted truncate max-w-[180px]">{user.email}</p>
+                        </div>
+                      </div>
+                      {user.role === "admin" && (
+                        <Link
+                          href="/admin"
+                          className="text-[10px] font-heading font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-primary text-white"
+                        >
+                          Admin
+                        </Link>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 pt-1 border-t border-border/40">
+                      <Link
+                        href="/dashboard"
+                        className="py-1.5 px-3 rounded-xl bg-primary/10 text-primary text-xs font-heading font-semibold text-center hover:bg-primary hover:text-white transition-colors flex items-center justify-center gap-1"
+                      >
+                        <Sparkles size={12} />
+                        <span>Feed Hub</span>
+                      </Link>
+                      <Link
+                        href="/account"
+                        className="py-1.5 px-3 rounded-xl bg-white border border-border text-dark text-xs font-heading font-semibold text-center hover:border-primary/40 transition-colors flex items-center justify-center gap-1"
+                      >
+                        <User size={12} />
+                        <span>My Account</span>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+
                 {/* Navigation Link List */}
                 <nav className="flex flex-col gap-1.5" aria-label="Mobile Navigation">
                   {NAV_LINKS.map((link) => {
@@ -195,13 +399,22 @@ export default function Navbar() {
                         )}
                       >
                         <div className="flex items-center gap-3">
-                          <span className={cn(
-                            "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
-                            isActive ? "bg-white/20 text-white" : "bg-white text-primary shadow-2xs border border-primary/10"
-                          )}>
+                          <span
+                            className={cn(
+                              "w-8 h-8 rounded-lg flex items-center justify-center shrink-0",
+                              isActive
+                                ? "bg-white/20 text-white"
+                                : "bg-white text-primary shadow-2xs border border-primary/10"
+                            )}
+                          >
                             {NAV_ICONS[link.href] || <FileText size={16} />}
                           </span>
-                          <span>{link.label}</span>
+                          <span className="flex items-center gap-2">
+                            {link.label}
+                            {link.href === '/tools' && (
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-white bg-gradient-to-r from-accent to-[#ff8a57] px-1.5 py-0.5 rounded shadow-sm">Pro</span>
+                            )}
+                          </span>
                         </div>
                         <ChevronRight size={16} className={isActive ? "text-white" : "text-text-muted"} />
                       </Link>
@@ -211,32 +424,49 @@ export default function Navbar() {
 
                 {/* Mobile Auth & Subscription CTAs */}
                 <div className="pt-3 border-t border-border flex flex-col gap-2.5">
-                  <Link href="/login" className="w-full">
-                    <span className="w-full flex items-center justify-center py-3 text-sm font-heading font-semibold text-primary bg-surface border border-primary/30 rounded-xl hover:bg-primary/10 transition-all">
-                      Login to Account
-                    </span>
-                  </Link>
-                  <Link href="/subscribe" className="w-full">
-                    <span className="w-full flex items-center justify-center gap-2 py-3 text-sm font-heading font-semibold text-white bg-gradient-to-r from-accent to-[#ff8a57] rounded-xl shadow-md hover:shadow-lg active:scale-98 transition-all">
-                      <Sparkles size={16} /> Subscribe for Free &rarr;
-                    </span>
-                  </Link>
+                  {status === "authenticated" ? (
+                    <button
+                      type="button"
+                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="w-full flex items-center justify-center gap-2 py-3 text-sm font-heading font-semibold text-red-600 bg-red-50 border border-red-200 rounded-xl hover:bg-red-100 transition-all"
+                    >
+                      <LogOut size={16} /> Sign Out
+                    </button>
+                  ) : (
+                    <>
+                      <Link href="/login" className="w-full">
+                        <span className="w-full flex items-center justify-center py-3 text-sm font-heading font-semibold text-primary bg-surface border border-primary/30 rounded-xl hover:bg-primary/10 transition-all">
+                          Login to Account
+                        </span>
+                      </Link>
+                      <Link href="/subscribe" className="w-full">
+                        <span className="w-full flex items-center justify-center gap-2 py-3 text-sm font-heading font-semibold text-white bg-gradient-to-r from-accent to-[#ff8a57] rounded-xl shadow-md hover:shadow-lg active:scale-98 transition-all">
+                          <Sparkles size={16} /> Subscribe for Free &rarr;
+                        </span>
+                      </Link>
+                    </>
+                  )}
                 </div>
 
                 {/* Footer Micro-links in Mobile Menu */}
                 <div className="pt-2 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted font-medium px-1">
                   <div className="flex items-center gap-3">
-                    <Link href="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
+                    <Link href="/privacy" className="hover:text-primary transition-colors">
+                      Privacy
+                    </Link>
                     <span>•</span>
-                    <Link href="/terms" className="hover:text-primary transition-colors">Terms</Link>
+                    <Link href="/terms" className="hover:text-primary transition-colors">
+                      Terms
+                    </Link>
                     <span>•</span>
-                    <Link href="/about" className="hover:text-primary transition-colors">About</Link>
+                    <Link href="/about" className="hover:text-primary transition-colors">
+                      About
+                    </Link>
                   </div>
                   <span className="flex items-center gap-1 text-primary font-semibold">
                     <ShieldCheck size={13} /> HealthGhuru
                   </span>
                 </div>
-
               </div>
             </motion.div>
           )}

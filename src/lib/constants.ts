@@ -8,6 +8,7 @@ export const NAV_LINKS = [
   { label: 'Magazines', href: '/magazines' },
   { label: 'Stay Healthy', href: '/stay-healthy' },
   { label: 'Blog', href: '/blog' },
+  { label: 'Tools', href: '/tools' },
 ];
 
 export const BLOG_POSTS: BlogPost[] = [

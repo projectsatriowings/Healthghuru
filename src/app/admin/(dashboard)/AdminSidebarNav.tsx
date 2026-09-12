@@ -12,6 +12,7 @@ import {
   Activity,
   CheckSquare,
   Layers,
+  Megaphone,
 } from 'lucide-react';
 import { IconAction } from '@/components/ui/IconAction';
 
@@ -21,6 +22,7 @@ export function AdminSidebarNav() {
   const links = [
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/content', label: 'Content Library', icon: FileText },
+    { href: '/admin/advertisements', label: 'Advertisements', icon: Megaphone },
     { href: '/admin/review-queue', label: 'Review Queue', icon: CheckSquare },
     { href: '/admin/sources', label: 'Content Sources', icon: Rss },
     { href: '/admin/ingestion', label: 'Ingestion Runs', icon: Activity },

@@ -6,6 +6,7 @@ import { SectionHeader } from '@/components/ui/SectionHeader';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { ContentCard } from '@/components/media/ContentCard';
 import { HealthDisclaimer } from '@/components/media/HealthDisclaimer';
+import { HeroBannerAd } from '@/components/ads/HeroBannerAd';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
@@ -107,6 +108,9 @@ export default async function CategoryDetailPage({
             </div>
           </div>
         </ScrollReveal>
+
+        {/* Category Targeted Sponsor Banner */}
+        <HeroBannerAd category={category.name} className="!my-6 !px-0" />
 
         {items.length === 0 ? (
           <div className="bg-white rounded-2xl p-12 text-center border border-border shadow-sm">

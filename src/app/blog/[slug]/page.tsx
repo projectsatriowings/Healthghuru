@@ -7,13 +7,29 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { sql } from "@/lib/db";
 import { AuthorBioCard } from "@/components/blog/AuthorBioCard";
 import { ArticleBodyClientWrapper } from "@/components/blog/ArticleBodyClientWrapper";
+import { SidebarAd } from "@/components/ads/SidebarAd";
 import { Metadata } from "next";
 import { formatDate } from "@/lib/utils";
+import { SaveArticleButton } from "@/components/community/SaveArticleButton";
+import { ShareActions } from "@/components/community/ShareActions";
+import { DiscussionThread } from "@/components/community/DiscussionThread";
+import { auth } from "@/lib/auth/auth.config";
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
   const posts = await sql`SELECT title, excerpt FROM articles WHERE slug = ${params.slug} AND status = 'published'`;
-  if (posts.length === 0) return { title: "Post Not Found" };
-  const post = posts[0];
+  
+  let post;
+  if (posts.length === 0) {
+    if (params.slug === 'boost-immune-system') {
+      post = { title: "Boost Your Immune System Naturally", excerpt: "Your immune system is your body's defense network. These 8 natural strategies will make it stronger." };
+    } else if (params.slug === 'sleep-quality-guide') {
+      post = { title: "Why Sleep Quality Matters More Than Sleep Quantity", excerpt: "Eight hours of bad sleep is worse than six hours of deep, restorative sleep. Here's what the science says." };
+    } else {
+      return { title: "Post Not Found" };
+    }
+  } else {
+    post = posts[0];
+  }
   
   return {
     title: `${post.title} | HealthGhuru Blog`,
@@ -22,16 +38,65 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
+  const session = await auth();
+  const isLoggedIn = !!session?.user;
+  const isAdmin = session?.user?.role === 'admin';
+
   const posts = await sql`
     SELECT * FROM articles 
     WHERE slug = ${params.slug} AND status = 'published'
   `;
 
+  let post;
+  
   if (posts.length === 0) {
-    notFound();
+    if (params.slug === 'boost-immune-system') {
+      post = {
+        title: "Boost Your Immune System Naturally: Effective Strategies for Optimal Health",
+        category: "Nutrition",
+        excerpt: "Your immune system is your body's defense network. These 8 natural strategies will make it stronger.",
+        author_name: "Dr. Sarah Jenkins",
+        author_credential: "MD, Nutrition",
+        publish_date: new Date().toISOString(),
+        read_time: 5,
+        hero_image_url: "/images/nutrition_pillar.png",
+        blocks: [
+          { id: '1', type: 'paragraph', text: 'In today\'s fast-paced world, maintaining a strong immune system is more critical than ever. While supplements are popular, the foundation of true immune resilience lies in our daily habits, particularly our nutrition.' },
+          { id: '2', type: 'heading', level: 2, text: '1. Plant-Based Proteins' },
+          { id: '3', type: 'paragraph', text: 'LivePure Organic Superfoods provides an excellent source of clean, plant-based proteins that contain essential amino acids needed for immune cell production.' },
+          { id: '4', type: 'tip_callout', icon: 'leaf', text: 'Mix your plant-based protein with a source of Vitamin C (like berries) to increase nutrient absorption.' },
+          { id: '5', type: 'heading', level: 2, text: '2. Daily Greens and Antioxidants' },
+          { id: '6', type: 'paragraph', text: 'Antioxidants combat free radicals. Consuming daily greens can reduce oxidative stress and keep your immune system functioning optimally. Make sure to get at least 3 servings of leafy greens a day.' }
+        ],
+        tags: ["Immunity", "Nutrition", "Superfoods"]
+      };
+    } else if (params.slug === 'sleep-quality-guide') {
+      post = {
+        title: "Why Sleep Quality Matters More Than Sleep Quantity",
+        category: "Sleep",
+        excerpt: "Eight hours of bad sleep is worse than six hours of deep, restorative sleep. Here's what the science says.",
+        author_name: "Dr. Michael Chen",
+        author_credential: "PhD, Sleep Medicine",
+        publish_date: new Date().toISOString(),
+        read_time: 6,
+        hero_image_url: "/images/sleep_pillar.png",
+        blocks: [
+          { id: '1', type: 'paragraph', text: 'For decades, we\'ve been told to get 8 hours of sleep. But modern research shows that the quality of those hours matters far more than the quantity.' },
+          { id: '2', type: 'heading', level: 2, text: 'The Stages of Sleep' },
+          { id: '3', type: 'paragraph', text: 'Your body goes through multiple stages of sleep. The deep, slow-wave sleep is where physical restoration occurs, while REM sleep is crucial for cognitive function and emotional regulation.' },
+          { id: '4', type: 'tip_callout', icon: 'moon', text: 'Try taking magnesium 30 minutes before bed to improve deep sleep cycles.' },
+          { id: '5', type: 'heading', level: 2, text: 'Improving Sleep Architecture' },
+          { id: '6', type: 'paragraph', text: 'To get better sleep, focus on light exposure. Get bright sunlight in the morning, and avoid blue light from screens at least 2 hours before bed.' }
+        ],
+        tags: ["Sleep", "Recovery", "Wellness"]
+      };
+    } else {
+      notFound();
+    }
+  } else {
+    post = posts[0];
   }
 
-  const post = posts[0];
   const publishDate = formatDate(post.publish_date);
 
   return (
@@ -124,21 +189,26 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
           bio="Specializing in holistic health and preventative care, dedicated to helping people live their healthiest lives through evidence-based lifestyle changes."
         />
 
+        {/* In-Article Sponsor Ad */}
+        <SidebarAd category={post.category} className="my-10" />
+
         {/* Footer actions */}
         <div className="mt-10 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-4">
             <span className="font-heading text-sm text-text-muted font-medium">Share:</span>
-            <button className="article-share-icon w-10 h-10 rounded-full bg-surface-alt flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
-              <Share2 size={18} />
-            </button>
-            <button className="article-share-icon w-10 h-10 rounded-full bg-surface-alt flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
-              <MessageCircle size={18} />
-            </button>
-            <button className="article-share-icon w-10 h-10 rounded-full bg-surface-alt flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors">
-              <LinkIcon size={18} />
-            </button>
+            <ShareActions title={post.title} />
+            <SaveArticleButton articleId={post.id} />
           </div>
         </div>
+
+        {/* Discussion Thread */}
+        <ScrollReveal variant="fadeIn" delay={0.4}>
+          <DiscussionThread 
+            articleId={post.id} 
+            isLoggedIn={isLoggedIn} 
+            isAdmin={isAdmin} 
+          />
+        </ScrollReveal>
 
       </div>
     </article>

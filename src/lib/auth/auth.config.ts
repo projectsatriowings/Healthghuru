@@ -4,7 +4,7 @@ import { sql } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 
 class SuspendedAccountError extends CredentialsSignin {
-  code = "suspended"
+  code = "suspended";
 }
 
 declare module "next-auth" {
@@ -12,7 +12,7 @@ declare module "next-auth" {
     user: {
       id: string;
       role: string;
-    } & DefaultSession["user"]
+    } & DefaultSession["user"];
   }
   interface User {
     role?: string;
@@ -32,10 +32,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
         
+        const cleanEmail = (credentials.email as string).trim().toLowerCase();
+        
         const users = await sql`
           SELECT id, name, email, password_hash, role, status
           FROM users 
-          WHERE email = ${credentials.email}
+          WHERE LOWER(email) = ${cleanEmail}
         `;
         
         const user = users[0];
@@ -50,6 +52,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         );
         
         if (passwordsMatch) {
+          // Asynchronously record last login
+          try {
+            await sql`UPDATE users SET last_login_at = NOW() WHERE id = ${user.id}::uuid`;
+          } catch {
+            // Non-blocking
+          }
+
           return {
             id: user.id,
             name: user.name,
@@ -64,6 +73,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
   session: {
     strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -82,6 +92,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }
   },
   pages: {
-    signIn: '/admin/login',
+    signIn: '/login',
   }
 });

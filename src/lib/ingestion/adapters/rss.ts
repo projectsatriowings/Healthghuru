@@ -164,15 +164,24 @@ export class RssSourceAdapter extends BaseSourceAdapter {
     // Slug
     const slug = generateSlug(title, externalId);
 
-    // Auto-detect Instagram Reels and video URLs
-    const isVideo = canonicalUrl.includes('instagram.com/reel') ||
-                    canonicalUrl.includes('instagram.com/p/') ||
-                    canonicalUrl.includes('youtube.com') ||
-                    canonicalUrl.includes('youtu.be') ||
-                    canonicalUrl.includes('vimeo.com') ||
-                    item.enclosure?.['@_type']?.startsWith('video/') ||
-                    source.name.toLowerCase().includes('reel') ||
-                    source.name.toLowerCase().includes('video');
+    // Auto-detect format and content type
+    const isInstagramReel = canonicalUrl.includes('instagram.com/reel') || canonicalUrl.includes('instagram.com/reels');
+    const isYouTubeShort = canonicalUrl.includes('youtube.com/shorts') || title.toLowerCase().includes('#shorts');
+    const isYouTubeVideo = canonicalUrl.includes('youtube.com/watch') || canonicalUrl.includes('youtu.be/');
+    const isDirectVideo = canonicalUrl.includes('vimeo.com') || item.enclosure?.['@_type']?.startsWith('video/');
+
+    let contentType: 'video' | 'article' | 'news' = 'news';
+    let subcategory: string | undefined = undefined;
+
+    const isInstagram = canonicalUrl.includes('instagram.com') || source.name.toLowerCase().includes('instagram');
+
+    if (isInstagram || isYouTubeShort) {
+      contentType = 'video';
+      subcategory = 'short';
+    } else if (isYouTubeVideo || isDirectVideo || source.name.toLowerCase().includes('video')) {
+      contentType = 'video';
+      subcategory = 'video';
+    }
 
     return {
       externalId,
@@ -187,8 +196,9 @@ export class RssSourceAdapter extends BaseSourceAdapter {
       imageUrl,
       authorName,
       publishedAt,
-      contentType: isVideo ? 'video' : 'news',
+      contentType,
       category: source.defaultCategory || 'Wellness',
+      subcategory,
       tags,
       language: source.language || 'en',
       country: source.country,
