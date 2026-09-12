@@ -47,8 +47,10 @@ export async function detectDuplicate(
   // Level 1: Exact External ID from this source
   if (item.externalId) {
     const l1Match = await sql`
-      SELECT content_item_id FROM content_source_items
-      WHERE source_id = ${sourceId}::uuid AND external_id = ${item.externalId}
+      SELECT csi.content_item_id 
+      FROM content_source_items csi
+      JOIN content_items ci ON csi.content_item_id = ci.id AND ci.deleted_at IS NULL
+      WHERE csi.source_id = ${sourceId}::uuid AND csi.external_id = ${item.externalId}
       LIMIT 1
     `;
     if (l1Match.length > 0) {

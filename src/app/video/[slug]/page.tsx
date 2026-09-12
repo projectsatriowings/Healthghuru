@@ -93,6 +93,7 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
   `;
 
   return (
+
     <div className="pt-6 sm:pt-8 pb-20 bg-surface/30 min-h-screen">
       <div className="site-container max-w-[1560px] 2xl:max-w-[1680px] space-y-8">
         {/* Top Breadcrumb / Back Bar */}
@@ -301,4 +302,5 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
       </div>
     </div>
   );
+
 }

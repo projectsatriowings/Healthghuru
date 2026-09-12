@@ -76,6 +76,7 @@ export function YouTubePlayer({
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
   const [showControls, setShowControls] = useState(true);
   const [feedbackIcon, setFeedbackIcon] = useState<'play' | 'pause' | null>(null);
   const [iframeKey, setIframeKey] = useState(0);
