@@ -67,8 +67,12 @@ function AccountDashboard() {
   const [prescriptionsLoading, setPrescriptionsLoading] = useState(false);
 
   // Saved content data
+  const [collections, setCollections] = useState<any[]>([]);
+  const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
   const [savedItems, setSavedItems] = useState<any[]>([]);
   const [savedLoading, setSavedLoading] = useState(false);
+  const [isCreatingCollection, setIsCreatingCollection] = useState(false);
+  const [newCollectionName, setNewCollectionName] = useState("");
 
   // History data
   const [historyItems, setHistoryItems] = useState<any[]>([]);
@@ -151,16 +155,49 @@ function AccountDashboard() {
   const fetchSavedContent = async () => {
     try {
       setSavedLoading(true);
-      const res = await fetch("/api/user/saved");
+      const res = await fetch("/api/collections");
       const data = await res.json();
       if (res.ok && data.success) {
-        setSavedItems(data.items || []);
+        setCollections(data.collections || []);
+        setSavedItems(data.savedArticles || []);
+      } else {
+        // Fallback to legacy endpoint if collections API fails
+        const legacyRes = await fetch("/api/user/saved");
+        const legacyData = await legacyRes.json();
+        if (legacyRes.ok && legacyData.success) {
+          setSavedItems(legacyData.items || []);
+        }
       }
     } catch (err) {
       console.error("Error loading saved items:", err);
     } finally {
       setSavedLoading(false);
     }
+  };
+
+  const handleCreateCollection = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newCollectionName.trim()) return;
+    setSaving(true);
+    try {
+      const res = await fetch("/api/collections", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "create_collection", name: newCollectionName })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setCollections([data.collection, ...collections]);
+        setNewCollectionName("");
+        setIsCreatingCollection(false);
+        setStatusMessage({ type: "success", text: "Collection created successfully!" });
+      } else {
+        setStatusMessage({ type: "error", text: data.error });
+      }
+    } catch (err: any) {
+      setStatusMessage({ type: "error", text: "Failed to create collection." });
+    }
+    setSaving(false);
   };
 
   const fetchHistory = async () => {
@@ -263,11 +300,13 @@ function AccountDashboard() {
 
   const handleRemoveSavedItem = async (contentId: string) => {
     try {
-      const res = await fetch(`/api/user/saved/${contentId}`, {
-        method: "DELETE",
+      const res = await fetch("/api/collections", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "remove_article", articleId: contentId })
       });
       if (res.ok) {
-        setSavedItems((prev) => prev.filter((item) => item.id !== contentId));
+        setSavedItems((prev) => prev.filter((item) => item.id !== contentId && item.article_id !== contentId));
         setStatusMessage({ type: "success", text: "Item removed from saved bookmarks." });
       }
     } catch (err) {
@@ -869,16 +908,63 @@ function AccountDashboard() {
               </div>
             )}
 
-            {/* 5. Saved Content Tab */}
+            {/* 5. Saved Content & Collections Tab */}
             {activeTab === "saved" && (
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="font-display text-2xl text-dark">Saved Articles & Media</h2>
+                    <h2 className="font-display text-2xl text-dark">Saved Articles & Collections</h2>
                     <p className="text-xs sm:text-sm text-text-secondary mt-1">
-                      Articles, videos, and digests you bookmarked for later reading.
+                      Organize your bookmarked health guides into custom folders.
                     </p>
                   </div>
+                  {profile?.user_plans?.tier === 'pro' && !isCreatingCollection && (
+                    <Button variant="outline" size="sm" onClick={() => setIsCreatingCollection(true)}>
+                      + New Collection
+                    </Button>
+                  )}
+                </div>
+
+                {isCreatingCollection && (
+                  <form onSubmit={handleCreateCollection} className="p-4 bg-surface rounded-2xl border border-primary/20 flex gap-3 items-center mb-4">
+                    <input 
+                      type="text" 
+                      placeholder="Collection Name (e.g., Morning Routine)"
+                      value={newCollectionName}
+                      onChange={e => setNewCollectionName(e.target.value)}
+                      className="flex-1 px-4 py-2 bg-white border border-border rounded-xl text-sm"
+                      autoFocus
+                    />
+                    <Button variant="primary" size="sm" type="submit" disabled={saving}>Save</Button>
+                    <button type="button" onClick={() => setIsCreatingCollection(false)} className="text-sm font-semibold text-text-muted hover:text-dark">Cancel</button>
+                  </form>
+                )}
+
+                {/* Collections Filters */}
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                  <button
+                    onClick={() => setSelectedCollection(null)}
+                    className={`px-4 py-2 rounded-xl text-xs font-heading font-semibold whitespace-nowrap transition-colors ${
+                      selectedCollection === null
+                        ? 'bg-primary text-white shadow-sm'
+                        : 'bg-surface border border-border text-text-primary hover:border-primary/40'
+                    }`}
+                  >
+                    All Saved Items
+                  </button>
+                  {collections.map(col => (
+                    <button
+                      key={col.id}
+                      onClick={() => setSelectedCollection(col.id)}
+                      className={`px-4 py-2 rounded-xl text-xs font-heading font-semibold whitespace-nowrap transition-colors ${
+                        selectedCollection === col.id
+                          ? 'bg-primary text-white shadow-sm'
+                          : 'bg-surface border border-border text-text-primary hover:border-primary/40'
+                      }`}
+                    >
+                      {col.name}
+                    </button>
+                  ))}
                 </div>
 
                 {savedLoading ? (
@@ -886,12 +972,12 @@ function AccountDashboard() {
                     <div className="w-8 h-8 border-3 border-primary/20 border-t-primary rounded-full animate-spin mx-auto mb-2" />
                     <p className="text-xs text-text-muted">Loading saved bookmarks...</p>
                   </div>
-                ) : savedItems.length === 0 ? (
+                ) : savedItems.filter(item => selectedCollection ? item.collection_id === selectedCollection : true).length === 0 ? (
                   <div className="text-center py-12 px-4 rounded-3xl bg-surface border border-border/80">
                     <Bookmark size={32} className="mx-auto text-text-muted mb-3 opacity-40" />
-                    <h3 className="font-heading font-bold text-base text-dark">No Saved Content Yet</h3>
+                    <h3 className="font-heading font-bold text-base text-dark">No Content Found</h3>
                     <p className="text-xs text-text-secondary max-w-sm mx-auto mt-1 mb-5">
-                      Explore our health articles, videos, and clinical digests, then click the bookmark icon to save them here.
+                      {selectedCollection ? "This collection is empty." : "Explore our health articles, videos, and clinical digests, then click the bookmark icon to save them here."}
                     </p>
                     <Link href="/latest">
                       <Button variant="primary" size="sm">
@@ -901,15 +987,24 @@ function AccountDashboard() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {savedItems.map((item) => (
+                    {savedItems
+                      .filter(item => selectedCollection ? item.collection_id === selectedCollection : true)
+                      .map((item) => (
                       <div
                         key={item.id}
-                        className="p-4 rounded-2xl bg-surface border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group"
+                        className="p-4 rounded-2xl bg-surface border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 group hover:border-primary/40 transition-colors"
                       >
                         <div className="space-y-1 max-w-lg">
-                          <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-primary px-2 py-0.5 rounded-full bg-white border border-primary/15">
-                            {item.category || "Wellness"}
-                          </span>
+                          <div className="flex gap-2">
+                            <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-primary px-2 py-0.5 rounded-full bg-white border border-primary/15">
+                              {item.category || "Wellness"}
+                            </span>
+                            {item.collection_id && (
+                              <span className="text-[10px] font-heading font-bold uppercase tracking-wider text-text-secondary px-2 py-0.5 rounded-full bg-white border border-border">
+                                {collections.find(c => c.id === item.collection_id)?.name}
+                              </span>
+                            )}
+                          </div>
                           <h4 className="font-heading font-bold text-sm text-dark group-hover:text-primary transition-colors">
                             <Link
                               href={

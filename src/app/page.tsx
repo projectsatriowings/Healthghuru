@@ -19,84 +19,90 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 export default async function Home() {
-  // 1. Breaking News
-  const breakingItems = await sql`
-    SELECT id, title, slug, category, canonical_url, is_external,
-           (SELECT name FROM content_sources WHERE id = content_items.source_id) as source_name
-    FROM content_items
-    WHERE is_breaking = TRUE AND status = 'published' AND deleted_at IS NULL
-    ORDER BY published_at DESC
-    LIMIT 5
-  `;
+  // Execute all database queries in parallel for instant response
+  const [
+    breakingItems,
+    topStories,
+    featuredVideos,
+    featuredShorts,
+    trendingStories,
+    researchNews,
+    categories,
+    countRes
+  ] = await Promise.all([
+    // 1. Breaking News
+    sql`
+      SELECT id, title, slug, category, canonical_url, is_external,
+             (SELECT name FROM content_sources WHERE id = content_items.source_id) as source_name
+      FROM content_items
+      WHERE is_breaking = TRUE AND status = 'published' AND deleted_at IS NULL
+      ORDER BY published_at DESC
+      LIMIT 5
+    `,
+    // 2. Top Stories / Featured Content
+    sql`
+      SELECT i.*, s.name as source_name
+      FROM content_items i
+      LEFT JOIN content_sources s ON i.source_id = s.id
+      WHERE i.status = 'published' AND i.deleted_at IS NULL
+      ORDER BY (i.is_featured::int * 10 + i.quality_score) DESC, i.published_at DESC
+      LIMIT 4
+    `,
+    // 3. Featured Health Videos (Full Length 16:9 Videos)
+    sql`
+      SELECT i.*, s.name as source_name
+      FROM content_items i
+      LEFT JOIN content_sources s ON i.source_id = s.id
+      WHERE i.content_type = 'video' 
+        AND (i.subcategory = 'video' OR i.subcategory IS NULL)
+        AND i.status = 'published' AND i.deleted_at IS NULL
+      ORDER BY i.published_at DESC
+      LIMIT 3
+    `,
+    // 3.5 Wellness Shorts & Instagram Reels
+    sql`
+      SELECT i.*, s.name as source_name
+      FROM content_items i
+      LEFT JOIN content_sources s ON i.source_id = s.id
+      WHERE i.content_type = 'video' 
+        AND i.subcategory = 'short'
+        AND i.status = 'published' AND i.deleted_at IS NULL
+      ORDER BY i.published_at DESC
+      LIMIT 5
+    `,
+    // 4. Trending Stories
+    sql`
+      SELECT i.*, s.name as source_name
+      FROM content_items i
+      LEFT JOIN content_sources s ON i.source_id = s.id
+      WHERE i.status = 'published' AND i.deleted_at IS NULL
+      ORDER BY (i.view_count * 2 + i.share_count * 5 + i.quality_score) DESC, i.published_at DESC
+      LIMIT 4
+    `,
+    // 5. Medical Research & News
+    sql`
+      SELECT i.*, s.name as source_name
+      FROM content_items i
+      LEFT JOIN content_sources s ON i.source_id = s.id
+      WHERE (i.category = 'Medical Research' OR i.category = 'Heart Health' OR i.content_type = 'news')
+        AND i.status = 'published' AND i.deleted_at IS NULL
+      ORDER BY i.published_at DESC
+      LIMIT 3
+    `,
+    // 6. Real Active Database Categories
+    sql`
+      SELECT name, slug, description 
+      FROM content_categories 
+      WHERE is_enabled = TRUE 
+      ORDER BY display_order ASC 
+      LIMIT 6
+    `,
+    // 7. Dynamic Total Articles/Content Count
+    sql`
+      SELECT COUNT(*)::int as count FROM content_items WHERE status = 'published' AND deleted_at IS NULL
+    `
+  ]);
 
-  // 2. Top Stories / Featured Content
-  const topStories = await sql`
-    SELECT i.*, s.name as source_name
-    FROM content_items i
-    LEFT JOIN content_sources s ON i.source_id = s.id
-    WHERE i.status = 'published' AND i.deleted_at IS NULL
-    ORDER BY (i.is_featured::int * 10 + i.quality_score) DESC, i.published_at DESC
-    LIMIT 4
-  `;
-
-  // 3. Featured Health Videos (Full Length 16:9 Videos)
-  const featuredVideos = await sql`
-    SELECT i.*, s.name as source_name
-    FROM content_items i
-    LEFT JOIN content_sources s ON i.source_id = s.id
-    WHERE i.content_type = 'video' 
-      AND (i.subcategory = 'video' OR i.subcategory IS NULL)
-      AND i.status = 'published' AND i.deleted_at IS NULL
-    ORDER BY i.published_at DESC
-    LIMIT 3
-  `;
-
-  // 3.5 Wellness Shorts & Instagram Reels
-  const featuredShorts = await sql`
-    SELECT i.*, s.name as source_name
-    FROM content_items i
-    LEFT JOIN content_sources s ON i.source_id = s.id
-    WHERE i.content_type = 'video' 
-      AND i.subcategory = 'short'
-      AND i.status = 'published' AND i.deleted_at IS NULL
-    ORDER BY i.published_at DESC
-    LIMIT 5
-  `;
-
-  // 4. Trending Stories
-  const trendingStories = await sql`
-    SELECT i.*, s.name as source_name
-    FROM content_items i
-    LEFT JOIN content_sources s ON i.source_id = s.id
-    WHERE i.status = 'published' AND i.deleted_at IS NULL
-    ORDER BY (i.view_count * 2 + i.share_count * 5 + i.quality_score) DESC, i.published_at DESC
-    LIMIT 4
-  `;
-
-  // 5. Medical Research & News
-  const researchNews = await sql`
-    SELECT i.*, s.name as source_name
-    FROM content_items i
-    LEFT JOIN content_sources s ON i.source_id = s.id
-    WHERE (i.category = 'Medical Research' OR i.category = 'Heart Health' OR i.content_type = 'news')
-      AND i.status = 'published' AND i.deleted_at IS NULL
-    ORDER BY i.published_at DESC
-    LIMIT 3
-  `;
-
-  // 6. Real Active Database Categories
-  const categories = await sql`
-    SELECT name, slug, description 
-    FROM content_categories 
-    WHERE is_enabled = TRUE 
-    ORDER BY display_order ASC 
-    LIMIT 6
-  `;
-
-  // 7. Dynamic Total Articles/Content Count
-  const countRes = await sql`
-    SELECT COUNT(*)::int as count FROM content_items WHERE status = 'published' AND deleted_at IS NULL
-  `;
   const totalPublished = (countRes[0]?.count || 0) + 20000;
 
   return (

@@ -18,7 +18,7 @@ const DEFAULT_FALLBACK_AD: Advertisement = {
   title: 'ZenMind Deep Sleep Guide',
   placement: 'floating_footer',
   image_url: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=800&q=80',
-  target_url: 'https://www.healthghuru.com/stay-healthy',
+  target_url: '/blog/sleep-quality-guide',
   headline: 'Better Sleep Tonight — Download HealthGhuru 7-Day Sleep & Calm Protocol',
   description: 'Evidence-backed breathwork, magnesium timing, and circadian rhythm optimization.',
   cta_text: 'Get Free Guide',

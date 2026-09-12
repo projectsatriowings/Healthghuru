@@ -10,7 +10,17 @@ export async function GET(request: NextRequest) {
     const placement = searchParams.get('placement') as AdPlacement | null;
     const category = searchParams.get('category') || undefined;
 
-    const ads = await getActiveAds(placement || undefined, category);
+    let ads = await getActiveAds(placement || undefined, category);
+
+    // Override any external 404 links from the database to point to a reliable article
+    if (ads && Array.isArray(ads)) {
+      ads = ads.map((ad: any) => {
+        if (ad.target_url && ad.target_url.includes('healthghuru.com')) {
+          return { ...ad, target_url: '/blog/boost-immune-system' };
+        }
+        return ad;
+      });
+    }
 
     return NextResponse.json({
       success: true,

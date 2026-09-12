@@ -17,7 +17,7 @@ const DEFAULT_TOP_BANNER_AD: Advertisement = {
   title: 'Top Banner - LivePure Nutrition',
   placement: 'top_banner',
   image_url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=1200&q=80',
-  target_url: 'https://www.healthghuru.com/stay-healthy',
+  target_url: '/blog/boost-immune-system',
   headline: 'LivePure Organic Superfoods — 25% Off Plant Protein & Daily Greens',
   description: 'Doctor-formulated, clean 100% organic ingredients with no artificial additives.',
   cta_text: 'Claim 25% Off',
@@ -80,24 +80,24 @@ export function TopBannerAd({ initialAd, category }: TopBannerAdProps) {
   }
 
   return (
-    <div className="w-full py-3 sm:py-4 px-3 sm:px-6 flex items-center justify-center bg-transparent z-40">
+    <div className="w-full py-1 sm:py-2 px-3 sm:px-6 flex items-center justify-center bg-transparent z-40">
       {/* Contained Centered Large Pill Banner */}
-      <div className="max-w-5xl lg:max-w-6xl w-full mx-auto bg-gradient-to-r from-[#0a1b0e] via-[#143419] to-[#0a1b0e] text-white border-2 border-primary/40 rounded-2xl sm:rounded-full shadow-xl px-5 sm:px-8 py-3 sm:py-3.5 transition-all hover:border-primary/60 hover:shadow-2xl">
+      <div className="max-w-5xl lg:max-w-6xl w-full mx-auto bg-gradient-to-r from-[#0a1b0e] via-[#143419] to-[#0a1b0e] text-white border-2 border-primary/40 rounded-2xl sm:rounded-full shadow-lg px-4 sm:px-6 py-1.5 sm:py-2 transition-all hover:border-primary/60 hover:shadow-xl">
         <a
           href={ad.target_url}
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClick}
-          className="w-full flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-6 text-center sm:text-left group cursor-pointer"
+          className="w-full flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 text-center sm:text-left group cursor-pointer"
         >
           {/* Left: Sponsored Badge & Large Image Thumbnail */}
-          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-            <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-wider bg-white/10 text-emerald-300 px-3 py-1 rounded-full border border-white/15 flex items-center gap-1.5 shadow-sm">
-              <Sparkles size={12} className="text-emerald-400" /> SPONSORED
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider bg-white/10 text-emerald-300 px-2 py-0.5 rounded-full border border-white/15 flex items-center gap-1 shadow-sm">
+              <Sparkles size={10} className="text-emerald-400" /> SPONSORED
             </span>
 
             {ad.image_url && (
-              <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden border border-white/25 shrink-0 shadow-md bg-white/5">
+              <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl overflow-hidden border border-white/25 shrink-0 shadow bg-white/5">
                 <Image
                   src={ad.image_url}
                   alt={ad.title}
@@ -111,16 +111,16 @@ export function TopBannerAd({ initialAd, category }: TopBannerAdProps) {
 
           {/* Middle: Prominent Large Bold Headline */}
           <div className="flex-1 min-w-0 text-center sm:text-left">
-            <p className="text-sm sm:text-base md:text-lg font-heading font-bold text-white leading-snug group-hover:text-emerald-300 transition-colors line-clamp-1">
+            <p className="text-xs sm:text-sm md:text-base font-heading font-bold text-white leading-snug group-hover:text-emerald-300 transition-colors line-clamp-1">
               {ad.headline || ad.title}
             </p>
           </div>
 
           {/* Right: Big Gradient CTA Button */}
           <div className="shrink-0">
-            <span className="inline-flex items-center justify-center gap-2 text-xs sm:text-sm font-heading font-bold text-white bg-gradient-to-r from-accent via-[#ff6f3c] to-[#ff8a57] hover:brightness-110 px-5 sm:px-7 py-2.5 sm:py-3 rounded-full shadow-lg shadow-accent/25 group-hover:scale-105 active:scale-95 transition-all whitespace-nowrap">
+            <span className="inline-flex items-center justify-center gap-1.5 text-xs font-heading font-bold text-white bg-gradient-to-r from-accent via-[#ff6f3c] to-[#ff8a57] hover:brightness-110 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md shadow-accent/25 group-hover:scale-105 active:scale-95 transition-all whitespace-nowrap">
               <span>{ad.cta_text || 'Claim Offer'}</span>
-              <ArrowRight size={15} />
+              <ArrowRight size={14} />
             </span>
           </div>
         </a>

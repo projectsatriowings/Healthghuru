@@ -26,6 +26,7 @@ import {
   Compass,
   Settings,
   LayoutDashboard,
+  Activity,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { NAV_LINKS } from "@/lib/constants";
@@ -39,6 +40,7 @@ const NAV_ICONS: Record<string, React.ReactNode> = {
   "/magazines": <BookOpen size={18} />,
   "/stay-healthy": <HeartPulse size={18} />,
   "/blog": <PenTool size={18} />,
+  "/tools": <Activity size={18} />,
 };
 
 export default function Navbar() {
@@ -141,11 +143,14 @@ export default function Navbar() {
                     href={link.href}
                     prefetch={true}
                     className={cn(
-                      "font-heading font-semibold text-sm xl:text-[15px] tracking-wide transition-colors relative py-2 whitespace-nowrap",
+                      "flex items-center gap-1.5 font-heading font-semibold text-sm xl:text-[15px] tracking-wide transition-colors relative py-2 whitespace-nowrap",
                       isActive ? "text-primary font-bold" : "text-text-primary hover:text-primary"
                     )}
                   >
                     {link.label}
+                    {link.href === '/tools' && (
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-white bg-gradient-to-r from-accent to-[#ff8a57] px-1.5 py-0.5 rounded shadow-sm relative -top-1.5 -ml-0.5">Pro</span>
+                    )}
                     {/* Active / Hover underline indicator */}
                     <span
                       className={cn(
@@ -404,7 +409,12 @@ export default function Navbar() {
                           >
                             {NAV_ICONS[link.href] || <FileText size={16} />}
                           </span>
-                          <span>{link.label}</span>
+                          <span className="flex items-center gap-2">
+                            {link.label}
+                            {link.href === '/tools' && (
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-white bg-gradient-to-r from-accent to-[#ff8a57] px-1.5 py-0.5 rounded shadow-sm">Pro</span>
+                            )}
+                          </span>
                         </div>
                         <ChevronRight size={16} className={isActive ? "text-white" : "text-text-muted"} />
                       </Link>

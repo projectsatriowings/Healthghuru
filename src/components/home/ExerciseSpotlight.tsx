@@ -15,15 +15,15 @@ export default function ExerciseSpotlight() {
           <SectionHeader title="Explore the Best Exercises" light />
         </ScrollReveal>
 
-        {/* Horizontal Scroll Row */}
-        <div className="mt-12 -mx-4 px-4 sm:mx-0 sm:px-0">
-          <div className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar gap-6 xl:gap-8 pb-8 pt-4">
+        {/* Grid Layout Row */}
+        <div className="mt-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 xl:gap-8 pb-8 pt-4">
             {EXERCISE_DATA.map((exercise, index) => (
-              <Link key={exercise.name} href="/category/fitness" className="snap-center shrink-0">
+              <Link key={exercise.name} href="/category/fitness" className="block w-full">
                 <motion.div
-                  className="w-[85vw] sm:w-[320px] 2xl:w-[360px] relative rounded-2xl overflow-hidden shadow-2xl group cursor-pointer"
-                  initial={{ opacity: 0, x: 50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
+                  className="w-full relative rounded-2xl overflow-hidden shadow-2xl group cursor-pointer"
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                   whileHover={{ y: -5 }}
