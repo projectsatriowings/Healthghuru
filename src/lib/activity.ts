@@ -8,7 +8,7 @@ export interface TrackActivityParams {
   contentId?: string;
   action: 'view' | 'open' | 'read' | 'watch' | 'save' | 'category_click' | 'share' | 'magazine_read';
   category?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export function trackActivity({ contentId, action, category, metadata }: TrackActivityParams) {

@@ -6,17 +6,15 @@ import {
   Upload,
   FileText,
   Sparkles,
-  CheckCircle2,
   AlertCircle,
   X,
   Stethoscope,
   ShieldCheck,
-  Camera,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 interface PrescriptionUploaderProps {
-  onSuccess?: (newPrescription: any) => void;
+  onSuccess?: (newPrescription: unknown) => void;
   className?: string;
 }
 
@@ -128,9 +126,9 @@ export function PrescriptionUploader({ onSuccess, className = '' }: Prescription
       setAnalysisStep(null);
 
       onSuccess?.(data.prescription);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Prescription upload error:', err);
-      setError(err.message || 'Error processing prescription.');
+      setError(err instanceof Error ? err.message : 'Error processing prescription.');
       setUploading(false);
       setAnalysisStep(null);
     }
