@@ -37,7 +37,7 @@ export default function ToolsHubPage() {
       <SectionHeader 
         title="Premium Health Tools"
         subtitle="Exclusive utilities designed to help you optimize your daily routines, track your progress, and get instant answers."
-        align="center"
+        centered={true}
       />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
