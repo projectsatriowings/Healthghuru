@@ -157,11 +157,11 @@ export default function SubscribePage() {
             </p>
 
             {/* Billing Cycle Toggle */}
-            <div className="mt-8 inline-flex items-center bg-white p-1.5 rounded-full border border-primary/20 shadow-sm">
+            <div className="mt-8 inline-flex items-center bg-white p-1 rounded-full border border-primary/20 shadow-xs">
               <button
                 type="button"
                 onClick={() => setBillingCycle("monthly")}
-                className={`px-6 py-2 rounded-full text-xs sm:text-sm font-heading font-semibold transition-all ${
+                className={`px-4 sm:px-5 py-1.5 rounded-full text-xs font-heading font-semibold transition-all ${
                   billingCycle === "monthly"
                     ? "bg-primary text-white shadow-sm"
                     : "text-text-secondary hover:text-dark"
@@ -172,7 +172,7 @@ export default function SubscribePage() {
               <button
                 type="button"
                 onClick={() => setBillingCycle("annual")}
-                className={`px-6 py-2 rounded-full text-xs sm:text-sm font-heading font-semibold transition-all flex items-center gap-1.5 ${
+                className={`px-4 sm:px-5 py-1.5 rounded-full text-xs font-heading font-semibold transition-all flex items-center gap-1.5 ${
                   billingCycle === "annual"
                     ? "bg-primary text-white shadow-sm"
                     : "text-text-secondary hover:text-dark"
@@ -300,125 +300,153 @@ export default function SubscribePage() {
 
       {/* Step 2: Checkout / Registration Flow */}
       {checkoutStep === "checkout" && (
-        <main className="site-container pt-12 max-w-2xl mx-auto">
-          <button
-            type="button"
-            onClick={() => setCheckoutStep("plans")}
-            className="inline-flex items-center gap-2 text-text-secondary hover:text-primary transition-colors text-sm font-heading font-medium mb-6"
-          >
-            <ArrowLeft size={16} /> Back to Plan Selection
-          </button>
+        <main className="site-container min-h-[calc(100vh-140px)] flex flex-col justify-center py-10 sm:py-16 px-4">
+          <div className="w-full max-w-xl mx-auto">
+            <button
+              type="button"
+              onClick={() => setCheckoutStep("plans")}
+              className="inline-flex items-center gap-2 text-text-secondary hover:text-primary transition-colors text-sm font-heading font-medium mb-6"
+            >
+              <ArrowLeft size={16} /> Back to Plan Selection
+            </button>
 
-          <div className="bg-white rounded-3xl shadow-xl border border-primary/10 p-8 sm:p-10 relative overflow-hidden">
-            <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-accent" />
+            <div className="bg-white rounded-3xl shadow-xl border border-primary/10 p-8 sm:p-10 relative overflow-hidden">
+              <div className="absolute top-0 left-0 right-0 h-2 bg-gradient-to-r from-primary to-accent" />
 
-            <div className="flex items-center justify-between pb-6 border-b border-border mb-6">
-              <div>
-                <span className="text-xs font-mono text-primary uppercase tracking-wider font-semibold">Selected Membership</span>
-                <h2 className="font-display text-2xl sm:text-3xl text-dark">{activePlanObj.name}</h2>
-              </div>
-              <div className="text-right">
-                <span className="font-display text-3xl font-bold text-dark">
-                  ${billingCycle === "annual" ? activePlanObj.priceAnnual.toFixed(2) : activePlanObj.priceMonthly.toFixed(2)}
-                </span>
-                <span className="text-text-muted text-xs block">/ month ({billingCycle})</span>
-              </div>
-            </div>
-
-            <form onSubmit={handleCompleteSubscription} className="space-y-4">
-              <div className="space-y-1.5">
-                <label className="block text-xs font-heading font-semibold uppercase tracking-wider text-text-primary">
-                  Your Full Name
-                </label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Alex Morgan"
-                  value={checkoutName}
-                  onChange={(e) => setCheckoutName(e.target.value)}
-                  className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-sm text-dark focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="block text-xs font-heading font-semibold uppercase tracking-wider text-text-primary">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  required
-                  placeholder="name@example.com"
-                  value={checkoutEmail}
-                  onChange={(e) => setCheckoutEmail(e.target.value)}
-                  className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-sm text-dark focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
-                />
-              </div>
-
-              <div className="p-4 rounded-2xl bg-surface-alt border border-border/80 flex items-start gap-3 mt-4">
-                <Lock size={18} className="text-primary shrink-0 mt-0.5" />
-                <div className="text-xs text-text-secondary leading-relaxed">
-                  <span className="font-semibold text-dark block mb-0.5">Zero Risk Launch Preview</span>
-                  No credit card required. Membership benefits are activated instantly for your account during our community launch period.
+              <div className="flex items-center justify-between pb-6 border-b border-border mb-6">
+                <div>
+                  <span className="text-xs font-mono text-primary uppercase tracking-wider font-semibold">Selected Membership</span>
+                  <h2 className="font-display text-2xl sm:text-3xl text-dark">{activePlanObj.name}</h2>
+                </div>
+                <div className="text-right">
+                  <span className="font-display text-3xl font-bold text-dark">
+                    ${billingCycle === "annual" ? activePlanObj.priceAnnual.toFixed(2) : activePlanObj.priceMonthly.toFixed(2)}
+                  </span>
+                  <span className="text-text-muted text-xs block">/ month ({billingCycle})</span>
                 </div>
               </div>
 
-              <Button
-                variant="accent"
-                size="lg"
-                type="submit"
-                className="w-full mt-4 flex items-center justify-center gap-2 shadow-lg"
-              >
-                Activate {activePlanObj.name} <ArrowRight size={16} />
-              </Button>
-            </form>
+              <form onSubmit={handleCompleteSubscription} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-heading font-semibold uppercase tracking-wider text-text-primary">
+                    Your Full Name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Alex Morgan"
+                    value={checkoutName}
+                    onChange={(e) => setCheckoutName(e.target.value)}
+                    className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-sm text-dark focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="block text-xs font-heading font-semibold uppercase tracking-wider text-text-primary">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    required
+                    placeholder="name@example.com"
+                    value={checkoutEmail}
+                    onChange={(e) => setCheckoutEmail(e.target.value)}
+                    className="w-full px-4 py-3 bg-surface border border-border rounded-xl text-sm text-dark focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all"
+                  />
+                </div>
+
+                <div className="p-4 rounded-2xl bg-surface-alt border border-border/80 flex items-start gap-3 mt-4">
+                  <Lock size={18} className="text-primary shrink-0 mt-0.5" />
+                  <div className="text-xs text-text-secondary leading-relaxed">
+                    <span className="font-semibold text-dark block mb-0.5">Zero Risk Launch Preview</span>
+                    No credit card required. Membership benefits are activated instantly for your account during our community launch period.
+                  </div>
+                </div>
+
+                <Button
+                  variant="accent"
+                  size="md"
+                  type="submit"
+                  className="w-full mt-4 flex items-center justify-center gap-2 shadow-md h-10 text-sm rounded-full"
+                >
+                  Activate {activePlanObj.name} <ArrowRight size={16} />
+                </Button>
+              </form>
+            </div>
           </div>
         </main>
       )}
 
       {/* Step 3: Success Confirmation */}
       {checkoutStep === "success" && (
-        <main className="site-container pt-16 max-w-xl mx-auto text-center">
+        <main className="site-container min-h-[calc(100vh-140px)] flex items-center justify-center py-10 sm:py-16 px-4">
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-3xl shadow-xl border border-primary/15 p-8 sm:p-12"
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="w-full max-w-md mx-auto bg-white rounded-3xl shadow-xl border border-primary/15 p-6 sm:p-8 text-center relative overflow-hidden"
           >
-            <div className="w-20 h-20 bg-green-100 text-primary rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
-              <CheckCircle2 size={44} />
+            {/* Top decorative gradient accent line */}
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary via-secondary to-accent" />
+
+            {/* Emerald Checkmark Badge */}
+            <div className="relative w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 flex items-center justify-center">
+              <div className="absolute inset-0 rounded-full bg-emerald-400/20 blur-md" />
+              <div className="relative w-14 h-14 sm:w-16 sm:h-16 bg-emerald-50 border border-emerald-200 text-primary rounded-full flex items-center justify-center shadow-xs">
+                <CheckCircle2 size={32} className="text-primary" />
+              </div>
             </div>
 
-            <h2 className="font-display text-3xl text-dark mb-2">
+            <h2 className="font-display text-2xl sm:text-3xl text-dark mb-2 tracking-tight font-bold">
               Welcome to HealthGuru!
             </h2>
-            <p className="text-text-secondary text-sm sm:text-base leading-relaxed mb-6 font-body">
-              Your <strong className="text-primary">{activePlanObj.name}</strong> has been successfully activated for <strong>{checkoutEmail}</strong>.
+            <p className="text-text-secondary text-xs sm:text-sm leading-relaxed mb-6 font-body max-w-sm mx-auto">
+              Your <strong className="text-primary font-semibold">{activePlanObj.name}</strong> has been successfully activated for <strong className="text-dark font-medium">{checkoutEmail || "your account"}</strong>.
             </p>
 
-            <div className="bg-surface rounded-2xl p-4 text-xs text-text-secondary space-y-2 mb-8 text-left">
-              <div className="flex justify-between">
-                <span>Plan:</span>
-                <span className="font-semibold text-dark">{activePlanObj.name}</span>
+            {/* Details Summary Box */}
+            <div className="bg-surface/90 rounded-2xl p-4 sm:p-5 border border-border/80 text-xs sm:text-sm space-y-2 mb-6 text-left">
+              <div className="flex items-center justify-between pb-2 border-b border-border/50">
+                <span className="text-text-muted">Plan:</span>
+                <span className="font-heading font-semibold text-dark flex items-center gap-1.5">
+                  {activePlanObj.name}
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20">
+                    VIP
+                  </span>
+                </span>
               </div>
-              <div className="flex justify-between">
-                <span>Billing:</span>
-                <span className="font-semibold text-dark">{billingCycle === "annual" ? "Annual Pass" : "Monthly"}</span>
+              <div className="flex items-center justify-between pb-2 border-b border-border/50">
+                <span className="text-text-muted">Billing:</span>
+                <span className="font-heading font-semibold text-dark">
+                  {billingCycle === "annual" ? "Annual Pass" : "Monthly"}
+                </span>
               </div>
-              <div className="flex justify-between">
-                <span>Status:</span>
-                <span className="font-semibold text-primary">Active & Verified</span>
+              <div className="flex items-center justify-between">
+                <span className="text-text-muted">Status:</span>
+                <span className="font-heading font-semibold text-primary flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Active &amp; Verified
+                </span>
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            {/* Sleek, Shorter Sized Pill Buttons */}
+            <div className="flex flex-row items-center justify-center gap-3">
               <Link href="/">
-                <Button variant="primary" size="lg" className="w-full sm:w-auto shadow-md">
-                  Explore HealthGuru Feed &rarr;
-                </Button>
+                <button
+                  type="button"
+                  className="h-9 px-4 sm:px-5 rounded-full text-xs font-heading font-semibold text-white bg-gradient-accent hover:opacity-95 active:scale-[0.98] shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"
+                >
+                  Explore HealthGuru Feed <ArrowRight size={13} />
+                </button>
               </Link>
               <Link href="/magazines">
-                <Button variant="ghost" size="lg" className="w-full sm:w-auto">
+                <button
+                  type="button"
+                  className="h-9 px-4 sm:px-5 rounded-full text-xs font-heading font-semibold text-primary bg-white border border-primary/30 hover:border-primary hover:bg-primary/5 active:scale-[0.98] shadow-xs transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"
+                >
                   Browse Magazines
-                </Button>
+                </button>
               </Link>
             </div>
           </motion.div>
