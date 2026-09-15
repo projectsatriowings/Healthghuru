@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Share2, MessageCircle, Link as LinkIcon } from "lucide-react";
+import { ShieldCheck, Clock, Sparkles, BookOpen, ArrowRight, CheckCircle2 } from "lucide-react";
 import { PillBadge } from "@/components/ui/PillBadge";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { sql } from "@/lib/db";
@@ -42,16 +43,26 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   const isLoggedIn = !!session?.user;
   const isAdmin = session?.user?.role === 'admin';
 
-  const posts = await sql`
-    SELECT * FROM articles 
-    WHERE slug = ${params.slug} AND status = 'published'
-  `;
+  const [posts, relatedQuery] = await Promise.all([
+    sql`
+      SELECT * FROM articles 
+      WHERE slug = ${params.slug} AND status = 'published'
+    `,
+    sql`
+      SELECT id, title, slug, category, hero_image_url, read_time, publish_date
+      FROM articles
+      WHERE slug != ${params.slug} AND status = 'published' AND deleted_at IS NULL
+      ORDER BY publish_date DESC
+      LIMIT 3
+    `
+  ]);
 
   let post;
   
   if (posts.length === 0) {
     if (params.slug === 'boost-immune-system') {
       post = {
+        id: 'boost-immune-system',
         title: "Boost Your Immune System Naturally: Effective Strategies for Optimal Health",
         category: "Nutrition",
         excerpt: "Your immune system is your body's defense network. These 8 natural strategies will make it stronger.",
@@ -72,6 +83,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
       };
     } else if (params.slug === 'sleep-quality-guide') {
       post = {
+        id: 'sleep-quality-guide',
         title: "Why Sleep Quality Matters More Than Sleep Quantity",
         category: "Sleep",
         excerpt: "Eight hours of bad sleep is worse than six hours of deep, restorative sleep. Here's what the science says.",
@@ -99,116 +111,260 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
   const publishDate = formatDate(post.publish_date);
 
+  // Fallback related posts if database is empty
+  const relatedPosts = relatedQuery.length > 0 ? relatedQuery : [
+    {
+      id: 'fallback-1',
+      title: params.slug === 'boost-immune-system' ? "Why Sleep Quality Matters More Than Sleep Quantity" : "Boost Your Immune System Naturally: Effective Strategies for Optimal Health",
+      slug: params.slug === 'boost-immune-system' ? 'sleep-quality-guide' : 'boost-immune-system',
+      category: params.slug === 'boost-immune-system' ? 'Sleep' : 'Nutrition',
+      hero_image_url: params.slug === 'boost-immune-system' ? '/images/sleep_pillar.png' : '/images/nutrition_pillar.png',
+      read_time: 6,
+      publish_date: new Date().toISOString()
+    }
+  ];
+
+  // Extract headings for Table of Contents
+  const headings = (post.blocks || [])
+    .filter((b: any) => b.type === 'heading')
+    .map((b: any) => b.text);
+
   return (
-    <article className="pt-8 sm:pt-12 pb-24 bg-white relative">
-      <div className="max-w-[760px] mx-auto px-4 sm:px-6">
+    <article className="pt-6 sm:pt-10 pb-24 bg-white relative">
+      <div className="site-container-article">
         
         {/* Breadcrumbs */}
         <ScrollReveal variant="fadeIn">
-          <div className="flex items-center gap-2 text-sm text-text-muted font-heading mb-6">
-            <Link href="/" className="hover:text-primary transition-colors">Home</Link>
+          <div className="flex items-center gap-2 text-xs sm:text-sm text-text-muted font-heading mb-6 overflow-hidden">
+            <Link href="/" className="hover:text-primary transition-colors shrink-0">Home</Link>
             <span>/</span>
-            <Link href="/blog" className="hover:text-primary transition-colors">Blog</Link>
+            <Link href="/blog" className="hover:text-primary transition-colors shrink-0">Blog</Link>
             <span>/</span>
             <span className="text-text-primary truncate">{post.title}</span>
           </div>
         </ScrollReveal>
 
-        {/* Header */}
-        <ScrollReveal variant="fadeUp" delay={0.1}>
-          <div className="mb-6">
-            <PillBadge active className="article-category-pill">{post.category}</PillBadge>
-          </div>
-          <h1 className="article-h1 font-display text-4xl sm:text-5xl lg:text-[56px] leading-[1.1] text-dark mb-8">
-            {post.title}
-          </h1>
+        {/* 2-Column Responsive Layout: Content on Left (8-cols), Sticky Sidebar on Right (4-cols) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 xl:gap-14 items-start">
+          
+          {/* ========================================================= */}
+          {/* MAIN ARTICLE CONTENT (LEFT 8 COLUMNS)                     */}
+          {/* ========================================================= */}
+          <div className="lg:col-span-8 min-w-0">
+            
+            {/* Header */}
+            <ScrollReveal variant="fadeUp" delay={0.05}>
+              <div className="mb-4">
+                <PillBadge active className="article-category-pill">{post.category}</PillBadge>
+              </div>
+              <h1 className="article-h1 font-display text-3xl sm:text-4xl lg:text-5xl 2xl:text-[54px] leading-[1.15] text-dark mb-6 tracking-tight">
+                {post.title}
+              </h1>
 
-          <div className="flex items-center gap-4 py-6 border-t border-b border-border mb-10">
-            <div className="w-12 h-12 rounded-full relative overflow-hidden bg-surface-alt shrink-0">
-              <Image 
-                src={post.author_avatar || "/images/exercise_plank.png"} 
-                alt={post.author_name || "Author"} 
-                fill 
-                className="object-cover"
+              <div className="flex items-center gap-4 py-5 border-t border-b border-border mb-8">
+                <div className="w-12 h-12 rounded-full relative overflow-hidden bg-surface-alt shrink-0 border border-primary/20">
+                  <Image 
+                    src={post.author_avatar || "/images/exercise_plank.png"} 
+                    alt={post.author_name || "Author"} 
+                    fill 
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="article-byline-name font-heading font-semibold text-text-primary text-sm sm:text-base">{post.author_name}</span>
+                  <span suppressHydrationWarning className="article-byline-meta text-text-muted text-xs sm:text-sm flex items-center gap-1.5">
+                    {post.author_credential && <span className="text-primary font-medium">{post.author_credential} •</span>}
+                    {publishDate} · {post.read_time} min read
+                  </span>
+                </div>
+              </div>
+            </ScrollReveal>
+
+            {/* Hero Image */}
+            <ScrollReveal variant="scaleUp" delay={0.1} className="mb-10">
+              <div className="relative w-full aspect-[16/9] rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg border border-border/50">
+                <Image
+                  src={post.hero_image_url || "/images/exercise_push.png"}
+                  alt={post.hero_image_alt || post.title}
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+              {post.hero_image_alt && (
+                <p className="text-xs sm:text-sm text-center mt-3 italic text-text-muted">
+                  {post.hero_image_alt}
+                </p>
+              )}
+            </ScrollReveal>
+
+            {/* Article Body */}
+            <ScrollReveal variant="fadeIn" delay={0.15}>
+              <p className="text-lg sm:text-xl text-text-secondary leading-relaxed mb-8 font-medium border-l-4 border-primary/40 pl-4 py-1 italic bg-surface/40 rounded-r-xl">
+                {post.excerpt}
+              </p>
+              
+              <div className="prose-lg max-w-none">
+                <ArticleBodyClientWrapper blocks={post.blocks || []} />
+              </div>
+            </ScrollReveal>
+
+            {/* Tags */}
+            {post.tags && post.tags.length > 0 && (
+              <div className="mt-10 flex gap-2 flex-wrap items-center">
+                <span className="text-xs font-heading font-semibold text-text-muted mr-1">Tags:</span>
+                {post.tags.map((tag: string) => (
+                  <PillBadge key={tag} active={false} className="text-xs py-1">
+                    #{tag}
+                  </PillBadge>
+                ))}
+              </div>
+            )}
+
+            {/* Author Bio Card */}
+            <div className="mt-10">
+              <AuthorBioCard 
+                name={post.author_name}
+                avatarUrl={post.author_avatar || "/images/exercise_plank.png"}
+                credential={post.author_credential}
+                bio="Specializing in holistic health and preventative care, dedicated to helping people live their healthiest lives through evidence-based lifestyle changes."
               />
             </div>
-            <div className="flex flex-col">
-              <span className="article-byline-name font-heading font-semibold text-text-primary">{post.author_name}</span>
-              <span suppressHydrationWarning className="article-byline-meta text-text-muted text-sm">
-                {post.author_credential && <span className="text-primary mr-2 font-medium">{post.author_credential}</span>}
-                {publishDate} · {post.read_time} min read
-              </span>
+
+            {/* In-Article Sponsor Ad */}
+            <SidebarAd category={post.category} className="my-10" />
+
+            {/* Footer actions */}
+            <div className="mt-10 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-start">
+                <span className="font-heading text-xs sm:text-sm text-text-muted font-medium">Share article:</span>
+                <ShareActions title={post.title} />
+              </div>
+              <SaveArticleButton articleId={post.id} />
             </div>
+
+            {/* Discussion Thread */}
+            <div className="mt-12">
+              <ScrollReveal variant="fadeIn" delay={0.2}>
+                <DiscussionThread 
+                  articleId={post.id} 
+                  isLoggedIn={isLoggedIn} 
+                  isAdmin={isAdmin} 
+                />
+              </ScrollReveal>
+            </div>
+
           </div>
-        </ScrollReveal>
 
-        {/* Hero Image */}
-        <ScrollReveal variant="scaleUp" delay={0.2} className="mb-12">
-          <div className="relative w-full aspect-[16/9] rounded-2xl overflow-hidden shadow-lg">
-            <Image
-              src={post.hero_image_url || "/images/exercise_push.png"}
-              alt={post.hero_image_alt || post.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-          {post.hero_image_alt && (
-            <p className="text-sm text-center mt-3 italic text-text-muted">
-              {post.hero_image_alt}
-            </p>
-          )}
-        </ScrollReveal>
+          {/* ========================================================= */}
+          {/* RIGHT RAIL / STICKY EDITORIAL SIDEBAR (RIGHT 4 COLUMNS)   */}
+          {/* ========================================================= */}
+          <aside className="hidden lg:block lg:col-span-4 sticky top-28 space-y-6">
+            
+            {/* 1. Medical Accuracy / Fact Check Seal */}
+            <div className="bg-emerald-50/70 rounded-2xl p-5 border border-emerald-200/60 shadow-xs">
+              <div className="flex items-center gap-2.5 text-emerald-800 font-heading font-bold text-sm mb-2">
+                <ShieldCheck size={18} className="text-emerald-600" />
+                <span>Medically Reviewed</span>
+              </div>
+              <p className="text-xs text-emerald-950/80 leading-relaxed mb-3">
+                All health guides on HealthGhuru adhere to evidence-based medical consensus and clinical research publications.
+              </p>
+              <div className="flex items-center gap-2 text-[11px] text-emerald-700 font-medium">
+                <CheckCircle2 size={13} />
+                <span>Verified by Medical Review Board</span>
+              </div>
+            </div>
 
-        {/* Article Body */}
-        <ScrollReveal variant="fadeIn" delay={0.3}>
-          <p className="text-[20px] text-text-secondary leading-relaxed mb-10 font-medium">
-            {post.excerpt}
-          </p>
-          
-          <ArticleBodyClientWrapper blocks={post.blocks || []} />
-          
-        </ScrollReveal>
+            {/* 2. Table of Contents (if article has headings) */}
+            {headings.length > 0 && (
+              <div className="bg-white rounded-2xl p-6 border border-border shadow-xs">
+                <h3 className="font-heading font-bold text-sm uppercase tracking-wider text-dark flex items-center gap-2 mb-4">
+                  <BookOpen size={16} className="text-primary" />
+                  In This Article
+                </h3>
+                <nav className="space-y-2.5 text-xs">
+                  {headings.map((h: string, idx: number) => (
+                    <div key={idx} className="flex items-start gap-2 group cursor-pointer text-text-secondary hover:text-primary transition-colors">
+                      <span className="font-mono text-primary/70 font-semibold shrink-0 mt-0.5">0{idx + 1}.</span>
+                      <span className="leading-snug">{h}</span>
+                    </div>
+                  ))}
+                </nav>
+              </div>
+            )}
 
-        {/* Tags */}
-        {post.tags && post.tags.length > 0 && (
-          <div className="mt-12 flex gap-2 flex-wrap">
-            {post.tags.map((tag: string) => (
-              <PillBadge key={tag} active={false} className="text-xs py-1">
-                {tag}
-              </PillBadge>
-            ))}
-          </div>
-        )}
+            {/* 3. Related Health Reads */}
+            <div className="bg-white rounded-2xl p-6 border border-border shadow-xs">
+              <h3 className="font-heading font-bold text-sm uppercase tracking-wider text-dark flex items-center gap-2 mb-4">
+                <Sparkles size={16} className="text-accent" />
+                Related Articles
+              </h3>
+              <div className="space-y-4">
+                {relatedPosts.map((rel: any) => (
+                  <Link
+                    key={rel.id || rel.slug}
+                    href={`/blog/${rel.slug}`}
+                    className="group flex gap-3 items-center hover:bg-surface p-2 rounded-xl transition-all"
+                  >
+                    <div className="relative w-16 h-16 rounded-lg overflow-hidden bg-surface-alt shrink-0 border border-border/50">
+                      <Image
+                        src={rel.hero_image_url || "/images/nutrition_pillar.png"}
+                        alt={rel.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform"
+                      />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                        {rel.category}
+                      </span>
+                      <h4 className="text-xs font-heading font-semibold text-dark line-clamp-2 group-hover:text-primary transition-colors leading-snug">
+                        {rel.title}
+                      </h4>
+                      <span className="text-[11px] text-text-muted flex items-center gap-1 mt-0.5">
+                        <Clock size={11} /> {rel.read_time || 5} min read
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-        {/* Author Bio Card */}
-        <AuthorBioCard 
-          name={post.author_name}
-          avatarUrl={post.author_avatar || "/images/exercise_plank.png"}
-          credential={post.author_credential}
-          bio="Specializing in holistic health and preventative care, dedicated to helping people live their healthiest lives through evidence-based lifestyle changes."
-        />
+            {/* 4. Weekly Newsletter Subscription */}
+            <div className="bg-gradient-to-br from-[#1A2E1A] to-[#0D1F0D] text-white rounded-2xl p-6 shadow-md border border-primary/20">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="p-1 rounded bg-secondary/20 text-secondary">
+                  <Sparkles size={14} />
+                </span>
+                <span className="text-xs font-mono uppercase tracking-wider text-secondary font-bold">
+                  Health Intelligence
+                </span>
+              </div>
+              <h4 className="font-display text-lg text-white mb-2">
+                Get Weekly Wellness Dispatches
+              </h4>
+              <p className="text-xs text-white/80 leading-relaxed mb-4">
+                Join 50,000+ proactive individuals receiving science-backed nutritional protocols.
+              </p>
+              <div className="space-y-2">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="w-full px-3 py-2 text-xs rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-secondary transition-all"
+                />
+                <button
+                  type="button"
+                  className="w-full py-2 px-3 rounded-xl bg-secondary text-[#0D1F0D] font-heading font-bold text-xs hover:bg-[#7cd480] transition-colors shadow-sm flex items-center justify-center gap-1"
+                >
+                  Subscribe Free <ArrowRight size={13} />
+                </button>
+              </div>
+            </div>
 
-        {/* In-Article Sponsor Ad */}
-        <SidebarAd category={post.category} className="my-10" />
+          </aside>
 
-        {/* Footer actions */}
-        <div className="mt-10 pt-8 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <span className="font-heading text-sm text-text-muted font-medium">Share:</span>
-            <ShareActions title={post.title} />
-            <SaveArticleButton articleId={post.id} />
-          </div>
         </div>
-
-        {/* Discussion Thread */}
-        <ScrollReveal variant="fadeIn" delay={0.4}>
-          <DiscussionThread 
-            articleId={post.id} 
-            isLoggedIn={isLoggedIn} 
-            isAdmin={isAdmin} 
-          />
-        </ScrollReveal>
 
       </div>
     </article>

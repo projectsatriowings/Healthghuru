@@ -33,32 +33,32 @@ const TOOLS = [
 
 export default function ToolsHubPage() {
   return (
-    <div className="site-container py-16">
-      <SectionHeader 
+    <div className="site-container-tool py-12 sm:py-16">
+      <SectionHeader
         title="Premium Health Tools"
         subtitle="Exclusive utilities designed to help you optimize your daily routines, track your progress, and get instant answers."
-        centered={true}
+        centered
       />
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
         {TOOLS.map((tool, index) => (
-          <Link 
-            key={index} 
+          <Link
+            key={index}
             href={tool.href}
             className="group bg-white rounded-3xl p-8 border border-border shadow-sm hover:shadow-xl hover:border-primary/20 transition-all duration-300 flex flex-col h-full"
           >
             <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${tool.color} flex items-center justify-center mb-6 shadow-md transform group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}>
               {tool.icon}
             </div>
-            
+
             <h3 className="font-display text-xl text-dark mb-3 group-hover:text-primary transition-colors">
               {tool.title}
             </h3>
-            
+
             <p className="text-sm text-text-secondary leading-relaxed mb-8 flex-1">
               {tool.description}
             </p>
-            
+
             <div className="flex items-center text-sm font-heading font-semibold text-primary mt-auto">
               Launch Tool <ArrowRight size={16} className="ml-1.5 transform group-hover:translate-x-1 transition-transform" />
             </div>

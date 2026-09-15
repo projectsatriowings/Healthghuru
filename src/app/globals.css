@@ -111,14 +111,29 @@
 }
 
 @layer components {
-  /* Master Responsive Site Container */
+  /* Master Responsive Site Container (Standard Pages, Hubs, Feeds) */
   .site-container {
-    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 3xl:px-24;
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 3xl:px-16 max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1600px] 3xl:max-w-[1800px];
   }
 
-  /* Focused Narrow Container (for forms, single-column reading, newsletters) */
+  /* Editorial & Article Container (Optimized for 2-column wide layout on desktop) */
+  .site-container-article {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 max-w-7xl xl:max-w-[1440px] 2xl:max-w-[1560px];
+  }
+
+  /* Interactive Tool & Calculator Container */
+  .site-container-tool {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 max-w-6xl xl:max-w-7xl 2xl:max-w-[1560px];
+  }
+
+  /* Focused Narrow Container (for centered auth, single-column reading, short forms) */
   .site-container-narrow {
     @apply w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 max-w-4xl xl:max-w-5xl 2xl:max-w-6xl;
+  }
+
+  /* Wide Video Theater / Full-Width Container */
+  .site-container-wide {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12 max-w-[1560px] 2xl:max-w-[1680px] 3xl:max-w-[1880px];
   }
 
   /* Wide Dashboard / Data Grid Container */

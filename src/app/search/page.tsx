@@ -24,7 +24,7 @@ export default async function SearchPage({
 
   return (
     <div className="pt-6 sm:pt-10 pb-20 bg-surface/30 min-h-screen">
-      <div className="site-container max-w-6xl space-y-8">
+      <div className="site-container max-w-6xl xl:max-w-7xl 2xl:max-w-[1560px] space-y-8">
         <ScrollReveal>
           <SectionHeader
             eyebrow="Universal Search"

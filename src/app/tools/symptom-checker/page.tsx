@@ -87,82 +87,132 @@ export default function SymptomCheckerPage() {
   }
 
   return (
-    <div className="site-container py-8 max-w-4xl h-[calc(100vh-80px)] flex flex-col">
-      <Link href="/tools" className="inline-flex items-center text-sm font-semibold text-text-muted hover:text-primary transition-colors mb-6 shrink-0">
-        <ArrowLeft size={16} className="mr-2" /> Back to Tools
-      </Link>
-      
-      <div className="flex items-center gap-4 mb-6 shrink-0 bg-white p-4 rounded-2xl border border-border shadow-sm">
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-accent to-[#ff8a57] flex items-center justify-center shadow-md">
-          <Stethoscope size={24} className="text-white" />
-        </div>
-        <div>
-          <h1 className="font-display text-xl text-dark">AI Health Assistant</h1>
-          <p className="text-xs text-text-secondary">Powered by AI • <span className="text-red-500 font-semibold">Not a substitute for professional medical advice</span></p>
-        </div>
+    <div className="site-container-tool py-6 sm:py-8 h-[calc(100vh-90px)] min-h-[600px] flex flex-col">
+      <div className="flex items-center justify-between mb-4 shrink-0">
+        <Link href="/tools" className="inline-flex items-center text-sm font-semibold text-text-muted hover:text-primary transition-colors">
+          <ArrowLeft size={16} className="mr-2" /> Back to Tools
+        </Link>
+        <span className="text-[11px] font-mono text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 flex items-center gap-1">
+          <ShieldCheck size={12} /> AI Medical Assistant v2.4
+        </span>
       </div>
 
-      {/* Chat Area */}
-      <div className="flex-1 bg-surface border border-border rounded-t-3xl overflow-hidden flex flex-col relative">
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6">
-          {messages.map((msg, i) => (
-            <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`flex max-w-[85%] sm:max-w-[75%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} gap-3`}>
-                <div className={`w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-full flex items-center justify-center shadow-sm ${msg.role === 'user' ? 'bg-primary text-white' : 'bg-gradient-to-br from-accent to-[#ff8a57] text-white'}`}>
-                  {msg.role === 'user' ? <User size={16} /> : <Stethoscope size={16} />}
-                </div>
-                <div className={`p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user' ? 'bg-primary text-white rounded-tr-sm' : 'bg-white border border-border text-dark rounded-tl-sm shadow-sm'}`}>
-                  {msg.content}
-                </div>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 min-h-0">
+        {/* Left Column: Chat Window (8 Columns) */}
+        <div className="lg:col-span-8 flex flex-col h-full bg-white rounded-3xl border border-border shadow-xs overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center gap-3.5 p-4 sm:p-5 border-b border-border bg-white shrink-0">
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-accent to-[#ff8a57] flex items-center justify-center shadow-md shrink-0">
+              <Stethoscope size={22} className="text-white" />
             </div>
-          ))}
-          
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="flex flex-row gap-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded-full flex items-center justify-center shadow-sm bg-gradient-to-br from-accent to-[#ff8a57] text-white">
-                  <Stethoscope size={16} />
-                </div>
-                <div className="p-4 rounded-2xl bg-white border border-border text-dark rounded-tl-sm shadow-sm flex items-center gap-2">
-                  <div className="w-2 h-2 bg-text-muted rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <div className="w-2 h-2 bg-text-muted rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <div className="w-2 h-2 bg-text-muted rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                </div>
-              </div>
+            <div>
+              <h1 className="font-display text-lg sm:text-xl text-dark">AI Health Assistant</h1>
+              <p className="text-xs text-text-secondary">Powered by Evidence-Based Health Intelligence • <span className="text-red-500 font-semibold">Informational only</span></p>
             </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
+          </div>
 
-        {/* Input Area */}
-        <div className="p-4 bg-white border-t border-border">
-          <form onSubmit={handleSubmit} className="relative flex items-end gap-2">
-            <textarea 
-              value={input}
-              onChange={e => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSubmit(e);
-                }
-              }}
-              placeholder="Describe your symptoms or ask a nutrition question..."
-              className="w-full bg-surface border border-border rounded-xl px-4 py-3.5 pr-14 outline-none focus:border-accent focus:ring-1 focus:ring-accent text-dark resize-none min-h-[52px] max-h-[120px]"
-              rows={1}
-            />
-            <button 
-              type="submit"
-              disabled={isLoading || !input.trim()}
-              className="absolute right-2 bottom-2 p-2.5 rounded-lg bg-accent text-white hover:bg-orange-600 transition-colors disabled:opacity-50"
-            >
-              <Send size={18} />
-            </button>
-          </form>
-          <div className="text-center mt-2">
-            <span className="text-[10px] text-text-muted">AI can make mistakes. For serious conditions, consult a doctor immediately.</span>
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 bg-surface/50">
+            {messages.map((msg, i) => (
+              <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`flex max-w-[85%] sm:max-w-[75%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} gap-3`}>
+                  <div className={`w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full flex items-center justify-center shadow-sm ${msg.role === 'user' ? 'bg-primary text-white' : 'bg-gradient-to-br from-accent to-[#ff8a57] text-white'}`}>
+                    {msg.role === 'user' ? <User size={15} /> : <Stethoscope size={15} />}
+                  </div>
+                  <div className={`p-4 rounded-2xl text-xs sm:text-sm leading-relaxed ${msg.role === 'user' ? 'bg-primary text-white rounded-tr-sm shadow-sm' : 'bg-white border border-border text-dark rounded-tl-sm shadow-xs'}`}>
+                    {msg.content}
+                  </div>
+                </div>
+              </div>
+            ))}
+            
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="flex flex-row gap-3">
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 rounded-full flex items-center justify-center shadow-sm bg-gradient-to-br from-accent to-[#ff8a57] text-white">
+                    <Stethoscope size={15} />
+                  </div>
+                  <div className="p-4 rounded-2xl bg-white border border-border text-dark rounded-tl-sm shadow-xs flex items-center gap-2">
+                    <div className="w-2 h-2 bg-text-muted rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                    <div className="w-2 h-2 bg-text-muted rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                    <div className="w-2 h-2 bg-text-muted rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                  </div>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Area */}
+          <div className="p-3 sm:p-4 bg-white border-t border-border shrink-0">
+            <form onSubmit={handleSubmit} className="relative flex items-center gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={e => setInput(e.target.value)}
+                placeholder="Ask about symptoms, wellness routines, or dietary questions..."
+                className="flex-1 bg-surface border border-border rounded-xl px-4 py-3 outline-none focus:border-primary focus:ring-1 focus:ring-primary text-xs sm:text-sm text-dark transition-all"
+                disabled={isLoading}
+              />
+              <button 
+                type="submit" 
+                disabled={!input.trim() || isLoading}
+                className="w-11 h-11 bg-primary text-white rounded-xl flex items-center justify-center hover:bg-primary-dark transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm shrink-0"
+              >
+                <Send size={18} />
+              </button>
+            </form>
           </div>
         </div>
+
+        {/* Right Column: Emergency & Companion Guidance (4 Columns on Desktop) */}
+        <aside className="hidden lg:flex lg:col-span-4 flex-col space-y-4 overflow-y-auto">
+          {/* Emergency Alert Box */}
+          <div className="bg-red-50/80 rounded-3xl p-5 border border-red-200/80 shadow-xs">
+            <div className="flex items-center gap-2 text-red-700 font-heading font-bold text-sm mb-2">
+              <AlertTriangle size={17} />
+              <span>Medical Emergency Notice</span>
+            </div>
+            <p className="text-xs text-red-900/80 leading-relaxed mb-3">
+              If you are experiencing severe chest pain, shortness of breath, sudden numbness, or heavy bleeding, seek emergency care immediately.
+            </p>
+            <div className="flex items-center gap-2 text-xs font-bold text-red-700">
+              <span>Emergency Services: 911 / 112 / 108</span>
+            </div>
+          </div>
+
+          {/* Quick Prompt Ideas */}
+          <div className="bg-white rounded-3xl p-5 border border-border shadow-xs flex-1">
+            <h4 className="font-heading font-bold text-xs uppercase tracking-wider text-dark mb-3">
+              Popular Inquiries
+            </h4>
+            <div className="space-y-2">
+              {[
+                "What natural foods support immune resilience?",
+                "How can I optimize slow-wave deep sleep?",
+                "What are optimal daily protein intake targets?",
+                "Natural techniques to reduce elevated cortisol"
+              ].map((suggestion, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setInput(suggestion)}
+                  className="w-full text-left p-2.5 rounded-xl bg-surface hover:bg-primary/10 border border-border hover:border-primary/30 text-xs text-text-secondary hover:text-primary transition-all leading-snug"
+                >
+                  &quot;{suggestion}&quot;
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Educational Purpose Card */}
+          <div className="bg-surface rounded-2xl p-4 border border-border text-[11px] text-text-muted leading-relaxed">
+            <p className="flex items-center gap-1.5 font-semibold text-text-secondary mb-1">
+              <ShieldCheck size={14} className="text-primary" /> Verified Educational Scope
+            </p>
+            Responses are generated using biomedical knowledge models for educational exploration and do not constitute clinical doctor-patient relationships.
+          </div>
+        </aside>
       </div>
     </div>
   );
