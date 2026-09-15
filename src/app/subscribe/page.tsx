@@ -4,10 +4,9 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Check, Sparkles, Shield, Zap, BookOpen, Star, HelpCircle, ArrowRight, ArrowLeft, CheckCircle2, Lock } from "lucide-react";
+import { Check, Sparkles, Shield, Star, HelpCircle, ArrowRight, ArrowLeft, CheckCircle2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { PillBadge } from "@/components/ui/PillBadge";
-import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 interface Plan {
   id: string;
@@ -432,21 +431,17 @@ export default function SubscribePage() {
 
             {/* Sleek, Shorter Sized Pill Buttons */}
             <div className="flex flex-row items-center justify-center gap-3">
-              <Link href="/">
-                <button
-                  type="button"
-                  className="h-9 px-4 sm:px-5 rounded-full text-xs font-heading font-semibold text-white bg-gradient-accent hover:opacity-95 active:scale-[0.98] shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"
-                >
-                  Explore HealthGuru Feed <ArrowRight size={13} />
-                </button>
+              <Link
+                href="/"
+                className="h-9 px-4 sm:px-5 rounded-full text-xs font-heading font-semibold text-white bg-gradient-accent hover:opacity-95 active:scale-[0.98] shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"
+              >
+                Explore HealthGuru Feed <ArrowRight size={13} />
               </Link>
-              <Link href="/magazines">
-                <button
-                  type="button"
-                  className="h-9 px-4 sm:px-5 rounded-full text-xs font-heading font-semibold text-primary bg-white border border-primary/30 hover:border-primary hover:bg-primary/5 active:scale-[0.98] shadow-xs transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"
-                >
-                  Browse Magazines
-                </button>
+              <Link
+                href="/magazines"
+                className="h-9 px-4 sm:px-5 rounded-full text-xs font-heading font-semibold text-primary bg-white border border-primary/30 hover:border-primary hover:bg-primary/5 active:scale-[0.98] shadow-xs transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"
+              >
+                Browse Magazines
               </Link>
             </div>
           </motion.div>
