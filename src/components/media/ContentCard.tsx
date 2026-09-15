@@ -173,9 +173,9 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
               {item.title}
             </h3>
 
-            {!isVideo && (
-              <p className="text-xs text-text-secondary line-clamp-2 mt-1 leading-relaxed">
-                {item.excerpt || item.description || ''}
+            {(item.description || item.excerpt) && (
+              <p className="text-xs text-text-secondary line-clamp-1 mt-1 leading-relaxed">
+                {item.description || item.excerpt}
               </p>
             )}
           </div>
@@ -239,6 +239,12 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
           <h4 className="font-heading font-semibold text-dark text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
             {item.title}
           </h4>
+
+          {(item.description || item.excerpt) && (
+            <p className="text-[11px] text-text-secondary line-clamp-1 leading-normal">
+              {item.description || item.excerpt}
+            </p>
+          )}
 
           <p className="text-xs text-text-muted flex items-center gap-1.5 truncate">
             <span>{item.author_name || item.source_name || 'HealthGhuru'}</span>
@@ -312,9 +318,9 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
             {item.title}
           </h3>
 
-          {!isVideo && (
-            <p className="text-xs text-text-secondary line-clamp-2 mt-1.5 leading-relaxed">
-              {item.excerpt || item.description || ''}
+          {(item.description || item.excerpt) && (
+            <p className="text-xs text-text-secondary line-clamp-1 mt-1.5 leading-relaxed">
+              {item.description || item.excerpt}
             </p>
           )}
         </div>

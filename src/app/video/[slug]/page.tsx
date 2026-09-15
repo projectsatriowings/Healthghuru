@@ -17,6 +17,7 @@ import { ContentCard } from '@/components/media/ContentCard';
 import { HealthDisclaimer } from '@/components/media/HealthDisclaimer';
 import { HeroBannerAd } from '@/components/ads/HeroBannerAd';
 import { VideoEngagementBar } from '@/components/media/VideoEngagementBar';
+import { VideoDescription } from '@/components/media/VideoDescription';
 import { ScrollReveal } from '@/components/ui/ScrollReveal';
 import { formatDate } from '@/lib/utils';
 
@@ -242,6 +243,17 @@ export default async function VideoDetailPage({ params }: { params: { slug: stri
                     />
                   </div>
                 </div>
+
+                {/* 5. Expandable Video / Short / Reel Description */}
+                {(video.description || video.excerpt) && (
+                  <VideoDescription
+                    description={video.description}
+                    excerpt={video.excerpt}
+                    publishedAt={video.published_at}
+                    category={video.category}
+                    className="mt-2"
+                  />
+                )}
               </div>
             </ScrollReveal>
 

@@ -81,10 +81,10 @@ export function PopupAdModal({ initialAd, category, delayMs = 6000 }: PopupAdMod
         {/* Close Button */}
         <button
           onClick={handleClose}
-          className="absolute top-4 right-4 z-20 p-2 bg-black/40 hover:bg-black/70 text-white rounded-full backdrop-blur-md transition-colors"
+          className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4 z-20 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/45 hover:bg-black/75 text-white/95 hover:text-white border border-white/20 backdrop-blur-md shadow-md flex items-center justify-center transition-all hover:scale-105 active:scale-95"
           aria-label="Close Health Promotion"
         >
-          <X size={18} />
+          <X size={16} />
         </button>
 
         {/* Ad Image Hero */}
@@ -98,8 +98,8 @@ export function PopupAdModal({ initialAd, category, delayMs = 6000 }: PopupAdMod
               unoptimized
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute top-4 left-4">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-emerald-300 border border-white/20 text-xs font-mono font-bold uppercase tracking-wider">
+            <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 z-20">
+              <span className="inline-flex items-center gap-1.5 h-8 sm:h-9 px-3 rounded-full bg-black/45 backdrop-blur-md text-emerald-300 border border-white/20 text-xs font-mono font-bold uppercase tracking-wider shadow-sm">
                 <Sparkles size={12} className="text-emerald-400" /> SPONSORED HEALTH AD
               </span>
             </div>

@@ -80,24 +80,26 @@ export function TopBannerAd({ initialAd, category }: TopBannerAdProps) {
   }
 
   return (
-    <div className="w-full py-1 sm:py-2 px-3 sm:px-6 flex items-center justify-center bg-transparent z-40">
-      {/* Contained Centered Large Pill Banner */}
-      <div className="max-w-5xl lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[1600px] w-full mx-auto bg-gradient-to-r from-[#0a1b0e] via-[#143419] to-[#0a1b0e] text-white border-2 border-primary/40 rounded-2xl sm:rounded-full shadow-lg px-4 sm:px-6 py-1.5 sm:py-2 transition-all hover:border-primary/60 hover:shadow-xl">
+    <div className="w-full py-1 sm:py-2 px-2 sm:px-6 flex items-center justify-center bg-transparent z-40">
+      {/* Contained Centered Sleek Pill Banner */}
+      <div className="max-w-5xl lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[1600px] w-full mx-auto bg-gradient-to-r from-[#0a1b0e] via-[#143419] to-[#0a1b0e] text-white border border-primary/40 rounded-full shadow-md px-2.5 sm:px-6 py-1 sm:py-2 transition-all hover:border-primary/60 hover:shadow-lg">
         <a
           href={ad.target_url}
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClick}
-          className="w-full flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4 text-center sm:text-left group cursor-pointer"
+          className="w-full flex flex-row items-center justify-between gap-2 sm:gap-4 text-left group cursor-pointer"
         >
-          {/* Left: Sponsored Badge & Large Image Thumbnail */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            <span className="text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider bg-white/10 text-emerald-300 px-2 py-0.5 rounded-full border border-white/15 flex items-center gap-1 shadow-sm">
-              <Sparkles size={10} className="text-emerald-400" /> SPONSORED
+          {/* Left: Sponsored Badge & Image Thumbnail */}
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            <span className="text-[9px] sm:text-[11px] font-mono font-bold uppercase tracking-wider bg-white/10 text-emerald-300 px-1.5 sm:px-2 py-0.5 rounded-full border border-white/15 flex items-center gap-1 shadow-xs">
+              <Sparkles size={9} className="text-emerald-400" />
+              <span className="hidden xs:inline">SPONSORED</span>
+              <span className="xs:hidden">AD</span>
             </span>
 
             {ad.image_url && (
-              <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl overflow-hidden border border-white/25 shrink-0 shadow bg-white/5">
+              <div className="relative w-6 h-6 sm:w-9 sm:h-9 rounded-full overflow-hidden border border-white/25 shrink-0 shadow bg-white/5">
                 <Image
                   src={ad.image_url}
                   alt={ad.title}
@@ -109,18 +111,18 @@ export function TopBannerAd({ initialAd, category }: TopBannerAdProps) {
             )}
           </div>
 
-          {/* Middle: Prominent Large Bold Headline */}
-          <div className="flex-1 min-w-0 text-center sm:text-left">
-            <p className="text-xs sm:text-sm md:text-base font-heading font-bold text-white leading-snug group-hover:text-emerald-300 transition-colors line-clamp-1">
+          {/* Middle: Prominent Bold Headline */}
+          <div className="flex-1 min-w-0 text-left">
+            <p className="text-[11px] sm:text-sm md:text-base font-heading font-semibold sm:font-bold text-white leading-tight group-hover:text-emerald-300 transition-colors truncate">
               {ad.headline || ad.title}
             </p>
           </div>
 
-          {/* Right: Big Gradient CTA Button */}
+          {/* Right: Sleek Gradient CTA Button */}
           <div className="shrink-0">
-            <span className="inline-flex items-center justify-center gap-1.5 text-xs font-heading font-bold text-white bg-gradient-to-r from-accent via-[#ff6f3c] to-[#ff8a57] hover:brightness-110 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full shadow-md shadow-accent/25 group-hover:scale-105 active:scale-95 transition-all whitespace-nowrap">
+            <span className="inline-flex items-center justify-center gap-1 text-[10px] sm:text-xs font-heading font-bold text-white bg-gradient-to-r from-accent via-[#ff6f3c] to-[#ff8a57] hover:brightness-110 px-2.5 sm:px-5 py-1 sm:py-2 rounded-full shadow-sm group-hover:scale-105 active:scale-95 transition-all whitespace-nowrap">
               <span>{ad.cta_text || 'Claim Offer'}</span>
-              <ArrowRight size={14} />
+              <ArrowRight size={12} className="hidden xs:inline" />
             </span>
           </div>
         </a>

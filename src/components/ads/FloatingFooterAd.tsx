@@ -106,11 +106,11 @@ export function FloatingFooterAd({ initialAd, category }: FloatingFooterAdProps)
           {/* Prominent Close Button */}
           <button
             onClick={handleDismiss}
-            className="p-1.5 bg-black/70 hover:bg-black text-white rounded-full transition-transform hover:scale-110 active:scale-95 shadow-md"
+            className="w-6 h-6 flex items-center justify-center bg-black/70 hover:bg-black text-white rounded-full transition-transform hover:scale-110 active:scale-95 shadow-md"
             aria-label="Close Floating Banner"
             title="Dismiss Advertisement"
           >
-            <X size={14} />
+            <X size={13} />
           </button>
         </div>
 

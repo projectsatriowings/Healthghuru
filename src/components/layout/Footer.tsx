@@ -214,11 +214,13 @@ export default function Footer() {
         </motion.div>
 
         {/* Bottom Bar: Copyright & Working Legal Links */}
-        <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-white/55 gap-3">
-          <p className="flex items-center gap-1">
-            Copyright &copy; {new Date().getFullYear()} Healthghuru. Made with <Heart size={12} className="text-rose-500 fill-rose-500" /> for healthier lives.
+        <div className="border-t border-white/10 pt-4 flex flex-col sm:flex-row items-center justify-between text-xs text-white/55 gap-3 text-center sm:text-left">
+          <p className="leading-relaxed">
+            Copyright &copy; {new Date().getFullYear()} Healthghuru. Made with{' '}
+            <Heart size={12} className="inline-block text-rose-500 fill-rose-500 align-middle -mt-0.5 mx-0.5" />{' '}
+            for healthier lives.
           </p>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center justify-center gap-4 flex-wrap">
             <Link href="/about" className="hover:text-white transition-colors">About</Link>
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
