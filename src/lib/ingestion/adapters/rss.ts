@@ -173,7 +173,7 @@ export class RssSourceAdapter extends BaseSourceAdapter {
     let contentType: 'video' | 'article' | 'news' = 'news';
     let subcategory: string | undefined = undefined;
 
-    const isInstagram = canonicalUrl.includes('instagram.com') || source.name.toLowerCase().includes('instagram');
+    const isInstagram = isInstagramReel || canonicalUrl.includes('instagram.com') || source.name.toLowerCase().includes('instagram');
 
     if (isInstagram || isYouTubeShort) {
       contentType = 'video';

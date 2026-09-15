@@ -11,8 +11,6 @@ import {
   Play,
   RotateCcw,
   ShieldCheck,
-  Zap,
-  Check,
 } from 'lucide-react';
 import { RecommendedContentItem } from '@/lib/recommendations';
 import { PillBadge } from '@/components/ui/PillBadge';
@@ -69,7 +67,7 @@ export function RecommendedFeed({
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.savedItems && Array.isArray(data.savedItems)) {
-          setSavedIds(new Set(data.savedItems.map((s: any) => s.id)));
+          setSavedIds(new Set(data.savedItems.map((s: { id: string }) => s.id)));
         }
       })
       .catch(() => {});

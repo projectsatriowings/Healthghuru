@@ -68,9 +68,9 @@ export async function getPersonalizedRecommendations(
   try {
     let userInterests: string[] = [];
     let userFormats: string[] = [];
-    let userActivityCategories: Record<string, number> = {};
-    let recentlyInteractedItemIds = new Set<string>();
-    let savedCategories = new Set<string>();
+    const userActivityCategories: Record<string, number> = {};
+    const recentlyInteractedItemIds = new Set<string>();
+    const savedCategories = new Set<string>();
     let isPersonalized = false;
 
     if (userId) {
@@ -103,7 +103,7 @@ export async function getPersonalizedRecommendations(
         if (act.content_id) {
           recentlyInteractedItemIds.add(act.content_id);
         }
-        const meta = act.metadata as Record<string, any> | null;
+        const meta = act.metadata as Record<string, unknown> | null;
         const actCategory = meta?.category;
         if (actCategory && typeof actCategory === 'string') {
           userActivityCategories[actCategory] = (userActivityCategories[actCategory] || 0) + 1;
