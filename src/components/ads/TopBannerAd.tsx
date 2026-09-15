@@ -72,7 +72,7 @@ export function TopBannerAd({ initialAd, category }: TopBannerAdProps) {
   if (ad.html_code) {
     return (
       <div className="w-full py-3 px-4 flex items-center justify-center bg-transparent z-40">
-        <div className="max-w-5xl w-full bg-white rounded-2xl border border-border p-4 text-center shadow-md">
+        <div className="max-w-5xl lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[1600px] w-full bg-white rounded-2xl border border-border p-4 text-center shadow-md">
           <div dangerouslySetInnerHTML={{ __html: ad.html_code }} />
         </div>
       </div>
@@ -82,7 +82,7 @@ export function TopBannerAd({ initialAd, category }: TopBannerAdProps) {
   return (
     <div className="w-full py-1 sm:py-2 px-3 sm:px-6 flex items-center justify-center bg-transparent z-40">
       {/* Contained Centered Large Pill Banner */}
-      <div className="max-w-5xl lg:max-w-6xl w-full mx-auto bg-gradient-to-r from-[#0a1b0e] via-[#143419] to-[#0a1b0e] text-white border-2 border-primary/40 rounded-2xl sm:rounded-full shadow-lg px-4 sm:px-6 py-1.5 sm:py-2 transition-all hover:border-primary/60 hover:shadow-xl">
+      <div className="max-w-5xl lg:max-w-6xl xl:max-w-7xl 2xl:max-w-[1600px] w-full mx-auto bg-gradient-to-r from-[#0a1b0e] via-[#143419] to-[#0a1b0e] text-white border-2 border-primary/40 rounded-2xl sm:rounded-full shadow-lg px-4 sm:px-6 py-1.5 sm:py-2 transition-all hover:border-primary/60 hover:shadow-xl">
         <a
           href={ad.target_url}
           target="_blank"

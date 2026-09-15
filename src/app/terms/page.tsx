@@ -194,7 +194,7 @@ export default function TermsOfServicePage() {
 
       {/* Hero Header Area */}
       <header className="border-b border-primary/10 bg-white/80 backdrop-blur-md pt-8 pb-10 sm:py-12">
-        <div className="site-container max-w-6xl">
+        <div className="site-container max-w-6xl xl:max-w-7xl 2xl:max-w-[1560px]">
           
           {/* Breadcrumb & Quick Actions */}
           <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
@@ -277,7 +277,7 @@ export default function TermsOfServicePage() {
       </header>
 
       {/* Main Document Body */}
-      <div className="site-container max-w-6xl py-10 sm:py-14">
+      <div className="site-container max-w-6xl xl:max-w-7xl 2xl:max-w-[1560px] py-10 sm:py-14">
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
           
           {/* Left: Sticky Floating Navigator */}

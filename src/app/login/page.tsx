@@ -237,7 +237,7 @@ function LoginForm() {
 
       {/* Main Authentication Grid */}
       <main className="site-container my-auto py-6 sm:py-10 relative z-10">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="max-w-5xl xl:max-w-6xl 2xl:max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
           {/* Left Side: Brand Story & Trust Showcase (Visible on lg+) */}
           <motion.div

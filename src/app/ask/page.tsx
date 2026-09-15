@@ -44,7 +44,7 @@ export default async function AskPage() {
     <div className="bg-surface min-h-screen pb-20">
       {/* Header */}
       <div className="bg-white border-b border-border/50 py-12 sm:py-16 mb-8">
-        <div className="site-container max-w-4xl">
+        <div className="site-container max-w-5xl xl:max-w-6xl 2xl:max-w-7xl">
           <span className="text-xs font-semibold uppercase tracking-wider text-primary font-heading flex items-center gap-1.5 mb-2 justify-center">
             HealthGhuru Community
           </span>
@@ -57,7 +57,7 @@ export default async function AskPage() {
       </div>
 
       {/* Board */}
-      <div className="site-container max-w-4xl">
+      <div className="site-container max-w-5xl xl:max-w-6xl 2xl:max-w-7xl">
         <AskBoardClient 
           initialQuestions={questionsRes as any} 
           isAdmin={isAdmin} 

@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Calculator, Flame, Beef, Droplets, Wheat } from 'lucide-react';
-import { SectionHeader } from '@/components/ui/SectionHeader';
 
 export default function MacroCalculatorPage() {
   const [gender, setGender] = useState<'male' | 'female'>('male');
@@ -52,7 +51,7 @@ export default function MacroCalculatorPage() {
   };
 
   return (
-    <div className="site-container py-12">
+    <div className="site-container-tool py-8 sm:py-12">
       <Link href="/tools" className="inline-flex items-center text-sm font-semibold text-text-muted hover:text-primary transition-colors mb-8">
         <ArrowLeft size={16} className="mr-2" /> Back to Tools
       </Link>

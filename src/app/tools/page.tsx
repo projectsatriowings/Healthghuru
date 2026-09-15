@@ -33,11 +33,11 @@ const TOOLS = [
 
 export default function ToolsHubPage() {
   return (
-    <div className="site-container py-16">
+    <div className="site-container-tool py-12 sm:py-16">
       <SectionHeader 
         title="Premium Health Tools"
         subtitle="Exclusive utilities designed to help you optimize your daily routines, track your progress, and get instant answers."
-        align="center"
+        centered
       />
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
