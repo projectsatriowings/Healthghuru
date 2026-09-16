@@ -323,9 +323,9 @@ export default function Navbar() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="lg:hidden bg-white border-b border-primary/20 shadow-2xl absolute top-full left-0 w-full z-50"
+              className="lg:hidden bg-white border-b border-primary/20 shadow-2xl absolute top-full left-0 w-full z-50 max-h-[calc(100dvh-4.5rem)] overflow-y-auto overscroll-contain"
             >
-              <div className="site-container py-5 flex flex-col gap-4 max-h-[calc(100vh-5rem)] overflow-y-auto bg-white">
+              <div className="site-container pt-4 pb-12 sm:pb-16 flex flex-col gap-3.5 bg-white">
                 
                 {/* Search Bar in Mobile Menu */}
                 <Link
@@ -392,7 +392,7 @@ export default function Navbar() {
                         href={link.href}
                         prefetch={true}
                         className={cn(
-                          "flex items-center justify-between px-3.5 py-3 rounded-xl font-heading text-sm transition-all",
+                          "flex items-center justify-between px-3.5 py-2.5 rounded-xl font-heading text-sm transition-all",
                           isActive
                             ? "bg-primary text-white font-bold shadow-xs"
                             : "bg-surface/60 hover:bg-surface text-text-primary hover:text-primary font-semibold"
@@ -435,12 +435,12 @@ export default function Navbar() {
                   ) : (
                     <>
                       <Link href="/login" className="w-full">
-                        <span className="w-full flex items-center justify-center py-3 text-sm font-heading font-semibold text-primary bg-surface border border-primary/30 rounded-xl hover:bg-primary/10 transition-all">
+                        <span className="w-full flex items-center justify-center py-2.5 text-sm font-heading font-semibold text-primary bg-surface border border-primary/30 rounded-xl hover:bg-primary/10 transition-all">
                           Login to Account
                         </span>
                       </Link>
                       <Link href="/subscribe" className="w-full">
-                        <span className="w-full flex items-center justify-center gap-2 py-3 text-sm font-heading font-semibold text-white bg-gradient-to-r from-accent to-[#ff8a57] rounded-xl shadow-md hover:shadow-lg active:scale-98 transition-all">
+                        <span className="w-full flex items-center justify-center gap-2 py-2.5 text-sm font-heading font-semibold text-white bg-gradient-to-r from-accent to-[#ff8a57] rounded-xl shadow-md hover:shadow-lg active:scale-98 transition-all">
                           <Sparkles size={16} /> Subscribe for Free &rarr;
                         </span>
                       </Link>
