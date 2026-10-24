@@ -37,6 +37,7 @@ export default async function TrendingPage() {
               <Flame size={28} />
             </div>
             <SectionHeader
+              as="h1"
               eyebrow="Community Engagement"
               title="Trending Health Stories"
               subtitle="The most read, shared, and discussed health topics and scientific developments this week."

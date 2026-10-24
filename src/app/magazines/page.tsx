@@ -32,6 +32,7 @@ export default async function MagazinesPage() {
         <ScrollReveal>
           <div className="w-full flex flex-col items-center justify-center text-center border-b border-border pb-6">
             <SectionHeader
+              as="h1"
               eyebrow="Periodicals & Digests"
               title="Health Magazines & Clinical Bulletins"
               subtitle="Curated monthly digests, medical school journals, and clinical letters from world-class healthcare authorities."

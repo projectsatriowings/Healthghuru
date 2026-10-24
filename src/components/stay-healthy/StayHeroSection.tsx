@@ -8,6 +8,7 @@ export default function StayHeroSection() {
       <div className="site-container">
         <ScrollReveal variant="fadeUp" className="text-center">
           <SectionHeader
+            as="h1"
             eyebrow="YOUR WELLNESS JOURNEY"
             title="Stay Healthy"
             subtitle="Evidence-based tips and strategies for a longer, healthier life."

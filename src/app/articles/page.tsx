@@ -67,6 +67,7 @@ export default async function ArticlesPage({
         <ScrollReveal>
           <div className="w-full flex flex-col items-center justify-center text-center border-b border-border pb-6 space-y-5">
             <SectionHeader
+              as="h1"
               eyebrow="Editorial & Syndicated"
               title="Health & Wellness Articles"
               subtitle="Explore original guides by HealthGhuru alongside in-depth analyses from accredited medical publishers."

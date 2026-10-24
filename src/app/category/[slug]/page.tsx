@@ -75,6 +75,7 @@ export default async function CategoryDetailPage({
             </Link>
 
             <SectionHeader
+              as="h1"
               eyebrow="Health Topic Pillar"
               title={category.name}
               subtitle={category.description || `Comprehensive insights, breaking clinical reports, and guides on ${category.name}.`}

@@ -27,6 +27,7 @@ export default async function SearchPage({
       <div className="site-container max-w-6xl xl:max-w-7xl 2xl:max-w-[1560px] space-y-8">
         <ScrollReveal>
           <SectionHeader
+            as="h1"
             eyebrow="Universal Search"
             title="Search Health & Wellness"
             subtitle="Find evidence-based answers across clinical research, health news, original articles, and verified videos."

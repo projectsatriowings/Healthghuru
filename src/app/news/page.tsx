@@ -67,6 +67,7 @@ export default async function NewsPage({
         <ScrollReveal>
           <div className="w-full flex flex-col items-center justify-center text-center border-b border-border pb-6">
             <SectionHeader
+              as="h1"
               eyebrow="Live Health News"
               title="Global Health & Medical Updates"
               subtitle="Curated from world health organizations, leading research institutes, and accredited publishers."

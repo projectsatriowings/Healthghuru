@@ -27,6 +27,7 @@ export default async function LatestFeedPage() {
         <ScrollReveal>
           <div className="border-b border-border pb-6">
             <SectionHeader
+              as="h1"
               eyebrow="Chronological Stream"
               title="Latest Health Updates"
               subtitle="All newly published and syndicated health stories, news, and videos in real time."

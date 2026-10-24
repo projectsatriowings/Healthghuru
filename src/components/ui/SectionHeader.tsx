@@ -17,6 +17,7 @@ interface SectionHeaderProps {
   light?: boolean;
   className?: string;
   titleClassName?: string;
+  as?: 'h1' | 'h2' | 'h3';
 }
 
 export function SectionHeader({
@@ -27,7 +28,10 @@ export function SectionHeader({
   light = false,
   className,
   titleClassName,
+  as = 'h2',
 }: SectionHeaderProps) {
+  const HeadingTag = as;
+
   return (
     <div className={cn("flex flex-col", centered ? "items-center text-center" : "items-start", className)}>
       {eyebrow && (
@@ -39,13 +43,13 @@ export function SectionHeader({
         </span>
       )}
 
-      <h2 className={cn(
+      <HeadingTag className={cn(
         "font-display text-xl md:text-h2 mb-2 md:mb-4",
         light ? "text-white" : "text-dark",
         titleClassName
       )}>
         {title}
-      </h2>
+      </HeadingTag>
 
       <div className="flex items-center justify-center gap-3 md:gap-4 mb-3 md:mb-6">
         <div className={cn("h-[1px] w-8 md:w-12", light ? "bg-white/20" : "bg-primary/20")} />

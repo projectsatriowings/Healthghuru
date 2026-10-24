@@ -101,6 +101,7 @@ export default async function VideosPage({
         <ScrollReveal>
           <div className="w-full flex flex-col items-center justify-center text-center border-b border-border pb-6">
             <SectionHeader
+              as="h1"
               eyebrow="Visual Wellness Intelligence"
               title="Health Videos & Shorts"
               subtitle="Explore official HealthGhuru medical explainers, home remedies, and quick wellness shorts."
