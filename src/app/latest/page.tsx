@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function LatestFeedPage() {
   const items = await sql`
-    SELECT i.*, s.name as source_name
+    SELECT i.id, i.title, i.slug, i.content_type, i.subcategory, i.excerpt, i.image_url, i.canonical_url, i.published_at, i.author_name, i.category, i.duration_seconds, i.video_id, i.is_external, i.quality_score, s.name as source_name
     FROM content_items i
     LEFT JOIN content_sources s ON i.source_id = s.id
     WHERE i.status = 'published' AND i.deleted_at IS NULL
@@ -36,8 +36,8 @@ export default async function LatestFeedPage() {
         </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {items.map((item: any) => (
-            <ContentCard key={item.id} item={item} />
+          {items.map((item: any, idx: number) => (
+            <ContentCard key={item.id} item={item} priority={idx === 0} />
           ))}
         </div>
 

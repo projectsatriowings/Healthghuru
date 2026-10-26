@@ -247,12 +247,13 @@ function LoginForm() {
             className="hidden lg:flex lg:col-span-5 flex-col justify-between space-y-8"
           >
             <div>
-              <Link href="/" className="inline-block relative w-52 h-14 mb-6">
+              <Link href="/" className="inline-block relative w-14 h-14 mb-6">
                 <Image
                   src="/images/logo_transparent.png"
                   alt="HealthGuru Logo"
-                  fill
-                  className="object-contain object-left"
+                  width={56}
+                  height={56}
+                  className="w-full h-full object-contain"
                   priority
                 />
               </Link>
@@ -339,12 +340,13 @@ function LoginForm() {
 
               {/* Mobile-only Header Logo */}
               <div className="lg:hidden text-center mb-6">
-                <Link href="/" className="inline-block relative w-44 h-12 mb-2">
+                <Link href="/" className="inline-block relative w-12 h-12 mb-2">
                   <Image
                     src="/images/logo_transparent.png"
                     alt="HealthGuru Logo"
-                    fill
-                    className="object-contain"
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-contain"
                     priority
                   />
                 </Link>
@@ -630,11 +632,11 @@ function LoginForm() {
                       />
                       <span>
                         I accept the{" "}
-                        <Link href="/terms" target="_blank" className="text-primary font-semibold hover:underline">
+                        <Link href="/terms" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">
                           Terms of Service
                         </Link>{" "}
                         and{" "}
-                        <Link href="/privacy" target="_blank" className="text-primary font-semibold hover:underline">
+                        <Link href="/privacy" target="_blank" rel="noopener noreferrer" className="text-primary font-semibold hover:underline">
                           Privacy Policy
                         </Link>
                         .

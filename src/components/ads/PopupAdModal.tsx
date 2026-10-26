@@ -94,8 +94,8 @@ export function PopupAdModal({ initialAd, category, delayMs = 6000 }: PopupAdMod
               src={ad.image_url}
               alt={ad.title}
               fill
+              sizes="(max-width: 640px) 100vw, 512px"
               className="object-cover"
-              unoptimized
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
             <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 z-20">

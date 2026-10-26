@@ -111,8 +111,8 @@ export function SideFloatingBanners({ initialLeftAd, initialRightAd, category }:
                   src={leftAd.image_url}
                   alt={leftAd.title}
                   fill
+                  sizes="140px"
                   className="object-cover"
-                  unoptimized
                 />
               </div>
             )}
@@ -161,8 +161,8 @@ export function SideFloatingBanners({ initialLeftAd, initialRightAd, category }:
                   src={rightAd.image_url}
                   alt={rightAd.title}
                   fill
+                  sizes="140px"
                   className="object-cover"
-                  unoptimized
                 />
               </div>
             )}

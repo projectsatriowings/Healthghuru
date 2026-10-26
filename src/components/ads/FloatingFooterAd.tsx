@@ -129,8 +129,8 @@ export function FloatingFooterAd({ initialAd, category }: FloatingFooterAdProps)
                 src={ad.image_url}
                 alt={ad.title}
                 fill
+                sizes="(max-width: 640px) 100vw, 448px"
                 className="object-cover"
-                unoptimized
               />
               <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[10px] font-mono text-white flex items-center gap-1">
                 <ShieldCheck size={11} className="text-emerald-400" /> Health Partner

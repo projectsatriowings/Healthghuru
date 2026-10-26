@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -9,6 +10,13 @@ import { NAV_LINKS } from "@/lib/constants";
 
 export default function Footer() {
   const pathname = usePathname();
+  const [emailUser, setEmailUser] = useState("");
+  const [emailDomain, setEmailDomain] = useState("");
+
+  useEffect(() => {
+    setEmailUser("contact");
+    setEmailDomain("healthghuru.com");
+  }, []);
 
   if (pathname === '/login' || pathname === '/subscribe') {
     return null;
@@ -44,13 +52,14 @@ export default function Footer() {
               className="inline-block transition-transform hover:scale-[1.02] active:scale-[0.98]"
               aria-label="HealthGhuru Home"
             >
-              <div className="relative w-40 sm:w-48 h-16 sm:h-20 flex items-center">
+              <div className="relative h-16 w-16 sm:h-20 sm:w-20 flex items-center">
                 <Image
-                  src="/images/logo_white.png"
+                  src="/images/logo_white.webp"
                   alt="HealthGhuru Logo"
-                  fill
-                  sizes="(max-width: 640px) 160px, 192px"
-                  className="object-contain object-left"
+                  width={80}
+                  height={80}
+                  sizes="(max-width: 640px) 64px, 80px"
+                  className="w-full h-full object-contain"
                 />
               </div>
             </Link>
@@ -101,6 +110,7 @@ export default function Footer() {
                 <motion.div key={link.href} variants={linkVariants} whileHover="hover">
                   <Link
                     href={link.href}
+                    prefetch={false}
                     className="text-white/75 hover:text-secondary transition-colors inline-flex items-center gap-1.5 group py-0.5"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-secondary/40 group-hover:bg-secondary transition-colors" />
@@ -111,6 +121,7 @@ export default function Footer() {
               <motion.div variants={linkVariants} whileHover="hover">
                 <Link
                   href="/about"
+                  prefetch={false}
                   className="text-white/75 hover:text-secondary transition-colors inline-flex items-center gap-1.5 group py-0.5"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-secondary/40 group-hover:bg-secondary transition-colors" />
@@ -143,6 +154,7 @@ export default function Footer() {
                 <motion.div key={item.href} variants={linkVariants} whileHover="hover">
                   <Link
                     href={item.href}
+                    prefetch={false}
                     className="text-white/75 hover:text-secondary transition-colors inline-flex items-center gap-1.5 group py-0.5"
                   >
                     <span className="w-1.5 h-1.5 rounded-full bg-secondary/40 group-hover:bg-secondary transition-colors" />
@@ -181,12 +193,20 @@ export default function Footer() {
 
             <div className="flex items-center gap-2.5 text-white/75 text-xs">
               <Mail className="text-secondary shrink-0" size={15} />
-              <a href="mailto:contact@healthghuru.com" className="hover:text-white transition-colors">contact@healthghuru.com</a>
+              {emailUser && emailDomain ? (
+                <a href={`mailto:${emailUser}@${emailDomain}`} className="hover:text-white transition-colors">
+                  {emailUser}@{emailDomain}
+                </a>
+              ) : (
+                <span className="hover:text-white transition-colors">
+                  contact&#64;healthghuru&#46;com
+                </span>
+              )}
             </div>
 
             {/* Quick CTA with Hover Scale */}
             <div className="pt-2">
-              <Link href="/subscribe" className="w-full inline-block">
+              <Link href="/subscribe" prefetch={false} className="w-full inline-block">
                 <motion.span
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -221,9 +241,9 @@ export default function Footer() {
             for healthier lives.
           </p>
           <div className="flex items-center justify-center gap-4 flex-wrap">
-            <Link href="/about" className="hover:text-white transition-colors">About</Link>
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+            <Link href="/about" prefetch={false} className="hover:text-white transition-colors">About</Link>
+            <Link href="/privacy" prefetch={false} className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/terms" prefetch={false} className="hover:text-white transition-colors">Terms of Service</Link>
           </div>
         </div>
 

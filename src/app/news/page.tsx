@@ -37,7 +37,7 @@ export default async function NewsPage({
     `,
     categoryFilter
       ? sql`
-          SELECT i.*, s.name as source_name
+          SELECT i.id, i.title, i.slug, i.content_type, i.subcategory, i.excerpt, i.image_url, i.canonical_url, i.published_at, i.author_name, i.category, i.duration_seconds, i.video_id, i.is_external, i.quality_score, s.name as source_name
           FROM content_items i
           LEFT JOIN content_sources s ON i.source_id = s.id
           WHERE i.content_type = 'news' AND i.status = 'published' AND i.deleted_at IS NULL
@@ -49,7 +49,7 @@ export default async function NewsPage({
           LIMIT 24
         `
       : sql`
-          SELECT i.*, s.name as source_name
+          SELECT i.id, i.title, i.slug, i.content_type, i.subcategory, i.excerpt, i.image_url, i.canonical_url, i.published_at, i.author_name, i.category, i.duration_seconds, i.video_id, i.is_external, i.quality_score, s.name as source_name
           FROM content_items i
           LEFT JOIN content_sources s ON i.source_id = s.id
           WHERE i.content_type = 'news' AND i.status = 'published' AND i.deleted_at IS NULL

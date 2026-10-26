@@ -14,7 +14,7 @@ export function AuthorBioCard({ name, avatarUrl, credential, bio }: AuthorBioCar
       style={{ backgroundColor: 'var(--color-surface)', border: '1px solid var(--color-border)' }}
     >
       <div className="relative w-14 h-14 rounded-full overflow-hidden flex-shrink-0">
-        <Image src={avatarUrl} alt={name} fill className="object-cover" />
+        <Image src={avatarUrl} alt={name} fill sizes="56px" className="object-cover" />
       </div>
       <div>
         <p className="font-semibold text-lg" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text-primary)' }}>

@@ -24,7 +24,7 @@ export const revalidate = 60;
 
 export default async function StayHealthyPage() {
   const pillarGuides = await sql`
-    SELECT i.*, s.name as source_name
+    SELECT i.id, i.title, i.slug, i.content_type, i.subcategory, i.excerpt, i.image_url, i.canonical_url, i.published_at, i.author_name, i.category, i.duration_seconds, i.video_id, i.is_external, i.quality_score, s.name as source_name
     FROM content_items i
     LEFT JOIN content_sources s ON i.source_id = s.id
     WHERE i.category IN ('Nutrition', 'Fitness', 'Mental Health', 'Sleep')
@@ -50,7 +50,7 @@ export default async function StayHealthyPage() {
           "Manage your stress",
           "Supplement your strategies"
         ]}
-        imageUrl="/images/nutrition_pillar.png"
+        imageUrl="/images/nutrition_pillar.webp"
         imageAlt="Healthy Food"
         ctaText="Read Nutrition Articles →"
         ctaHref="/category/nutrition"
@@ -67,7 +67,7 @@ export default async function StayHealthyPage() {
           "Increases energy levels",
           "Lowers excess weight"
         ]}
-        imageUrl="/images/fitness_pillar.png"
+        imageUrl="/images/fitness_pillar.webp"
         imageAlt="Fitness Workout"
         reversed
         ctaText="Explore Workouts →"
@@ -87,7 +87,7 @@ export default async function StayHealthyPage() {
           "Avoid alcohol and other drugs",
           "Set realistic goals"
         ]}
-        imageUrl="/images/mental_health_pillar.png"
+        imageUrl="/images/mental_health_pillar.webp"
         imageAlt="Mental Wellbeing"
         ctaText="Mental Health Guide →"
         ctaHref="/category/mental-health"
@@ -103,7 +103,7 @@ export default async function StayHealthyPage() {
           "Get along better with people",
           "Stay at a healthy weight"
         ]}
-        imageUrl="/images/sleep_pillar.png"
+        imageUrl="/images/sleep_pillar.webp"
         imageAlt="Good Sleep"
         reversed
         ctaText="Improve Your Sleep →"

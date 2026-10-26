@@ -6,21 +6,21 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 import { Leaf, Apple, Heart, Brain, Moon, Sparkles, Activity } from "lucide-react";
 
 const CATEGORY_IMAGE_MAP: Record<string, { image: string; icon: any }> = {
-  nutrition: { image: "/images/nutrition_pillar.png", icon: Leaf },
-  fitness: { image: "/images/fitness_pillar.png", icon: Activity },
-  "mental-health": { image: "/images/mental_health_pillar.png", icon: Brain },
-  sleep: { image: "/images/sleep_pillar.png", icon: Moon },
-  "heart-health": { image: "/images/exercise_push.png", icon: Heart },
-  "preventive-care": { image: "/images/nutrition_pillar.png", icon: Sparkles },
-  "gut-health": { image: "/images/nutrition_pillar.png", icon: Apple },
-  "healthy-aging": { image: "/images/fitness_pillar.png", icon: Sparkles },
+  nutrition: { image: "/images/nutrition_pillar.webp", icon: Leaf },
+  fitness: { image: "/images/fitness_pillar.webp", icon: Activity },
+  "mental-health": { image: "/images/mental_health_pillar.webp", icon: Brain },
+  sleep: { image: "/images/sleep_pillar.webp", icon: Moon },
+  "heart-health": { image: "/images/exercise_push.webp", icon: Heart },
+  "preventive-care": { image: "/images/nutrition_pillar.webp", icon: Sparkles },
+  "gut-health": { image: "/images/nutrition_pillar.webp", icon: Apple },
+  "healthy-aging": { image: "/images/fitness_pillar.webp", icon: Sparkles },
 };
 
 export default function FoodCategories({ categories }: { categories?: any[] }) {
   // If database categories are passed, display the top 3-4, otherwise fallback to standard taxonomy
   const displayCategories = categories && categories.length > 0 
     ? categories.slice(0, 3).map((c) => {
-        const meta = CATEGORY_IMAGE_MAP[c.slug] || { image: "/images/nutrition_pillar.png", icon: Leaf };
+        const meta = CATEGORY_IMAGE_MAP[c.slug] || { image: "/images/nutrition_pillar.webp", icon: Leaf };
         return {
           name: c.name,
           slug: c.slug,
@@ -29,9 +29,9 @@ export default function FoodCategories({ categories }: { categories?: any[] }) {
         };
       })
     : [
-        { name: "Nutrition", slug: "nutrition", icon: Leaf, image: "/images/nutrition_pillar.png" },
-        { name: "Gut Health", slug: "gut-health", icon: Apple, image: "/images/nutrition_pillar.png" },
-        { name: "Heart Health", slug: "heart-health", icon: Heart, image: "/images/exercise_push.png" },
+        { name: "Nutrition", slug: "nutrition", icon: Leaf, image: "/images/nutrition_pillar.webp" },
+        { name: "Gut Health", slug: "gut-health", icon: Apple, image: "/images/nutrition_pillar.webp" },
+        { name: "Heart Health", slug: "heart-health", icon: Heart, image: "/images/exercise_push.webp" },
       ];
 
   return (
@@ -58,6 +58,7 @@ export default function FoodCategories({ categories }: { categories?: any[] }) {
                     src={category.image}
                     alt={category.name}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 33vw, 400px"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-dark/85 via-dark/25 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300" />

@@ -4,10 +4,10 @@ import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 export default function FiveExercises() {
   const exercises = [
-    { name: "Push", image: "/images/exercise_push.png" },
-    { name: "Pull", image: "/images/exercise_pull.png" },
-    { name: "Squats", image: "/images/exercise_squats.png" },
-    { name: "Plank", image: "/images/exercise_plank.png" },
+    { name: "Push", image: "/images/exercise_push.webp" },
+    { name: "Pull", image: "/images/exercise_pull.webp" },
+    { name: "Squats", image: "/images/exercise_squats.webp" },
+    { name: "Plank", image: "/images/exercise_plank.webp" },
   ];
 
   return (
@@ -29,6 +29,7 @@ export default function FiveExercises() {
                   src={exercise.image}
                   alt={exercise.name}
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/20 to-transparent" />

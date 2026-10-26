@@ -88,8 +88,8 @@ export function SidebarAd({ initialAd, category, className = '', sticky = false 
               src={ad.image_url}
               alt={ad.title}
               fill
+              sizes="(max-width: 1024px) 100vw, 350px"
               className="object-cover"
-              unoptimized
             />
           </div>
         )}

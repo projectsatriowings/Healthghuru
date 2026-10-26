@@ -7,11 +7,11 @@ import CategoryFilter from "./CategoryFilter";
 import { ScrollReveal } from "@/components/ui/ScrollReveal";
 
 const blogImages = [
-  "/images/yoga.png", // sun salutation
-  "/images/nutrition_pillar.png", // nutrient timing
-  "/images/fitness_pillar.png", // abs
-  "/images/mental_health_pillar.png", // yoga mental health
-  "/images/sleep_pillar.png", // boost immune
+  "/images/yoga.webp", // sun salutation
+  "/images/nutrition_pillar.webp", // nutrient timing
+  "/images/fitness_pillar.webp", // abs
+  "/images/mental_health_pillar.webp", // yoga mental health
+  "/images/sleep_pillar.webp", // boost immune
 ];
 
 export default function BlogGrid({ posts }: { posts: any[] }) {

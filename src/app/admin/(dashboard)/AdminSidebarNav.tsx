@@ -41,7 +41,7 @@ export function AdminSidebarNav() {
             <Link 
               key={link.href} 
               href={link.href}
-              prefetch={true}
+              prefetch={false}
               data-cursor="tab"
               className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-heading font-medium text-sm transition-all duration-150 border-l-4 ${
                 isActive 
@@ -60,7 +60,7 @@ export function AdminSidebarNav() {
       <div className="mt-auto pt-4 border-t border-border">
         <Link 
           href="/admin/settings" 
-          prefetch={true}
+          prefetch={false}
           data-cursor="tab"
           className={`flex items-center gap-3 px-4 py-2.5 rounded-lg font-heading font-medium text-sm transition-all duration-150 border-l-4 ${
             pathname.startsWith('/admin/settings')

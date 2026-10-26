@@ -269,7 +269,7 @@ export function YouTubePlayer({
   };
 
   const displayThumbnail =
-    thumbnailUrl || (cleanVideoId ? `https://i.ytimg.com/vi/${cleanVideoId}/hqdefault.jpg` : '/images/exercise_plank.png');
+    thumbnailUrl || (cleanVideoId ? `https://i.ytimg.com/vi/${cleanVideoId}/hqdefault.jpg` : '/images/exercise_plank.webp');
 
   // ==========================================
   // CASE 1: INSTAGRAM REEL DIRECT WEB PLAYER
@@ -553,7 +553,7 @@ export function YouTubePlayer({
       <div className="w-full bg-gradient-to-br from-[#121820] to-[#0A0E13] rounded-3xl overflow-hidden shadow-2xl aspect-video relative border border-border flex flex-col items-center justify-center p-6 sm:p-10 text-center transition-all duration-500 hover:shadow-2xl hover:border-primary/30 hover:-translate-y-1">
         {displayThumbnail && (
           <div className="absolute inset-0 opacity-20 filter blur-md">
-            <Image src={displayThumbnail} alt={title} fill className="object-cover" unoptimized />
+            <Image src={displayThumbnail} alt={title} fill sizes="(max-width: 1024px) 100vw, 850px" className="object-cover" />
           </div>
         )}
         <div className="relative z-10 max-w-lg space-y-4">

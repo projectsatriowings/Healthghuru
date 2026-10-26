@@ -52,6 +52,7 @@ export default async function AboutPage() {
                   src="/images/nutrition_pillar.png"
                   alt="Our Mission"
                   fill
+                  sizes="(max-width: 1024px) 100vw, 600px"
                   className="object-cover"
                 />
               </ScrollReveal>
@@ -261,6 +262,7 @@ export default async function AboutPage() {
                     src="/images/fitness_pillar.png" 
                     alt="Map" 
                     fill 
+                    sizes="(max-width: 1024px) 100vw, 600px"
                     className="object-cover opacity-60 grayscale" 
                   />
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

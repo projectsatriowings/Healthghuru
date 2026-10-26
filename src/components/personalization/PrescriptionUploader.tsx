@@ -179,7 +179,7 @@ export function PrescriptionUploader({ onSuccess, className = '' }: Prescription
             <div className="flex items-center gap-3 overflow-hidden">
               {filePreview ? (
                 <div className="relative w-14 h-14 rounded-xl overflow-hidden border border-border shrink-0">
-                  <Image src={filePreview} alt="Prescription preview" fill className="object-cover" />
+                  <Image src={filePreview} alt="Prescription preview" fill sizes="56px" className="object-cover" unoptimized />
                 </div>
               ) : (
                 <div className="w-14 h-14 rounded-xl bg-primary/10 text-primary flex items-center justify-center shrink-0">

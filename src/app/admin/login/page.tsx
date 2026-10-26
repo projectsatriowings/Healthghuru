@@ -72,14 +72,15 @@ export default function AdminLoginPage() {
               style={{ outline: 'none', border: 'none', boxShadow: 'none' }}
             >
               <div
-                className="relative w-48 h-20 outline-none border-0"
+                className="relative w-20 h-20 outline-none border-0 mx-auto"
                 style={{ outline: 'none', border: 'none', boxShadow: 'none' }}
               >
                 <Image
                   src="/images/logo_transparent.png"
                   alt="HealthGhuru Logo"
-                  fill
-                  className="object-contain outline-none border-0"
+                  width={80}
+                  height={80}
+                  className="w-full h-full object-contain outline-none border-0"
                   style={{ outline: 'none', border: 'none' }}
                   priority
                 />

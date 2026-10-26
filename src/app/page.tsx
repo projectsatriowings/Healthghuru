@@ -15,8 +15,7 @@ import { SidebarAd } from "@/components/ads/SidebarAd";
 import Link from 'next/link';
 import { Sparkles, ArrowRight, Play, Flame, BookOpen, Zap } from 'lucide-react';
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function Home() {
   // Execute all database queries in parallel for instant response
@@ -41,7 +40,7 @@ export default async function Home() {
     `,
     // 2. Top Stories / Featured Content
     sql`
-      SELECT i.*, s.name as source_name
+      SELECT i.id, i.title, i.slug, i.content_type, i.subcategory, i.excerpt, i.image_url, i.canonical_url, i.published_at, i.author_name, i.category, i.duration_seconds, i.video_id, i.is_external, i.quality_score, s.name as source_name
       FROM content_items i
       LEFT JOIN content_sources s ON i.source_id = s.id
       WHERE i.status = 'published' AND i.deleted_at IS NULL
@@ -50,7 +49,7 @@ export default async function Home() {
     `,
     // 3. Featured Health Videos (Full Length 16:9 Videos)
     sql`
-      SELECT i.*, s.name as source_name
+      SELECT i.id, i.title, i.slug, i.content_type, i.subcategory, i.excerpt, i.image_url, i.canonical_url, i.published_at, i.author_name, i.category, i.duration_seconds, i.video_id, i.is_external, i.quality_score, s.name as source_name
       FROM content_items i
       LEFT JOIN content_sources s ON i.source_id = s.id
       WHERE i.content_type = 'video' 
@@ -61,7 +60,7 @@ export default async function Home() {
     `,
     // 3.5 Wellness Shorts & Instagram Reels
     sql`
-      SELECT i.*, s.name as source_name
+      SELECT i.id, i.title, i.slug, i.content_type, i.subcategory, i.excerpt, i.image_url, i.canonical_url, i.published_at, i.author_name, i.category, i.duration_seconds, i.video_id, i.is_external, i.quality_score, s.name as source_name
       FROM content_items i
       LEFT JOIN content_sources s ON i.source_id = s.id
       WHERE i.content_type = 'video' 
@@ -72,7 +71,7 @@ export default async function Home() {
     `,
     // 4. Trending Stories
     sql`
-      SELECT i.*, s.name as source_name
+      SELECT i.id, i.title, i.slug, i.content_type, i.subcategory, i.excerpt, i.image_url, i.canonical_url, i.published_at, i.author_name, i.category, i.duration_seconds, i.video_id, i.is_external, i.quality_score, s.name as source_name
       FROM content_items i
       LEFT JOIN content_sources s ON i.source_id = s.id
       WHERE i.status = 'published' AND i.deleted_at IS NULL
@@ -81,7 +80,7 @@ export default async function Home() {
     `,
     // 5. Medical Research & News
     sql`
-      SELECT i.*, s.name as source_name
+      SELECT i.id, i.title, i.slug, i.content_type, i.subcategory, i.excerpt, i.image_url, i.canonical_url, i.published_at, i.author_name, i.category, i.duration_seconds, i.video_id, i.is_external, i.quality_score, s.name as source_name
       FROM content_items i
       LEFT JOIN content_sources s ON i.source_id = s.id
       WHERE (i.category = 'Medical Research' OR i.category = 'Heart Health' OR i.content_type = 'news')
@@ -135,8 +134,8 @@ export default async function Home() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {topStories.map((item: any) => (
-                <ContentCard key={item.id} item={item} />
+              {topStories.map((item: any, idx: number) => (
+                <ContentCard key={item.id} item={item} priority={idx === 0} />
               ))}
             </div>
           </div>

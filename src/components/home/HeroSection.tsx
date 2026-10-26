@@ -85,10 +85,11 @@ export default function HeroSection() {
           <div className="relative w-full aspect-[4/5] lg:aspect-[3/4] max-w-lg xl:max-w-xl 2xl:max-w-2xl mx-auto lg:ml-auto">
             <ScrollReveal delay={0.3} className="w-full h-full relative rounded-[24px] overflow-hidden shadow-2xl">
               <Image
-                src="/images/fitness_pillar.png"
+                src="/images/fitness_pillar.webp"
                 alt="Wellness Lifestyle"
                 fill
                 priority
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 512px, (max-width: 1280px) 576px, 672px"
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-dark/40 to-transparent" />

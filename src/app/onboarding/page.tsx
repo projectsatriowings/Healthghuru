@@ -186,12 +186,13 @@ function OnboardingWizard() {
 
       {/* Top Header */}
       <header className="site-container max-w-4xl mx-auto flex items-center justify-between relative z-10 mb-6">
-        <Link href="/" className="inline-block relative w-44 sm:w-52 h-12">
+        <Link href="/" className="inline-block relative w-12 h-12">
           <Image
             src="/images/logo_transparent.png"
             alt="HealthGuru Logo"
-            fill
-            className="object-contain object-left"
+            width={48}
+            height={48}
+            className="w-full h-full object-contain"
             priority
           />
         </Link>

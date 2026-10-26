@@ -192,8 +192,8 @@ export function ReviewQueueClient({ initialItems, categories }: ReviewQueueClien
                         src={item.image_url}
                         alt={item.title}
                         fill
+                        sizes="(max-width: 768px) 100vw, 176px"
                         className="object-cover"
-                        unoptimized
                       />
                     </div>
                   ) : (

@@ -20,9 +20,10 @@ export default function ScienceSection() {
           <div className="w-full lg:w-[45%] relative">
             <ScrollReveal variant="slideRight" className="relative w-full aspect-[4/5] rounded-[24px] overflow-hidden shadow-2xl">
               <Image
-                src="/images/mental_health_pillar.png"
+                src="/images/mental_health_pillar.webp"
                 alt="Yoga and Science"
                 fill
+                sizes="(max-width: 1024px) 100vw, 550px"
                 className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent opacity-80" />

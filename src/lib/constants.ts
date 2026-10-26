@@ -58,22 +58,22 @@ export const EXERCISE_DATA: ExerciseData[] = [
   { 
     name: 'Cycling', 
     description: 'Plan to ride your bike for 30 to 60 minutes, 3 to 5 days a week. Start slow and gradually increase intensity.', 
-    image: '/images/cycling.png' 
+    image: '/images/cycling.webp' 
   },
   { 
     name: 'Walking', 
     description: 'Just 30 minutes of daily walking can strengthen bones, reduce excess body fat, and boost muscle power.', 
-    image: '/images/walking.png' 
+    image: '/images/walking.webp' 
   },
   { 
     name: 'Swimming', 
     description: 'Your body is supported by the buoyancy of the water, making it a great low-impact full-body workout.', 
-    image: '/images/swimming.png' 
+    image: '/images/swimming.webp' 
   },
   { 
     name: 'Yoga', 
     description: 'Yoga focuses on balancing the mind and body through physical postures, breathing techniques, and meditation.', 
-    image: '/images/yoga.png' 
+    image: '/images/yoga.webp' 
   },
 ];
 

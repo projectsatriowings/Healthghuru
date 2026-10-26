@@ -115,8 +115,8 @@ export function HeroBannerAd({ initialAd, category, className = '' }: HeroBanner
                 src={ad.image_url}
                 alt={ad.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 384px"
                 className="object-cover"
-                unoptimized
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
               <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] text-white flex items-center gap-1 font-heading">

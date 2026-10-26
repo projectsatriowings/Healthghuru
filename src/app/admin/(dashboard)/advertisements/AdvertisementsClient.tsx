@@ -302,8 +302,8 @@ export function AdvertisementsClient({ initialAds }: AdvertisementsClientProps) 
                                 src={ad.image_url}
                                 alt={ad.title}
                                 fill
+                                sizes="56px"
                                 className="object-cover"
-                                unoptimized
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center text-text-muted">

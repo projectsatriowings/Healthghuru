@@ -17,7 +17,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
   {
     id: '1',
     slug: 'sun-salutation-secrets',
-    image: '/images/yoga.png',
+    image: '/images/yoga.webp',
     title: 'Sun Salutation Secrets: Elevate Your Wellness with Surya Namaskar',
     category: 'Fitness',
     readTime: 5,
@@ -29,7 +29,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
   {
     id: '2',
     slug: 'nutrient-timing',
-    image: '/images/nutrition_pillar.png',
+    image: '/images/nutrition_pillar.webp',
     title: 'Mastering Nutrient Timing: Optimizing Your Diet for Peak Performance',
     category: 'Nutrition',
     readTime: 7,
@@ -41,7 +41,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
   {
     id: '3',
     slug: 'exercises-for-abs',
-    image: '/images/exercise_plank.png',
+    image: '/images/exercise_plank.webp',
     title: 'The Best Exercises for Stronger Abs and a Stronger Core',
     category: 'Fitness',
     readTime: 4,
@@ -53,7 +53,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
   {
     id: '4',
     slug: 'yoga-mental-health',
-    image: '/images/mental_health_pillar.png',
+    image: '/images/mental_health_pillar.webp',
     title: 'The Benefits of Yoga for Mental Health: A Holistic Approach to Wellness',
     category: 'Mental Health',
     readTime: 6,
@@ -65,7 +65,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
   {
     id: '5',
     slug: 'boost-immune-system',
-    image: '/images/nutrition_pillar.png',
+    image: '/images/nutrition_pillar.webp',
     title: 'Boost Your Immune System Naturally: Effective Strategies for Optimal Health',
     category: 'Nutrition',
     readTime: 5,
@@ -77,7 +77,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
   {
     id: '6',
     slug: 'sleep-quality-guide',
-    image: '/images/sleep_pillar.png',
+    image: '/images/sleep_pillar.webp',
     title: 'Why Sleep Quality Matters More Than Sleep Quantity',
     category: 'Sleep',
     readTime: 6,
@@ -89,7 +89,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
   {
     id: '7',
     slug: 'stress-management',
-    image: '/images/mental_health_pillar.png',
+    image: '/images/mental_health_pillar.webp',
     title: 'The Science of Stress: How Chronic Stress Destroys Your Health',
     category: 'Mental Health',
     readTime: 8,
@@ -101,7 +101,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
   {
     id: '8',
     slug: 'hydration-myths',
-    image: '/images/walking.png',
+    image: '/images/walking.webp',
     title: 'Hydration Myths Debunked: How Much Water Do You Really Need?',
     category: 'Nutrition',
     readTime: 4,
@@ -113,7 +113,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
   {
     id: '9',
     slug: 'morning-routine',
-    image: '/images/exercise_squats.png',
+    image: '/images/exercise_squats.webp',
     title: '7 Morning Habits That Set You Up for a Healthier Day',
     category: 'Fitness',
     readTime: 5,
@@ -125,7 +125,7 @@ export const MOCK_ARTICLES: MockArticle[] = [
   {
     id: '10',
     slug: 'gut-health',
-    image: '/images/swimming.png',
+    image: '/images/swimming.webp',
     title: 'Your Gut is Your Second Brain: The Microbiome Guide',
     category: 'Nutrition',
     readTime: 9,

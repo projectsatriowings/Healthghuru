@@ -132,7 +132,7 @@ function BlockRenderer({ block }: { block: ArticleBlock }) {
       return (
         <figure className="my-10">
           <div className="relative w-full rounded-2xl overflow-hidden shadow-md" style={{ aspectRatio: '16/9' }}>
-            <Image src={block.url} alt={block.alt} fill className="object-cover" />
+            <Image src={block.url} alt={block.alt} fill sizes="(max-width: 768px) 100vw, 768px" className="object-cover" />
           </div>
           {block.caption && (
             <figcaption

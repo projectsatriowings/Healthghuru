@@ -16,12 +16,13 @@ export default async function AdminDashboardLayout({ children }: { children: Rea
       <aside className="w-[var(--sidebar-width,260px)] h-screen bg-surface border-r border-border flex flex-col z-40 shrink-0">
         <div className="p-6 flex flex-col flex-1">
           <Link href="/admin" className="inline-block mb-8 transition-transform hover:scale-105">
-            <div className="relative w-40 h-12">
+            <div className="relative w-12 h-12">
               <Image
                 src="/images/logo_transparent.png"
                 alt="HealthGhuru Logo"
-                fill
-                className="object-contain object-left"
+                width={48}
+                height={48}
+                className="w-full h-full object-contain"
                 priority
               />
             </div>

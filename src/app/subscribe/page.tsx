@@ -127,12 +127,13 @@ export default function SubscribePage() {
           <Link href="/" className="inline-flex items-center gap-2 text-text-secondary hover:text-primary transition-colors text-sm font-heading font-medium">
             <ArrowLeft size={16} /> Back to Home
           </Link>
-          <Link href="/" className="relative w-44 sm:w-52 h-12 flex items-center">
+          <Link href="/" className="relative w-12 h-12 flex items-center">
             <Image
-              src="/images/logo_transparent.png"
+              src="/images/logo_transparent.webp"
               alt="HealthGuru Logo"
-              fill
-              className="object-contain"
+              width={48}
+              height={48}
+              className="w-full h-full object-contain"
               priority
             />
           </Link>

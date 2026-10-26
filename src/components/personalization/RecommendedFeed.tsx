@@ -293,11 +293,11 @@ export function RecommendedFeed({
                   className="w-full aspect-[16/10] relative overflow-hidden bg-surface block cursor-pointer"
                 >
                   <Image
-                    src={item.imageUrl || '/images/exercise_plank.png'}
+                    src={item.imageUrl || '/images/exercise_plank.webp'}
                     alt={item.title}
                     fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 380px"
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
-                    unoptimized
                   />
 
                   {/* Top-Left Category Badge */}

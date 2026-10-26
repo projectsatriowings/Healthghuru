@@ -129,8 +129,39 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     .filter((b: any) => b.type === 'heading')
     .map((b: any) => b.text);
 
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    "headline": post.title,
+    "description": post.excerpt,
+    "image": post.hero_image_url ? (post.hero_image_url.startsWith('http') ? post.hero_image_url : `https://healthghuru.com${post.hero_image_url}`) : "https://healthghuru.com/images/nutrition_pillar.webp",
+    "datePublished": post.publish_date || new Date().toISOString(),
+    "dateModified": post.publish_date || new Date().toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": post.author_name || "Medical Editorial Board",
+      "jobTitle": post.author_role || "Medical Reviewer"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "HealthGhuru",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://healthghuru.com/images/logo_transparent.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://healthghuru.com/blog/${params.slug}`
+    }
+  };
+
   return (
     <article className="pt-6 sm:pt-10 pb-24 bg-white relative">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       <div className="site-container-article">
         
         {/* Breadcrumbs */}
@@ -167,6 +198,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                     src={post.author_avatar || "/images/exercise_plank.png"} 
                     alt={post.author_name || "Author"} 
                     fill 
+                    sizes="48px"
                     className="object-cover"
                   />
                 </div>
@@ -187,6 +219,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                   src={post.hero_image_url || "/images/exercise_push.png"}
                   alt={post.hero_image_alt || post.title}
                   fill
+                  sizes="(max-width: 896px) 100vw, 896px"
                   className="object-cover"
                   priority
                 />
@@ -312,6 +345,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                         src={rel.hero_image_url || "/images/nutrition_pillar.png"}
                         alt={rel.title}
                         fill
+                        sizes="64px"
                         className="object-cover group-hover:scale-105 transition-transform"
                       />
                     </div>

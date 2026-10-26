@@ -121,13 +121,14 @@ export default function Navbar() {
               className="flex-shrink-0 flex items-center transition-transform hover:scale-[1.02] active:scale-[0.98]"
               aria-label="HealthGhuru Home"
             >
-              <div className="relative w-44 sm:w-56 md:w-64 h-12 sm:h-14 md:h-16 flex items-center">
+              <div className="relative h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 flex items-center justify-center">
                 <Image
-                  src="/images/logo_transparent.png"
+                  src="/images/logo_transparent.webp"
                   alt="HealthGhuru Logo"
-                  fill
-                  sizes="(max-width: 640px) 176px, (max-width: 768px) 224px, 256px"
-                  className="object-contain object-left"
+                  width={64}
+                  height={64}
+                  sizes="(max-width: 640px) 48px, (max-width: 768px) 56px, 64px"
+                  className="w-full h-full object-contain"
                   priority
                 />
               </div>
@@ -141,7 +142,7 @@ export default function Navbar() {
                   <Link
                     key={link.href}
                     href={link.href}
-                    prefetch={true}
+                    prefetch={false}
                     className={cn(
                       "flex items-center gap-1.5 font-heading font-semibold text-sm xl:text-[15px] tracking-wide transition-colors relative py-2 whitespace-nowrap",
                       isActive ? "text-primary font-bold" : "text-text-primary hover:text-primary"
@@ -390,7 +391,7 @@ export default function Navbar() {
                       <Link
                         key={link.href}
                         href={link.href}
-                        prefetch={true}
+                        prefetch={false}
                         className={cn(
                           "flex items-center justify-between px-3.5 py-2.5 rounded-xl font-heading text-sm transition-all",
                           isActive

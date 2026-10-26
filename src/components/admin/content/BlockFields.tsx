@@ -199,7 +199,7 @@ export function BlockFields({ block, onUpdate }: BlockFieldsProps) {
               />
               {block.url && (
                 <div className="relative w-10 h-10 rounded border border-gray-200 overflow-hidden shrink-0">
-                  <img src={block.url} alt="Preview" className="object-cover w-full h-full" />
+                  <img src={block.url} alt="Preview" width={40} height={40} className="object-cover w-full h-full" />
                 </div>
               )}
             </div>

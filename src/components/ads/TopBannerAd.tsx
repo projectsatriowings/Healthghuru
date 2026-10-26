@@ -104,8 +104,8 @@ export function TopBannerAd({ initialAd, category }: TopBannerAdProps) {
                   src={ad.image_url}
                   alt={ad.title}
                   fill
+                  sizes="36px"
                   className="object-cover"
-                  unoptimized
                 />
               </div>
             )}

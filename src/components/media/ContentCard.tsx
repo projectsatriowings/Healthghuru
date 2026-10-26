@@ -28,6 +28,7 @@ export interface ContentCardProps {
     quality_score?: number;
   };
   layout?: 'standard' | 'horizontal' | 'compact' | 'short';
+  priority?: boolean;
 }
 
 function InstagramIcon({ size = 11, className = '' }: { size?: number; className?: string }) {
@@ -58,7 +59,7 @@ function YouTubeShortsIcon({ size = 13, className = '' }: { size?: number; class
   );
 }
 
-export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
+export function ContentCard({ item, layout = 'standard', priority = false }: ContentCardProps) {
   const [imageError, setImageError] = useState(false);
 
   const isVideo = item.content_type === 'video';
@@ -112,13 +113,14 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
   };
 
   // Fallback image asset
-  const displayImage = imageError || !item.image_url ? '/images/exercise_plank.png' : item.image_url;
+  const displayImage = imageError || !item.image_url ? '/images/exercise_plank.webp' : item.image_url;
 
   // 1. Horizontal List Layout (Used in Trending / Research sidebars)
   if (layout === 'horizontal') {
     return (
       <Link
         href={targetHref}
+        prefetch={false}
         target={isExternalLink ? '_blank' : '_self'}
         rel={isExternalLink ? 'noopener noreferrer' : undefined}
         onClick={recordClick}
@@ -130,9 +132,10 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
             src={displayImage}
             alt={item.title}
             fill
+            priority={priority}
+            sizes="(max-width: 640px) 100vw, 192px"
             onError={() => setImageError(true)}
             className="object-cover group-hover:scale-105 transition-transform duration-300"
-            unoptimized
           />
           {isVideo && (
             <div className="absolute inset-0 bg-black/30 flex items-center justify-center transition-colors group-hover:bg-black/40">
@@ -197,6 +200,7 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
     return (
       <Link
         href={targetHref}
+        prefetch={false}
         onClick={recordClick}
         className="group flex flex-col w-full select-none cursor-pointer block text-inherit no-underline"
       >
@@ -206,9 +210,9 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
             src={displayImage}
             alt={item.title}
             fill
+            sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, (max-width: 1024px) 25vw, 240px"
             onError={() => setImageError(true)}
             className="object-cover group-hover:scale-105 transition-transform duration-500"
-            unoptimized
           />
 
           {/* Top Category Badge */}
@@ -259,6 +263,7 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
   return (
     <Link
       href={targetHref}
+      prefetch={false}
       target={isExternalLink ? '_blank' : '_self'}
       rel={isExternalLink ? 'noopener noreferrer' : undefined}
       onClick={recordClick}
@@ -270,9 +275,10 @@ export function ContentCard({ item, layout = 'standard' }: ContentCardProps) {
           src={displayImage}
           alt={item.title}
           fill
+          priority={priority}
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 380px"
           onError={() => setImageError(true)}
           className="object-cover group-hover:scale-105 transition-transform duration-300"
-          unoptimized
         />
 
         {/* Category Pill Over Image */}
